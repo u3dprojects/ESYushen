@@ -69,7 +69,8 @@ public class PS_MidLeft{
     Vector3 movPos = Vector3.zero;
 
     // 特效事件
-    ED_AniTimeEvent stateEvent = new ED_AniTimeEvent();
+    EMT_Event m_cEvents = new EMT_Event();
+
     List<bool> m_event_fodeOut = new List<bool>();
 
     // 特效挂节点
@@ -104,8 +105,8 @@ public class PS_MidLeft{
     {
         ind_popup = 0;
         pre_ind_popup = -1;
-
-        stateEvent.DoClear();
+        
+        m_cEvents.DoClear();
     }
 
     void OnResetProgress()
@@ -207,8 +208,6 @@ public class PS_MidLeft{
             m_curAni.ResetAniState(ind_popup);
 
             OnResetProgress();
-
-            m_curAni.AddCallPhase(OnUpdateAniPhase);
         }
         EG_GUIHelper.FEG_EndH();
     }
@@ -407,8 +406,7 @@ public class PS_MidLeft{
                 GUI.color = Color.green;
                 if (GUILayout.Button("+", GUILayout.Width(50)))
                 {
-                    // m_curAni.AddCurEffect();
-                    stateEvent.AddEffect();
+                    m_cEvents.NewEffect();
                 }
                 GUI.color = Color.white;
                 EG_GUIHelper.FEG_EndV();
@@ -416,20 +414,19 @@ public class PS_MidLeft{
 
             {
                 // 中
-                // int lens = m_curAni.curEffects.Count;
-                int lens = stateEvent.lst_effects.Count;
+                List<EDT_Effect> lstEffect = m_cEvents.m_lEffects;
+                int lens = lstEffect.Count;
                 if (lens > 0)
                 {
                     for (int i = 0; i < lens; i++)
                     {
-                        lens = stateEvent.lst_effects.Count;
-                        if (i > lens - 1)
-                        {
-                            i = lens - 1;
-                        }
                         m_event_fodeOut.Add(false);
+                        if ((lstEffect[i]).m_isDelete)
+                        {
+                            continue;
+                        }
 
-                        _DrawOneEffect(i, stateEvent.lst_effects[i]);
+                        _DrawOneEffect(i, lstEffect[i]);
                     }
                 }
                 else
@@ -441,20 +438,19 @@ public class PS_MidLeft{
         EG_GUIHelper.FG_EndV();
     }
 
-    void _DrawOneEffect(int index,EA_Effect effect)
+    void _DrawOneEffect(int index, EDT_Effect effect)
     {
-        bool isEmptyName = string.IsNullOrEmpty(effect.name);
+        bool isEmptyName = string.IsNullOrEmpty(effect.m_sName);
 
         EG_GUIHelper.FEG_BeginV();
         {
             EG_GUIHelper.FEG_BeginH();
             {
-                m_event_fodeOut[index] = EditorGUILayout.Foldout(m_event_fodeOut[index], "特效 - " + (isEmptyName ? "未指定" : effect.name));
+                m_event_fodeOut[index] = EditorGUILayout.Foldout(m_event_fodeOut[index], "特效 - " + (isEmptyName ? "未指定" : effect.m_sName));
                 GUI.color = Color.red;
                 if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
                 {
-                    // m_curAni.RemoveEffect(effect);
-                    stateEvent.RemoveEffect(effect);
+                    m_cEvents.RmEvent(effect);
                     m_event_fodeOut.RemoveAt(index);
                 }
                 GUI.color = Color.white;
@@ -471,18 +467,13 @@ public class PS_MidLeft{
         EG_GUIHelper.FEG_EndV();
     }
 
-    void _DrawOneEffectAttrs(EA_Effect effect)
+    void _DrawOneEffectAttrs(EDT_Effect effect)
     {
-        if (effect.isChanged)
-        {
-            // m_curAni.ResetEvent(effect, effect.trsfParent);
-            stateEvent.ResetOneEvent(effect, effect.trsfParent);
-        }
-
+        
         EG_GUIHelper.FEG_BeginH();
         {
             GUILayout.Label("特效文件:", GUILayout.Width(80));
-            effect.gobjFab = EditorGUILayout.ObjectField(effect.gobjFab, typeof(GameObject), false) as GameObject;
+            effect.m_objOrg = EditorGUILayout.ObjectField(effect.m_objOrg, typeof(GameObject), false) as GameObject;
         }
         EG_GUIHelper.FEG_EndH();
 
@@ -491,7 +482,7 @@ public class PS_MidLeft{
         EG_GUIHelper.FEG_BeginH();
         {
             GUILayout.Label("触发时间:", GUILayout.Width(80));
-            effect.time = EditorGUILayout.Slider(effect.time, 0, 1);
+            effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, 1);
         }
         EG_GUIHelper.FEG_EndH();
 
@@ -500,12 +491,12 @@ public class PS_MidLeft{
         _DrawOneEffectJoinPos(effect);
     }
 
-    void _DrawOneEffectJoinPos(EA_Effect effect)
+    void _DrawOneEffectJoinPos(EDT_Effect effect)
     {
         EG_GUIHelper.FEG_BeginH();
         {
             EG_GUIHelper.FEG_BeginToggleGroup("手动位置??", ref isEffectJoinSelf);
-            effect.trsfParent = EditorGUILayout.ObjectField("位置:", effect.trsfParent, typeof(Transform), isEffectJoinSelf) as Transform;
+            effect.m_trsfParent = EditorGUILayout.ObjectField("位置:", effect.m_trsfParent, typeof(Transform), isEffectJoinSelf) as Transform;
             EG_GUIHelper.FEG_EndToggleGroup();
         }
         EG_GUIHelper.FEG_EndH();
@@ -516,7 +507,7 @@ public class PS_MidLeft{
 
         EG_GUIHelper.FEG_BeginH();
         {
-            effect.v3LocPos = EditorGUILayout.Vector3Field("偏移:", effect.v3LocPos);
+            effect.m_v3OffsetPos = EditorGUILayout.Vector3Field("偏移:", effect.m_v3OffsetPos);
         }
         EG_GUIHelper.FEG_EndH();
 
@@ -524,7 +515,7 @@ public class PS_MidLeft{
 
         EG_GUIHelper.FEG_BeginH();
         {
-            effect.v3LocEulerAngle = EditorGUILayout.Vector3Field("旋转:", effect.v3LocEulerAngle);
+            effect.m_v3EulerAngle = EditorGUILayout.Vector3Field("旋转:", effect.m_v3EulerAngle);
         }
         EG_GUIHelper.FEG_EndH();
 
@@ -533,7 +524,7 @@ public class PS_MidLeft{
         EG_GUIHelper.FEG_BeginH();
         {
             EG_GUIHelper.FG_Label("缩放:");
-            effect.scale = EditorGUILayout.FloatField(effect.scale);
+            effect.m_fScale = EditorGUILayout.FloatField(effect.m_fScale);
         }
         EG_GUIHelper.FEG_EndH();
     }
@@ -579,10 +570,9 @@ public class PS_MidLeft{
 
         this.m_curTime.DoUpdateTime();
         this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,cur_speed);
-
-        // 设置粒子速度
-        EDM_Particle.m_instance.SetSpeed(cur_speed);
-        EDM_Particle.m_instance.OnUpdate(m_curTime.DeltaTime,true);
+        
+        m_cEvents.SetSpeed(cur_speed);
+        m_cEvents.OnUpdate(m_curTime.DeltaTime);
 
         // 设置位移
         if (isOpenMovPos)
@@ -603,30 +593,27 @@ public class PS_MidLeft{
 
     void DoPlay() {
         this.m_curAni.DoStart();
-        stateEvent.ResetEvents();
-
+        
         isRunnging = true;
         isPauseing = false;
 
-        EDM_Particle.m_instance.DoInit(false);
+        m_cEvents.DoStart();
     }
 
     void DoPause() {
         isPauseing = true;
+
+        m_cEvents.DoPause();
     }
 
     void DoResume() {
         isPauseing = false;
+        m_cEvents.DoResume();
     }
 
     void DoStop() {
         isRunnging = false;
-        EDM_Particle.m_instance.DoClear();
         trsfEntity.position = Vector3.zero;
-    }
-
-    void OnUpdateAniPhase(float phase)
-    {
-        stateEvent.OnUpdate(phase);
+		m_cEvents.DoEnd();
     }
 }
