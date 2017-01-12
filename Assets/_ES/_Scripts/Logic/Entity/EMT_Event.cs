@@ -9,10 +9,9 @@ using System.Collections.Generic;
 /// 功能 : 
 /// </summary>
 public class EMT_Event{
-    List<EDT_Base> m_lEvent = new List<EDT_Base>();
-    EDT_Base m_tmpEvent;
 
-    int lens = 0;
+	EDT_TEvents m_eTEvent = new EDT_TEvents ();
+
     bool isPause = false;
     float curSpeed = 1.0f;
     //更新间隔
@@ -20,65 +19,36 @@ public class EMT_Event{
     // 当前值
     float m_CurInvUp = 0.0f;
 
-    public T NewEvent<T>() where T : EDT_Base,new()
-    {
-        T ret = new T();
-        m_lEvent.Add(ret);
-        return ret;
-    }
-
-    public void RmEvent(EDT_Base en)
-    {
-        if (en == null)
-            return;
-        en.DoRemove();
-    }
-
-    public List<T> GetList<T>() where T : EDT_Base
-    {
-        List<T> ret = new List<T>();
-        lens = m_lEvent.Count;
-        for (int i = 0; i < lens; i++)
-        {
-            m_tmpEvent = m_lEvent[i];
-            if(m_tmpEvent is T)
-            {
-                ret.Add((T)m_tmpEvent);
-            }
-        }
-        return ret;
-    }
-
     public void NewEffect()
     {
-        NewEvent<EDT_Effect>();
+		m_eTEvent.NewEvent<EDT_Effect>();
     }
+
+	public void RmEvent(EDT_Base en)
+	{
+		m_eTEvent.RmEvent (en);
+	}
 
     public List<EDT_Effect> m_lEffects
     {
         get
         {
-            return GetList<EDT_Effect>();
+			return m_eTEvent.GetListEffects();
         }
     }
 
+	public void DoReInit(string json){
+		m_eTEvent.DoReInit (json);
+	}
+
     public void DoStart()
     {
-        lens = m_lEvent.Count;
-        for (int i = 0; i < lens; i++)
-        {
-            m_tmpEvent = m_lEvent[i];
-            m_tmpEvent.DoStart(true);
-        }
-        m_tmpEvent = null;
+		m_eTEvent.DoStart ();
     }
     
     public void OnUpdate(float deltatime, bool isImm = false)
     {
-        lens = m_lEvent.Count;
-        if (lens <= 0)
-            return;
-
+        
         if (!isImm)
         {
             if (isPause)
@@ -90,17 +60,7 @@ public class EMT_Event{
             return;
 
         // Debug.Log("== EDM_Particle delta = " + m_CurInvUp);
-
-        for (int i = 0; i < lens; i++)
-        {
-            m_tmpEvent = m_lEvent[i];
-            m_tmpEvent.DoUpdate(m_CurInvUp * curSpeed);
-            if (m_tmpEvent.m_isEnd)
-            {
-                m_tmpEvent.DoEnd();
-            }
-        }
-
+		m_eTEvent.OnUpdate(m_CurInvUp * curSpeed);
         m_CurInvUp = 0.0f;
     }
     
@@ -121,21 +81,13 @@ public class EMT_Event{
 
     public void DoClear()
     {
-        m_lEvent.Clear();
-        
-        m_tmpEvent = null;
+		m_eTEvent.DoClear ();
         isPause = false;
         curSpeed = 1.0f;
     }
 
     public void DoEnd()
     {
-        lens = m_lEvent.Count;
-        for (int i = 0; i < lens; i++)
-        {
-            m_tmpEvent = m_lEvent[i];
-            m_tmpEvent.DoEnd();
-        }
-        m_tmpEvent = null;
+		m_eTEvent.DoEnd ();
     }
 }
