@@ -37,7 +37,6 @@ public partial class PS_MidRight{
 
     // 技能
     string pathOpenSkill = "";
-    string prePathOpenSkill = "";
 
     // 技能属性
     EN_Skill ms_curSkill;
@@ -162,6 +161,7 @@ public partial class PS_MidRight{
         if (GUILayout.Button("选取Excel(Skill)"))
         {
             this.pathOpenSkill = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
+			optSkill.DoInit(this.pathOpenSkill, 0);
         }
         EG_GUIHelper.FEG_EndH();
 
@@ -180,12 +180,6 @@ public partial class PS_MidRight{
         }
 
         EG_GUIHelper.FG_Space(5);
-
-        if (!this.prePathOpenSkill.Equals(this.pathOpenSkill))
-        {
-            optSkill.DoInit(this.pathOpenSkill, 0);
-            this.prePathOpenSkill = this.pathOpenSkill;
-        }
     }
 
     void _DrawSkill()

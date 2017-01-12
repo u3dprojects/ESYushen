@@ -192,7 +192,11 @@ public class ED_Ani : ED_AniBase {
         }
         if(index_key >= Keys.Count)
         {
-            Debug.LogError("Key的Index下标小其长度,index = " + index_key);
+			string info = "Key的Index下标应该小于其长度,index = " + index_key;
+			if (Keys.Count <= 0) {
+				info += ",该Animator无动画，Name = " + this.m_ani.name;
+			}
+			Debug.LogError(info);
             return;
         }
 
