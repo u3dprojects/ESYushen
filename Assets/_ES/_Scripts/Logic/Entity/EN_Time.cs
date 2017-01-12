@@ -91,6 +91,10 @@ public class EN_Time : System.Object {
         this.isPause = isPause;
     }
 
+	public void DoStart(){
+		OnResetMemberReckon ();
+	}
+
     public void OnResetMemberReckon()
     {
         cur_ed_time_startup = 0.0d;

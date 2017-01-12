@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEditor;
 using System.IO;
+using System.Collections.Generic;
 
 /// <summary>
 /// 类名 : P-Partial,S-Skill 策划工具:技能数据表
@@ -9,24 +10,24 @@ using System.IO;
 /// 日期 : 2017-01-09 09:10
 /// 功能 : 
 /// </summary>
-public class PS_MidRight{
+public partial class PS_MidRight{
 
     #region  == Member Attribute ===
 
     EDW_Skill m_wSkill;
 
-    ED_Ani_YGame m_curAni
-    {
-        get
-        {
-            return m_wSkill.me_ani;
-        }
-    }
+	ED_Ani_YGame m_curAni;
 
     EN_SkillOpt optSkill
     {
         get { return EN_SkillOpt.Instance; }
     }
+
+	// 时间
+	EN_Time m_curTime;
+
+	// 事件
+	PS_Events m_ePSEvents = new PS_Events(true);
 
     Vector2 scrollPos;
     float minScrollH = 260;
@@ -64,14 +65,42 @@ public class PS_MidRight{
 
     float maxDistance, minDistance,cooldown,duration,beforeRoll,afterRoll;
 
-    string evtStr;
+	string ms_sEvtStr;
+
+	// 暂停按钮控制
+	bool isPauseing = false;
+
+	// 是否运行
+	bool isRunnging = false;
 
     #endregion
 
     public void DoInit(EDW_Skill org)
     {
         this.m_wSkill = org;
+		this.m_wSkill.AddCall4Update(OnUpdate);
+
+		m_ePSEvents.DoInit(org);
+
+		OnInitTime ();
     }
+
+	void OnInitTime()
+	{
+		if (m_curTime == null)
+			m_curTime = new EN_Time();
+
+		m_curTime.DoReInit(false);
+	}
+
+	public void DoReset()
+	{
+		if (this.m_curAni == null) {
+			this.m_curAni = new ED_Ani_YGame ();
+		}
+
+		this.m_curAni.DoReInit(this.m_wSkill.gobjEntity);
+	}
     
     void RecokenWH()
     {
@@ -103,7 +132,10 @@ public class PS_MidRight{
 
                     _DrawSkill();
 
-                    _DrawOptBtns();
+					_DrawOptBtns();
+
+					_DrawOptExcelBtns ();
+
                 }
 
                 EG_GUIHelper.FEG_EndScroll();
@@ -156,7 +188,6 @@ public class PS_MidRight{
         }
     }
 
-    
     void _DrawSkill()
     {
         EG_GUIHelper.FEG_BeginH();
@@ -253,13 +284,21 @@ public class PS_MidRight{
         EG_GUIHelper.FG_BeginVAsArea();
         {
             EG_GUIHelper.FEG_BeginH();
-            EditorGUILayout.LabelField("技能事件:",evtStr, EditorStyles.textArea);
+            EditorGUILayout.LabelField("技能事件:",ms_sEvtStr, EditorStyles.textArea);
             EG_GUIHelper.FEG_EndH();
+			EG_GUIHelper.FG_Space(5);
+
+			_DrawEvents ();
         }
         EG_GUIHelper.FG_EndV();
     }
 
-    void _DrawOptBtns()
+	void _DrawEvents(){
+		m_ePSEvents.DrawEvents ();
+		this.ms_sEvtStr = m_ePSEvents.ToJsonString ();
+	}
+
+    void _DrawOptExcelBtns()
     {
         EG_GUIHelper.FEG_BeginH();
         {
@@ -282,6 +321,8 @@ public class PS_MidRight{
                     UnityEditor.EditorUtility.DisplayDialog("Tips", "The save path is Empty !!!", "Okey");
                     return;
                 }
+
+				this.ms_sEvtStr = m_ePSEvents.ToJsonString ();
 
                 OnInitAttrs2Entity();
 
@@ -312,7 +353,9 @@ public class PS_MidRight{
             this.afterRoll = this.ms_curSkill.c15_PostCastTiming;
 
             // 事件处理有点麻烦，单独出来写
-            this.evtStr = this.ms_curSkill.c13_CastEvent_Str;
+            this.ms_sEvtStr = this.ms_curSkill.c13_CastEvent_Str;
+
+			m_ePSEvents.DoReInitEventJson (this.ms_sEvtStr);
         }
     }
 
@@ -336,7 +379,79 @@ public class PS_MidRight{
         this.ms_curSkill.c14_PreCastTiming = this.beforeRoll;
         this.ms_curSkill.c15_PostCastTiming = this.afterRoll;
 
-        this.ms_curSkill.c13_CastEvent_Str = this.evtStr;
+        this.ms_curSkill.c13_CastEvent_Str = this.ms_sEvtStr;
     }
 
+	void _DrawOptBtns()
+	{
+		EG_GUIHelper.FEG_BeginH();
+		{
+			if (GUILayout.Button("Play"))
+			{
+				DoPlay();
+			}
+
+			if (GUILayout.Button(isPauseing ? "ReGo" : "Pause"))
+			{
+				isPauseing = !isPauseing;
+				if (isPauseing)
+				{
+					DoPause();
+				}
+				else
+				{
+					DoResume();
+				}
+			}
+
+			if (GUILayout.Button("Stop"))
+			{
+				DoStop();
+			}
+		}
+		EG_GUIHelper.FEG_EndH();
+	}
+
+	void OnUpdate(){
+		if (!isRunnging || isPauseing)
+			return;
+
+		if (this.m_curAni == null)
+			return;
+
+		this.m_curTime.DoUpdateTime();
+		this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,1);
+		m_ePSEvents.OnUpdate (m_curTime.DeltaTime, 1);
+
+		// 设置位移
+	}
+
+	void DoPlay() {
+		m_curTime.DoStart ();
+		this.m_curAni.DoReady (ms_actId);
+		this.m_curAni.DoStart();
+
+		isRunnging = true;
+		isPauseing = false;
+
+		m_ePSEvents.DoStart();
+	}
+
+	void DoPause() {
+		isPauseing = true;
+
+		m_curTime.DoPause();
+		m_ePSEvents.DoPause();
+	}
+
+	void DoResume() {
+		isPauseing = false;
+		m_curTime.DoResume();
+		m_ePSEvents.DoResume();
+	}
+
+	void DoStop() {
+		isRunnging = false;
+		m_ePSEvents.DoEnd();
+	}
 }

@@ -273,4 +273,40 @@ public class ED_AniBase : System.Object
         if (m_ani)
             m_ani.applyRootMotion = isApply;
     }
+
+	protected string GetKey(string stateName){
+		if (string.IsNullOrEmpty (stateName)) {
+			return "";
+		}
+
+		if (!map_StateName.ContainsKey (stateName)) {
+			return "";
+		}
+
+		foreach (KeyValuePair<string,AnimatorState> item in dic_name_state) {
+			if (item.Value.name == stateName) {
+				return item.Key;
+			}
+		}
+
+		return "";
+	}
+
+	protected AnimatorState GetState(string stateName){
+		if (string.IsNullOrEmpty (stateName)) {
+			return null;
+		}
+		
+		if (!map_StateName.ContainsKey (stateName)) {
+			return null;
+		}
+
+		foreach (KeyValuePair<string,AnimatorState> item in dic_name_state) {
+			if (item.Value.name == stateName) {
+				return item.Value;
+			}
+		}
+
+		return null;
+	}
 }

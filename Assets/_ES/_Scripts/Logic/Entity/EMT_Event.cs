@@ -90,4 +90,8 @@ public class EMT_Event{
     {
 		m_eTEvent.DoEnd ();
     }
+
+	public string ToJsonString(){
+		return m_eTEvent.ToStrJsonData ();
+	}
 }

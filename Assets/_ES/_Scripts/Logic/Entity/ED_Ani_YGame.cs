@@ -16,4 +16,9 @@ public class ED_Ani_YGame : ED_Ani {
         Animator ani = gobj.GetComponentInChildren<Animator>();
         DoInit(ani);
     }
+
+	public void DoReady(int skillIndex){
+		string stateName = "Skill" + skillIndex;
+		ResetAniState (GetKey(stateName));
+	}
 }

@@ -44,7 +44,7 @@ public class ED_Ani : ED_AniBase {
     float m_InvLifeTime = 0.0f;
 
     // 更新true:用条件，false:用Play进度
-    bool isUpByCondition = false;
+    public bool m_isUpByCondition = false;
 
     // 当前state是否需要条件才能播放
     bool cur_isHasCondition = false;
@@ -73,19 +73,16 @@ public class ED_Ani : ED_AniBase {
     bool isCompletedRound = false;
 
     // 可循环次数
-    public int m_LoopTimes { get; set; }
+	public int m_LoopTimes;
     
     // 当前StateMatch
-    public StateMachineBehaviour cur_state_mache { get; set; }
+	public StateMachineBehaviour cur_state_mache;
 
     // 改变时候调用的函数
-    public System.Action callChanged { get; set; }
+	public System.Action callChanged;
     
     // 完成一次循环(一个周期)
-    public System.Action<bool> callCompleted { get; set; }
-
-    // 动作时间轴时间
-    ED_AniTimeEvent stateEvent = new ED_AniTimeEvent();
+	public System.Action<bool> callCompleted;
 
     // 更新动作回调 - 进度时间 
     System.Action<float> callOnUpdateProgress;
@@ -218,13 +215,13 @@ public class ED_Ani : ED_AniBase {
         }
     }
 
-    void ResetAniState(AnimatorState state)
+	protected void ResetAniState(AnimatorState state)
     {
         OnResetMember();
 
         cur_state = state;
         
-        if (state.motion)
+		if (state != null && state.motion != null)
         {
             AnimationClip clip = state.motion as AnimationClip;
             cur_Length = clip.length;
@@ -285,8 +282,6 @@ public class ED_Ani : ED_AniBase {
         cur_state_mache = null;
         cur_shortNameHash = 0;
 
-        stateEvent.DoClear();
-
         callChanged = null;
         callCompleted = null;
 
@@ -346,9 +341,9 @@ public class ED_Ani : ED_AniBase {
     }
 
     
-    public void SetCurCondition()
+    void SetCurCondition()
     {
-        if (cur_state && isUpByCondition)
+        if (cur_state && m_isUpByCondition)
         {
             AnimatorControllerParameterType pars_type = AnimatorControllerParameterType.Bool;
 
@@ -430,7 +425,7 @@ public class ED_Ani : ED_AniBase {
 
         OnUpdateTime(deltatime);
 
-        if (isUpByCondition && cur_isHasCondition)
+        if (m_isUpByCondition && cur_isHasCondition)
         {
             SetSpeed(speed);
             OnAniUpdate(deltatime);
@@ -453,9 +448,6 @@ public class ED_Ani : ED_AniBase {
             }
             isFinishedOneWheel = false;
         }
-
-        // 执行事件(自带的以前模式)
-        stateEvent.OnUpdate(cur_Phase);
 
         // 新的模式用于外部调用
         OnUpdateCallPhase();
@@ -600,43 +592,12 @@ public class ED_Ani : ED_AniBase {
 
     #endregion
 
-    #region ==== 动作时间轴 ==== 
-    public void AddCurEffect()
-    {
-        stateEvent.AddEffect();
-    }
-
-    public List<EA_Effect> curEffects
-    {
-        get
-        {
-            return stateEvent.lst_effects;
-        }
-    }
-
-    public void RemoveEffect(EA_Effect effect)
-    {
-        stateEvent.RemoveEffect(effect);
-    }
-
-    public void ResetEvent(EA_Effect effect, Transform trsfParent)
-    {
-        stateEvent.ResetOneEvent(effect, trsfParent);
-    }
-
-    public void ResetCurEvents()
-    {
-        stateEvent.ResetEvents();
-    }
-    #endregion
-
-    public virtual void DoStart(System.Action callChg = null, System.Action<bool> callFinished = null)
+    public void DoStart(System.Action callChg = null, System.Action<bool> callFinished = null)
     {
         DoResetAniCtrl();
 
         OnResetMemberReckon();
-        ResetCurEvents();
-
+        
         SetCurCondition();
         this.callChanged = callChg;
         this.callCompleted = callFinished;

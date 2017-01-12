@@ -29,11 +29,26 @@ public class EDT_TEvents  {
 		return ret;
 	}
 
+	public T NewEvent<T>(float castTime,JsonData jsonData) where T : EDT_Base,new()
+	{
+		T ret = new T();
+		ret.DoReInit (castTime, jsonData);
+		if (ret.m_isJsonDataToSelfSuccessed) {
+			m_lEvents.Add (ret);
+			return ret;
+		} else {
+			ret.DoClear ();
+		}
+		return null;
+	}
+
 	public void RmEvent(EDT_Base en)
 	{
 		if (en == null)
 			return;
-		en.DoRemove();
+		en.DoClear ();
+
+		m_lEvents.Remove (en);
 	}
 
 	public List<T> GetList<T>() where T : EDT_Base
@@ -129,9 +144,96 @@ public class EDT_TEvents  {
 		DoInit (json);
 	}
 
+	// 数据解析
 	public void DoInit(string json){
 		this.m_sJson = json;
 		m_jsonData = JsonMapper.ToObject (json);
-		Debug.Log (m_jsonData [0]);
+		if(!m_jsonData.IsArray){
+			return;
+		}
+
+		int lens = m_jsonData.Count;
+		JsonData tmpJsonData = null;
+		float casttime = 0.0f;
+		int typeInt = -1;
+
+		for (int i = 0; i < lens; i++) {
+			tmpJsonData = m_jsonData [i];
+
+			if (!tmpJsonData.IsObject)
+				continue;
+
+			casttime = float.Parse(tmpJsonData ["m_timing"].ToString());
+			tmpJsonData = tmpJsonData ["m_castEvts"];
+			if (!tmpJsonData.IsArray) 
+				continue;
+
+			for (int j = 0; j < tmpJsonData.Count; j++) {
+				typeInt = (int)((tmpJsonData [j]) ["m_typeInt"]);
+				switch (typeInt) {
+				case 1:
+					ToEffect (casttime, tmpJsonData [j]);
+					break;
+				}
+			}
+		}
+	}
+
+	// 转为特效事件
+	void ToEffect(float time,JsonData data){
+		NewEvent<EDT_Effect> (time,data);
+	}
+
+	public string ToStrJsonData(){
+		lens = m_lEvents.Count;
+		if (lens <= 0) {
+			return "";
+		}
+
+		Dictionary<float,List<EDT_Base>> tmpDic = new Dictionary<float, List<EDT_Base>> ();
+		List<EDT_Base> tmpList = null;
+		for (int i = 0; i < lens; i++)
+		{
+			m_tmpEvent = m_lEvents[i];
+			if (!m_tmpEvent.m_isInitedData)
+				continue;
+			
+			if (tmpDic.ContainsKey (m_tmpEvent.m_fCastTime)) {
+				tmpList = tmpDic [m_tmpEvent.m_fCastTime];
+			} else {
+				tmpList = new List<EDT_Base> ();
+				tmpDic.Add (m_tmpEvent.m_fCastTime, tmpList);
+			}
+
+			tmpList.Add (m_tmpEvent);
+		}
+
+		if (tmpDic.Count <= 0) {
+			return "";
+		}
+
+		JsonData tmpData = new JsonData ();
+		tmpData.SetJsonType (JsonType.Array);
+
+		JsonData tmpData2, tmpData3,tmpData4;
+
+		foreach (KeyValuePair<float,List<EDT_Base>> item in tmpDic) {
+			tmpData2 = new JsonData ();
+			tmpData2 ["m_timing"] = item.Key;
+
+			tmpData3 = new JsonData ();
+			tmpData3.SetJsonType (JsonType.Array);
+			foreach (EDT_Base one in item.Value) {
+				tmpData4 = one.ToJsonData ();
+				if (tmpData4 == null)
+					continue;
+				tmpData3.Add (tmpData4);
+			}
+			tmpData2 ["m_castEvts"] = tmpData3;
+
+			tmpData.Add (tmpData2);
+		}
+
+		return JsonMapper.ToJson (tmpData);
 	}
 }

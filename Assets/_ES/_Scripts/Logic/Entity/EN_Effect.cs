@@ -20,6 +20,7 @@ public class EN_Effect : System.Object
     public float curSpeed { get; set; }
 
     float up_deltatime = 0.0f;
+	float timeOut = 0;
 
     public bool isEnd
     {
@@ -31,19 +32,25 @@ public class EN_Effect : System.Object
 
     public EN_Effect() { }
 
-    public EN_Effect(GameObject gobj)
+	public EN_Effect(GameObject gobj)
     {
         DoReInit(gobj);
     }
 
-    public void DoReInit(GameObject gobj)
+	public EN_Effect(GameObject gobj,float timeOut)
+	{
+		DoReInit(gobj,timeOut);
+	}
+
+	public void DoReInit(GameObject gobj,float timeOut = 0)
     {
         DoClear();
-        DoInit(gobj);
+		DoInit(gobj,timeOut);
     }
 
-    void DoInit(GameObject gobj)
+	void DoInit(GameObject gobj,float timeOut = 0)
     {
+		this.timeOut = timeOut;
         m_particle.DoReInit(gobj);
 
         Animator[] anis = gobj.GetComponentsInChildren<Animator>();
@@ -65,6 +72,7 @@ public class EN_Effect : System.Object
     public void DoClear()
     {
         curSpeed = 1;
+		timeOut = 0;
         m_particle.DoClear();
         OnClearAnimator();
     }
@@ -82,7 +90,7 @@ public class EN_Effect : System.Object
 
     public void DoStart()
     {
-        m_particle.DoStart();
+		m_particle.DoStart(this.timeOut);
         lens = list.Count;
         for (int i = 0; i < lens; i++)
         {

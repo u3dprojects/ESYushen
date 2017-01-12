@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using LitJson;
 
 /// <summary>
 /// 类名 : Editor 的时间轴上的Event实体基类
@@ -45,37 +46,50 @@ public class EDT_Base {
     protected float m_fProgress = 0.0f;
 
     // 播放是否结束
-    public bool m_isEnd;
-
-    // 是否被删除了
-    public bool m_isDelete;
+	public bool m_isEnd = false;
 
     // 当前事件类型
     public int m_iCurType = -1;
+
+	public bool m_isJsonDataToSelfSuccessed = false;
+	public JsonData m_jsonData = null;
+
+	public bool m_isInitedData = false;
 
     public EDT_Base()
     {
         this.m_iCurID = ++EVENT_CORE_CURSOR;
     }
 
-    public virtual string GetPathByNameType(string objName,int type)
-    {
-        return "";
-    }
+	public void DoReInit(float castTime, JsonData jsonData){
+		DoClear ();
+		OnReInit (castTime, jsonData);
+	}
 
-    public void DoReInit(string objName,int type)
+	public virtual void OnReInit(float castTime, JsonData jsonData){
+		this.m_fCastTime = castTime;
+		this.m_jsonData = jsonData;
+	}
+
+	public bool DoReInit(string objName,int type)
     {
         string path = GetPathByNameType(objName, type);
         bool isExists = File.Exists(path);
         if (!isExists)
         {
-            Debug.LogWarning(path + "不存在！！！");
-            return;
+            Debug.LogWarning("资源路径path = ["+path + "],不存在！！！");
+			return false;
         }
         UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Object));
 
         DoReInit(obj);
+		return true;
     }
+
+	public virtual string GetPathByNameType(string objName,int type)
+	{
+		return "";
+	}
 
     public void DoReInit(UnityEngine.Object obj)
     {
@@ -108,7 +122,8 @@ public class EDT_Base {
         this.m_sName = Path.GetFileName(this.m_sObjPath);
         this.m_sNameNoSuffix = Path.GetFileNameWithoutExtension(this.m_sObjPath);
         this.m_objOrg = parentObject;
-        
+		this.m_isInitedData = true;
+
         OnInit();
     }
 
@@ -135,8 +150,15 @@ public class EDT_Base {
 
         m_fCastTime = 0.0f;
         _m_isDoEvent = false;
-        
         _m_isRunning = false;
+
+		m_isEnd = false;
+		m_iCurType = -1;
+		m_jsonData = null;
+		m_isJsonDataToSelfSuccessed = false;
+
+		m_isInitedData = false;
+
         OnClear();
     }
 
@@ -156,7 +178,6 @@ public class EDT_Base {
         this._m_isRunning = true;
         this._m_isDoEvent = false;
         this.m_isEnd = false;
-        this.m_isDelete = false;
         this.m_fProgress = 0.0f;
     }
 
@@ -165,7 +186,7 @@ public class EDT_Base {
         if (!_m_isRunning)
             return;
 
-        if (m_isEnd || m_isDelete)
+        if (m_isEnd)
             return;
 
         this.m_fProgress += upDeltaTime;
@@ -211,9 +232,7 @@ public class EDT_Base {
 
     }
 
-    public virtual void DoRemove()
-    {
-        DoEnd();
-        this.m_isDelete = true;
-    }
+	public virtual JsonData ToJsonData(){
+		return this.m_jsonData;
+	}
 }

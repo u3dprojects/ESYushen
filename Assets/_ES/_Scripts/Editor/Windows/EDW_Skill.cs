@@ -77,6 +77,9 @@ public class EDW_Skill : EditorWindow
     public Transform trsfEntity;
     public CharacterController m_myCtrl;
 
+	// 封装的挂节点对象
+	public SpriteJoint m_eCsJoin;
+
     PS_MidLeft m_midLeft;
     PS_MidRight m_midRight;
 
@@ -251,10 +254,12 @@ public class EDW_Skill : EditorWindow
     {
         DoClearEntity();
         
-        gobjEntity = GameObject.Instantiate<GameObject>(gobjFab);
-        // gobjEntity = GameObject.Instantiate(gobjFab, Vector3.zero, Quaternion.identity) as GameObject;
+        // gobjEntity = GameObject.Instantiate<GameObject>(gobjFab);
+        gobjEntity = GameObject.Instantiate(gobjFab, Vector3.zero, Quaternion.identity) as GameObject;
         trsfEntity = gobjEntity.transform;
         m_myCtrl = gobjEntity.GetComponent<CharacterController>();
+
+		m_eCsJoin = gobjEntity.GetComponent<SpriteJoint>();
 
         OnInitEnAni();
     }
@@ -271,6 +276,7 @@ public class EDW_Skill : EditorWindow
         me_ani.SetApplyRootMotion(false);
 
         m_midLeft.DoReset();
+		m_midRight.DoReset ();
     }
 
     void OnUpdate()

@@ -68,13 +68,8 @@ public class PS_MidLeft{
     AnimationCurve z_curve;
     Vector3 movPos = Vector3.zero;
 
-    // 特效事件
-    EMT_Event m_cEvents = new EMT_Event();
-
-    List<bool> m_event_fodeOut = new List<bool>();
-
-    // 特效挂节点
-    bool isEffectJoinSelf = false;
+    // 事件
+	PS_Events m_ePSEvents = new PS_Events();
 
     // 暂停按钮控制
     bool isPauseing = false;
@@ -88,6 +83,8 @@ public class PS_MidLeft{
     {
         this.m_wSkill = org;
         this.m_wSkill.AddCall4Update(OnUpdate);
+
+		m_ePSEvents.DoInit(org);
 
         OnInitTime();
     }
@@ -106,7 +103,7 @@ public class PS_MidLeft{
         ind_popup = 0;
         pre_ind_popup = -1;
         
-        m_cEvents.DoClear();
+		m_ePSEvents.DoClear();
     }
 
     void OnResetProgress()
@@ -158,7 +155,7 @@ public class PS_MidLeft{
 
                     _DrawMovPos();
 
-                    _DrawEffects();
+                    _DrawEvents();
                     
                     _DrawOptBtns();
                 }
@@ -388,145 +385,9 @@ public class PS_MidLeft{
         EG_GUIHelper.FEG_EndH();
     }
 
-    void _DrawEffects()
+    void _DrawEvents()
     {
-        EG_GUIHelper.FG_BeginVAsArea();
-        {
-            {
-                // 上
-                EG_GUIHelper.FEG_BeginH();
-                Color def = GUI.backgroundColor;
-                GUI.backgroundColor = Color.black;
-                GUI.color = Color.white;
-
-                EditorGUILayout.LabelField("特效列表", EditorStyles.textArea);
-
-                GUI.backgroundColor = def;
-
-                GUI.color = Color.green;
-                if (GUILayout.Button("+", GUILayout.Width(50)))
-                {
-                    m_cEvents.NewEffect();
-                }
-                GUI.color = Color.white;
-                EG_GUIHelper.FEG_EndV();
-            }
-
-            {
-                // 中
-                List<EDT_Effect> lstEffect = m_cEvents.m_lEffects;
-                int lens = lstEffect.Count;
-                if (lens > 0)
-                {
-                    for (int i = 0; i < lens; i++)
-                    {
-                        m_event_fodeOut.Add(false);
-                        if ((lstEffect[i]).m_isDelete)
-                        {
-                            continue;
-                        }
-
-                        _DrawOneEffect(i, lstEffect[i]);
-                    }
-                }
-                else
-                {
-                    m_event_fodeOut.Clear();
-                }
-            }
-        }
-        EG_GUIHelper.FG_EndV();
-    }
-
-    void _DrawOneEffect(int index, EDT_Effect effect)
-    {
-        bool isEmptyName = string.IsNullOrEmpty(effect.m_sName);
-
-        EG_GUIHelper.FEG_BeginV();
-        {
-            EG_GUIHelper.FEG_BeginH();
-            {
-                m_event_fodeOut[index] = EditorGUILayout.Foldout(m_event_fodeOut[index], "特效 - " + (isEmptyName ? "未指定" : effect.m_sName));
-                GUI.color = Color.red;
-                if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
-                {
-                    m_cEvents.RmEvent(effect);
-                    m_event_fodeOut.RemoveAt(index);
-                }
-                GUI.color = Color.white;
-            }
-            EG_GUIHelper.FEG_EndH();
-
-            EG_GUIHelper.FG_Space(5);
-
-            if (m_event_fodeOut[index])
-            {
-                _DrawOneEffectAttrs(effect);
-            }
-        }
-        EG_GUIHelper.FEG_EndV();
-    }
-
-    void _DrawOneEffectAttrs(EDT_Effect effect)
-    {
-        
-        EG_GUIHelper.FEG_BeginH();
-        {
-            GUILayout.Label("特效文件:", GUILayout.Width(80));
-            effect.m_objOrg = EditorGUILayout.ObjectField(effect.m_objOrg, typeof(GameObject), false) as GameObject;
-        }
-        EG_GUIHelper.FEG_EndH();
-
-        EG_GUIHelper.FG_Space(5);
-
-        EG_GUIHelper.FEG_BeginH();
-        {
-            GUILayout.Label("触发时间:", GUILayout.Width(80));
-            effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, 1);
-        }
-        EG_GUIHelper.FEG_EndH();
-
-        EG_GUIHelper.FG_Space(5);
-
-        _DrawOneEffectJoinPos(effect);
-    }
-
-    void _DrawOneEffectJoinPos(EDT_Effect effect)
-    {
-        EG_GUIHelper.FEG_BeginH();
-        {
-            EG_GUIHelper.FEG_BeginToggleGroup("手动位置??", ref isEffectJoinSelf);
-            effect.m_trsfParent = EditorGUILayout.ObjectField("位置:", effect.m_trsfParent, typeof(Transform), isEffectJoinSelf) as Transform;
-            EG_GUIHelper.FEG_EndToggleGroup();
-        }
-        EG_GUIHelper.FEG_EndH();
-
-        EG_GUIHelper.FG_Space(5);
-        GUIStyle style = EditorStyles.label;
-        style.alignment = TextAnchor.MiddleLeft;
-
-        EG_GUIHelper.FEG_BeginH();
-        {
-            effect.m_v3OffsetPos = EditorGUILayout.Vector3Field("偏移:", effect.m_v3OffsetPos);
-        }
-        EG_GUIHelper.FEG_EndH();
-
-        EG_GUIHelper.FG_Space(5);
-
-        EG_GUIHelper.FEG_BeginH();
-        {
-            effect.m_v3EulerAngle = EditorGUILayout.Vector3Field("旋转:", effect.m_v3EulerAngle);
-        }
-        EG_GUIHelper.FEG_EndH();
-
-        EG_GUIHelper.FG_Space(5);
-
-        EG_GUIHelper.FEG_BeginH();
-        {
-            EG_GUIHelper.FG_Label("缩放:");
-            effect.m_fScale = EditorGUILayout.FloatField(effect.m_fScale);
-        }
-        EG_GUIHelper.FEG_EndH();
+		m_ePSEvents.DrawEvents();
     }
 
     void _DrawOptBtns()
@@ -570,9 +431,8 @@ public class PS_MidLeft{
 
         this.m_curTime.DoUpdateTime();
         this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,cur_speed);
-        
-        m_cEvents.SetSpeed(cur_speed);
-        m_cEvents.OnUpdate(m_curTime.DeltaTime);
+
+		m_ePSEvents.OnUpdate (m_curTime.DeltaTime, cur_speed);
 
         // 设置位移
         if (isOpenMovPos)
@@ -593,27 +453,28 @@ public class PS_MidLeft{
 
     void DoPlay() {
         this.m_curAni.DoStart();
-        
+		m_curTime.DoStart ();
+
         isRunnging = true;
         isPauseing = false;
 
-        m_cEvents.DoStart();
+		m_ePSEvents.DoStart();
     }
 
     void DoPause() {
         isPauseing = true;
 
-        m_cEvents.DoPause();
+		m_ePSEvents.DoPause();
     }
 
     void DoResume() {
         isPauseing = false;
-        m_cEvents.DoResume();
+		m_ePSEvents.DoResume();
     }
 
     void DoStop() {
         isRunnging = false;
         trsfEntity.position = Vector3.zero;
-		m_cEvents.DoEnd();
+		m_ePSEvents.DoEnd();
     }
 }
