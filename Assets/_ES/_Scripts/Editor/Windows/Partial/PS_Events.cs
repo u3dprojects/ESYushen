@@ -207,6 +207,14 @@ public class PS_Events {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
+			effect.m_isFollow = EditorGUILayout.Toggle("是否跟随:", effect.m_isFollow);
+		}
+		EG_GUIHelper.FEG_EndH();
+
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
 			EG_GUIHelper.FEG_BeginToggleGroup("手动位置??", ref isEffectJoinSelf);
 			effect.m_trsfParent = EditorGUILayout.ObjectField("位置:", effect.m_trsfParent, typeof(Transform), isEffectJoinSelf) as Transform;
 			EG_GUIHelper.FEG_EndToggleGroup();

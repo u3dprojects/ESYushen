@@ -14,6 +14,14 @@ public class EDT_Base {
     // 对象的唯一标识 计数器
     static int EVENT_CORE_CURSOR = 0;
 
+	// 保留小数
+	static public double Round2D(float org, int acc)
+	{
+		double pow = Mathf.Pow(10, acc);
+		double temp = org * pow;
+		return Mathf.RoundToInt((float)temp) / pow;
+	}
+
     // 自身唯一标识
     public int m_iCurID;
 

@@ -27,6 +27,9 @@ public class EDT_Effect : EDT_Base {
 
 	// 时长
 	public float m_fDuration;
+
+	// 是否跟随
+	public bool m_isFollow = false;
     
     // 创建出来的实体对象
     EN_Effect _m_eEffect;
@@ -117,6 +120,10 @@ public class EDT_Effect : EDT_Base {
 			this.m_fDuration = float.Parse (jsonData ["m_duration"].ToString ());
 		}
 
+		if (((IDictionary)jsonData).Contains("m_isBindInAttacker")) {
+			this.m_isFollow = (bool)jsonData ["m_isBindInAttacker"];
+		}
+
 		JsonData tmp = null;
 		if (((IDictionary)jsonData).Contains ("m_pos")) {
 			tmp = jsonData ["m_pos"];
@@ -155,19 +162,20 @@ public class EDT_Effect : EDT_Base {
 		ret["m_typeInt"] = this.m_iCurType;
 		ret["m_resName"] = this.m_sNameNoSuffix;
 		ret["m_joint"] = this.m_iJoint;
-		ret["m_scale"] = this.m_fScale;
-		ret["m_duration"] = this.m_fDuration;
+		ret["m_scale"] = Round2D(this.m_fScale,2);
+		ret["m_duration"] = Round2D(this.m_fDuration,2);
+		ret["m_isBindInAttacker"] = this.m_isFollow;
 
 		JsonData pos = new JsonData ();
-		pos ["x"] = this.m_v3OffsetPos.x;
-		pos ["y"] = this.m_v3OffsetPos.y;
-		pos ["z"] = this.m_v3OffsetPos.z;
+		pos ["x"] = Round2D(this.m_v3OffsetPos.x,2);
+		pos ["y"] = Round2D(this.m_v3OffsetPos.y,2);
+		pos ["z"] = Round2D(this.m_v3OffsetPos.z,2);
 		ret["m_pos"] = pos;
 
 		pos = new JsonData ();
-		pos ["x"] = this.m_v3EulerAngle.x;
-		pos ["y"] = this.m_v3EulerAngle.y;
-		pos ["z"] = this.m_v3EulerAngle.z;
+		pos ["x"] = Round2D(this.m_v3OffsetPos.x,2);
+		pos ["y"] = Round2D(this.m_v3OffsetPos.y,2);
+		pos ["z"] = Round2D(this.m_v3OffsetPos.z,2);
 		ret["m_angle"] = pos;
 		return ret;
 	}
