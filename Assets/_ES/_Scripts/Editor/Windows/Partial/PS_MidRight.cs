@@ -62,7 +62,10 @@ public partial class PS_MidRight{
     int ms_lockType;
     string[] LockType = { "无锁定", "锁定", "锁定怪物(预留暂无用)" };
 
-    float maxDistance, minDistance,cooldown,duration,beforeRoll,afterRoll;
+    float maxDistance, minDistance,cooldown,beforeRoll,afterRoll;
+
+	// 总时长
+	public float duration = 0;
 
 	string ms_sEvtStr;
 

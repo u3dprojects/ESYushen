@@ -168,7 +168,7 @@ public class PS_Events {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("触发时间:", GUILayout.Width(80));
-			effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, 1);
+			effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
 		}
 		EG_GUIHelper.FEG_EndH();
 
