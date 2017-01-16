@@ -110,22 +110,25 @@ public class EDT_Effect : EDT_Base {
 		}
 
 		this.m_iJoint = (int)jsonData ["m_joint"];
-		if (((IDictionary)jsonData).Contains("m_scale")) {
+
+		IDictionary dicJsonData = (IDictionary)jsonData;
+
+		if (dicJsonData.Contains("m_scale")) {
 			this.m_fScale = float.Parse (jsonData ["m_scale"].ToString ());
 		} else {
 			this.m_fScale = 1f;
 		}
 
-		if (((IDictionary)jsonData).Contains("m_duration")) {
+		if (dicJsonData.Contains("m_duration")) {
 			this.m_fDuration = float.Parse (jsonData ["m_duration"].ToString ());
 		}
 
-		if (((IDictionary)jsonData).Contains("m_isBindInAttacker")) {
+		if (dicJsonData.Contains("m_isBindInAttacker")) {
 			this.m_isFollow = (bool)jsonData ["m_isBindInAttacker"];
 		}
 
 		JsonData tmp = null;
-		if (((IDictionary)jsonData).Contains ("m_pos")) {
+		if (dicJsonData.Contains ("m_pos")) {
 			tmp = jsonData ["m_pos"];
 		}
 		if (tmp != null && tmp.IsObject) {
@@ -137,7 +140,7 @@ public class EDT_Effect : EDT_Base {
 			this.m_v3OffsetPos = Vector3.zero;
 		}
 
-		if (((IDictionary)jsonData).Contains ("m_angle")) {
+		if (dicJsonData.Contains ("m_angle")) {
 			tmp = jsonData ["m_angle"];
 		}
 
@@ -155,7 +158,7 @@ public class EDT_Effect : EDT_Base {
 
 	public override JsonData ToJsonData ()
 	{
-		if (!this.m_isInitedData)
+		if (!this.m_isInitedFab)
 			return null;
 		
 		JsonData ret = new JsonData ();

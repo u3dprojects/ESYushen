@@ -19,26 +19,19 @@ public class EMT_Event{
     // 当前值
     float m_CurInvUp = 0.0f;
 
-    public void NewEffect()
-    {
-		m_eTEvent.NewEvent<EDT_Effect>();
-    }
+	#region ====== common func ====
 
 	public void RmEvent(EDT_Base en)
 	{
 		m_eTEvent.RmEvent (en);
 	}
 
-    public List<EDT_Effect> m_lEffects
-    {
-        get
-        {
-			return m_eTEvent.GetListEffects();
-        }
-    }
-
 	public void DoReInit(string json){
 		m_eTEvent.DoReInit (json);
+	}
+
+	public void ResetOwner(Transform trsfOwner){
+		m_eTEvent.m_trsfOwner = trsfOwner;
 	}
 
     public void DoStart()
@@ -93,5 +86,34 @@ public class EMT_Event{
 
 	public string ToJsonString(){
 		return m_eTEvent.ToStrJsonData ();
+	}
+
+	#endregion
+
+	// 特效
+	public void NewEffect()
+	{
+		m_eTEvent.NewEvent<EDT_Effect>();
+	}
+
+	public List<EDT_Effect> m_lEffects
+	{
+		get
+		{
+			return m_eTEvent.GetLEffects();
+		}
+	}
+
+	// 打击点绘制
+	public void NewHurt(){
+		m_eTEvent.NewEvent<EDT_Hurt>();
+	}
+
+	public List<EDT_Hurt> m_lHurts
+	{
+		get
+		{
+			return m_eTEvent.GetLHurts ();
+		}
 	}
 }

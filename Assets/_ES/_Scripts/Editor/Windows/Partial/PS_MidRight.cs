@@ -62,10 +62,16 @@ public partial class PS_MidRight{
     int ms_lockType;
     string[] LockType = { "无锁定", "锁定", "锁定怪物(预留暂无用)" };
 
-    float maxDistance, minDistance,cooldown,beforeRoll,afterRoll;
+    float maxDistance, minDistance,cooldown;
 
 	// 总时长
 	public float duration = 0;
+
+	// 前摇结束点
+	public float beforeRoll = 0;
+
+	// 后摇开始点
+	public float afterRoll = 0;
 
 	string ms_sEvtStr;
 
@@ -268,12 +274,12 @@ public partial class PS_MidRight{
         EG_GUIHelper.FG_Space(5);
 
         EG_GUIHelper.FEG_BeginH();
-        beforeRoll = EditorGUILayout.FloatField("前摇结束点(单位秒):", beforeRoll);
+		beforeRoll = EditorGUILayout.Slider("前摇结束点(单位秒):", beforeRoll,0,duration);
         EG_GUIHelper.FEG_EndH();
         EG_GUIHelper.FG_Space(5);
 
         EG_GUIHelper.FEG_BeginH();
-        afterRoll = EditorGUILayout.FloatField("后摇开始点(单位秒):", afterRoll);
+		afterRoll = EditorGUILayout.Slider("后摇开始点(单位秒):", afterRoll,beforeRoll,duration);
         EG_GUIHelper.FEG_EndH();
         EG_GUIHelper.FG_Space(5);
 

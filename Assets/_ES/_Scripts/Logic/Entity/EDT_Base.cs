@@ -62,7 +62,10 @@ public class EDT_Base {
 	public bool m_isJsonDataToSelfSuccessed = false;
 	public JsonData m_jsonData = null;
 
-	public bool m_isInitedData = false;
+	public bool m_isInitedFab = false;
+
+	// 属于谁(谁放的，谁造成的)
+	public Transform m_trsfOwner;
 
     public EDT_Base()
     {
@@ -130,7 +133,7 @@ public class EDT_Base {
         this.m_sName = Path.GetFileName(this.m_sObjPath);
         this.m_sNameNoSuffix = Path.GetFileNameWithoutExtension(this.m_sObjPath);
         this.m_objOrg = parentObject;
-		this.m_isInitedData = true;
+		this.m_isInitedFab = true;
 
         OnInit();
     }
@@ -165,7 +168,9 @@ public class EDT_Base {
 		m_jsonData = null;
 		m_isJsonDataToSelfSuccessed = false;
 
-		m_isInitedData = false;
+		m_isInitedFab = false;
+
+		m_trsfOwner = null;
 
         OnClear();
     }

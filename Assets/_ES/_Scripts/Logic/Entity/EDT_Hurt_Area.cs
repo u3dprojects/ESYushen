@@ -3,6 +3,10 @@ using System.Collections;
 using System.ComponentModel;
 using LitJson;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 /// <summary>
 /// 类名 : 伤害区域 hit Area
 /// 作者 : Canyon
@@ -26,7 +30,7 @@ public class EDT_Hurt_Area {
 	}
 
 	// 类型
-	public HurtAreaType m_emType = HurtAreaType.Circle;
+	public HurtAreaType m_emType = HurtAreaType.None;
 
 	// 相对偏移(相对于人物的位置偏移的位置) 就是产生点的位置
 	public Vector3 m_v3Offset = Vector3.zero;
@@ -43,6 +47,59 @@ public class EDT_Hurt_Area {
 	// 角度[0~360] 360表示圆,0就不绘制
 	public float m_fAngle;
 
+	// json数据
+	public bool m_isInitedByJson = false;
+
+	public void DoInit(string json){
+		JsonData org = JsonMapper.ToObject (json);
+		DoInit (org);
+	}
+
+	public void DoInit(JsonData org){
+		DoClear();
+		OnInit (org);
+	}
+
+	public void OnInit(JsonData jsonData){
+		if (jsonData == null)
+			return;
+		
+		int tpId = (int)jsonData ["m_id"];
+		this.m_emType = (HurtAreaType)tpId;
+
+		float x = float.Parse(jsonData ["m_offsetX"].ToString());
+		float z = float.Parse(jsonData ["m_offsetZ"].ToString());
+		this.m_v3Offset = new Vector3 (x, 0, z);
+
+		IDictionary dicJsonData = (IDictionary)jsonData;
+
+		if (dicJsonData.Contains("m_r")) {
+			this.m_fRange = float.Parse (jsonData ["m_r"].ToString ());
+		}
+
+		if (dicJsonData.Contains("m_len")) {
+			this.m_fRange = float.Parse (jsonData ["m_len"].ToString ());
+		}
+
+		if (dicJsonData.Contains("m_rad")) {
+			this.m_fAngle = float.Parse (jsonData ["m_rad"].ToString ());
+		}
+
+		if (dicJsonData.Contains("m_rot")) {
+			this.m_fRotation = float.Parse (jsonData ["m_rot"].ToString ());
+		}
+
+		if (dicJsonData.Contains("m_width")) {
+			this.m_fWidth = float.Parse (jsonData ["m_width"].ToString ());
+		}
+
+		this.m_isInitedByJson = true;
+	}
+
+	public void DoClear(){
+		this.m_isInitedByJson = false;
+	}
+
 	public JsonData ToJsonData(){
 		if (this.m_fRange <= 0 || m_emType == HurtAreaType.None) {
 			return null;
@@ -53,7 +110,7 @@ public class EDT_Hurt_Area {
 				return null;
 			}
 		} else if (m_emType == HurtAreaType.Arc) {
-			if (this.m_fAngle <= 0) {
+			if (this.m_fAngle <= 0 || this.m_fAngle > 360) {
 				return null;
 			}
 		}
@@ -63,6 +120,81 @@ public class EDT_Hurt_Area {
 		ret ["m_offsetX"] = EDT_Hurt.Round2D(m_v3Offset.x,2);
 		ret ["m_offsetZ"] = EDT_Hurt.Round2D(m_v3Offset.z,2);
 
+		switch (m_emType) {
+		case HurtAreaType.Arc:
+			ret ["m_r"] = EDT_Hurt.Round2D(m_fRange,2);
+			ret ["m_rad"] = EDT_Hurt.Round2D(m_fAngle,2);
+			ret ["m_rot"] = EDT_Hurt.Round2D(m_fRotation,2);
+			break;
+		case HurtAreaType.Circle:
+			ret ["m_r"] = EDT_Hurt.Round2D(m_fRange,2);
+			break;
+		case HurtAreaType.Rectangle:
+			ret ["m_len"] = EDT_Hurt.Round2D(m_fRange,2);
+			ret ["m_width"] = EDT_Hurt.Round2D(m_fWidth,2);
+			ret ["m_rot"] = EDT_Hurt.Round2D(m_fRotation,2);
+			break;
+		}
 		return ret;
+	}
+
+	// 在区域里面绘制
+	public void DrawAreaInSceneView(Transform trsfOrg){
+		#if UNITY_EDITOR
+		if(trsfOrg == null){
+			return;
+		}
+
+		if (this.m_fRange <= 0 || m_emType == HurtAreaType.None) {
+			return;
+		}
+
+		if (m_emType == HurtAreaType.Rectangle) {
+			if (this.m_fWidth <= 0) {
+				return;
+			}
+		} else if (m_emType == HurtAreaType.Arc) {
+			if (this.m_fAngle <= 0 || this.m_fAngle > 360) {
+				return;
+			}
+		}
+
+		Vector3 pos = trsfOrg.position + new Vector3 (this.m_v3Offset.x, 0, this.m_v3Offset.z);
+		Quaternion rotation = Quaternion.Euler(new Vector3(0,this.m_fAngle + trsfOrg.eulerAngles.y,0));
+		switch (m_emType) {
+		case HurtAreaType.Arc:
+			Handles.DrawSolidArc(pos,Vector3.up,trsfOrg.forward,this.m_fAngle,this.m_fRange);
+			// Handles.DrawWireArc(pos,Vector3.up,trsfOrg.forward,this.m_fAngle,this.m_fRange);
+			break;
+		case HurtAreaType.Circle:
+			// Handles.CircleCap(0,pos,rotation,this.m_fRange);
+			Handles.DrawSolidDisc(pos,Vector3.up,this.m_fRange);
+			break;
+		case HurtAreaType.Rectangle:
+			Handles.RectangleCap(0,pos,rotation,this.m_fRange);
+
+//			float hfw = this.m_fWidth / 2;
+//			float hfr = this.m_fRange / 2;
+//			Vector3[] verts = new Vector3[] { 
+//				new Vector3(pos.x - hfw,pos.y,pos.z - hfr),
+//				new Vector3(pos.x - hfw,pos.y,pos.z + hfr),
+//				new Vector3(pos.x + hfw,pos.y,pos.z + hfr),
+//				new Vector3(pos.x + hfw,pos.y,pos.z - hfr) 
+//			};
+//			Handles.DrawSolidRectangleWithOutline(verts,new Color( 1, 1, 1, 0.2f ), new Color( 0, 0, 0, 1 ));
+			break;
+		}
+		#endif
+	}
+
+	static public EDT_Hurt_Area NewHurtArea(JsonData jsonData){
+		EDT_Hurt_Area ret = new EDT_Hurt_Area ();
+		ret.DoInit (jsonData);
+		if (ret.m_isInitedByJson) {
+			return ret;
+		}else {
+			ret.DoClear ();
+		}
+		return null;
 	}
 }

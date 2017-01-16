@@ -11,6 +11,9 @@ using LitJson;
 /// </summary>
 public class EDT_TEvents  {
 
+	// 属于谁(谁放的，谁造成的)
+	public Transform m_trsfOwner;
+
 	public string m_sJson = "";
 	JsonData m_jsonData;
 
@@ -21,6 +24,9 @@ public class EDT_TEvents  {
 
 	// 特效事件
 	List<EDT_Effect> m_lEffects = new List<EDT_Effect>();
+
+	// 伤害事件
+	List<EDT_Hurt> m_lHurts = new List<EDT_Hurt>();
 
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
@@ -51,7 +57,7 @@ public class EDT_TEvents  {
 		m_lEvents.Remove (en);
 	}
 
-	public List<T> GetList<T>() where T : EDT_Base
+	protected List<T> GetList<T>() where T : EDT_Base
 	{
 		List<T> ret = new List<T>();
 		lens = m_lEvents.Count;
@@ -66,18 +72,33 @@ public class EDT_TEvents  {
 		return ret;
 	}
 
-	public List<EDT_Effect> GetListEffects(){
-		m_lEffects.Clear ();
+	public void GetList<T>(ref List<T> ret) where T : EDT_Base
+	{
+		if (ret == null) {
+			ret = new List<T> ();
+		} else {
+			ret.Clear ();
+		}
+
 		lens = m_lEvents.Count;
 		for (int i = 0; i < lens; i++)
 		{
 			m_tmpEvent = m_lEvents[i];
-			if(m_tmpEvent is EDT_Effect)
+			if(m_tmpEvent is T)
 			{
-				m_lEffects.Add((EDT_Effect)m_tmpEvent);
+				ret.Add((T)m_tmpEvent);
 			}
 		}
+	}
+
+	public List<EDT_Effect> GetLEffects(){
+		GetList<EDT_Effect> (ref m_lEffects);
 		return m_lEffects;
+	}
+
+	public List<EDT_Hurt> GetLHurts(){
+		GetList<EDT_Hurt> (ref m_lHurts);
+		return m_lHurts;
 	}
 
 	public void DoStart()
@@ -101,6 +122,7 @@ public class EDT_TEvents  {
 		for (int i = 0; i < lens; i++)
 		{
 			m_tmpEvent = m_lEvents[i];
+			m_tmpEvent.m_trsfOwner = this.m_trsfOwner;
 			m_tmpEvent.DoUpdate(deltatime);
 			if (m_tmpEvent.m_isEnd)
 			{
@@ -134,6 +156,7 @@ public class EDT_TEvents  {
 		m_tmpEvent = null;
 
 		m_lEffects.Clear ();
+		m_lHurts.Clear ();
 
 		m_sJson = "";
 		m_jsonData = null;
@@ -174,6 +197,9 @@ public class EDT_TEvents  {
 				case 1:
 					ToEffect (casttime, tmpJsonData [j]);
 					break;
+				case 6:
+					ToHurt(casttime, tmpJsonData [j]);
+					break;
 				}
 			}
 		}
@@ -182,6 +208,11 @@ public class EDT_TEvents  {
 	// 转为特效事件
 	void ToEffect(float time,JsonData data){
 		NewEvent<EDT_Effect> (time,data);
+	}
+
+	// 转为特效事件
+	void ToHurt(float time,JsonData data){
+		NewEvent<EDT_Hurt> (time,data);
 	}
 
 	public string ToStrJsonData(){
@@ -195,7 +226,7 @@ public class EDT_TEvents  {
 		for (int i = 0; i < lens; i++)
 		{
 			m_tmpEvent = m_lEvents[i];
-			if (!m_tmpEvent.m_isInitedData)
+			if (!m_tmpEvent.m_isInitedFab)
 				continue;
 			
 			if (tmpDic.ContainsKey (m_tmpEvent.m_fCastTime)) {
@@ -219,7 +250,7 @@ public class EDT_TEvents  {
 
 		foreach (KeyValuePair<float,List<EDT_Base>> item in tmpDic) {
 			tmpData2 = new JsonData ();
-			tmpData2 ["m_timing"] = item.Key;
+			tmpData2 ["m_timing"] = EDT_Base.Round2D(item.Key,2);
 
 			tmpData3 = new JsonData ();
 			tmpData3.SetJsonType (JsonType.Array);
