@@ -66,6 +66,7 @@ public class EDW_Skill : EditorWindow
 
     // delegate 更新
     System.Action call4OnUpdate;
+	System.Action<SceneView> call4OnSceneViewGUI;
 
     // 模型的Prefab
     GameObject gobjFab;
@@ -95,11 +96,13 @@ public class EDW_Skill : EditorWindow
     void OnEnable()
     {
         EditorApplication.update += OnUpdate;
+		SceneView.onSceneGUIDelegate += OnSceneGUI;
     }
 
     void OnDisable()
     {
         EditorApplication.update -= OnUpdate;
+		SceneView.onSceneGUIDelegate -= OnSceneGUI;
     }
 
     void OnGUI()
@@ -169,6 +172,7 @@ public class EDW_Skill : EditorWindow
     {
         OnClearSWindow();
         EditorApplication.update -= OnUpdate;
+		SceneView.onSceneGUIDelegate -= OnSceneGUI;
 
         DoClear();
     }
@@ -225,6 +229,25 @@ public class EDW_Skill : EditorWindow
             this.call4OnUpdate -= callFunc;
         }
     }
+
+	public void AddCall4SceneGUI(System.Action<SceneView> callFunc)
+	{
+		if(this.call4OnSceneViewGUI == null)
+		{
+			this.call4OnSceneViewGUI = callFunc;
+		}else
+		{
+			this.call4OnSceneViewGUI += callFunc;
+		}
+	}
+
+	public void RemoveCall4Update(System.Action<SceneView> callFunc)
+	{
+		if (this.call4OnSceneViewGUI != null)
+		{
+			this.call4OnSceneViewGUI -= callFunc;
+		}
+	}
 
     void DoInit()
     {
@@ -308,6 +331,8 @@ public class EDW_Skill : EditorWindow
         m_midLeft = null;
         m_midRight = null;
         call4OnUpdate = null;
+
+		call4OnSceneViewGUI = null;
     }
 
     void OnClearFab()
@@ -330,5 +355,17 @@ public class EDW_Skill : EditorWindow
             me_ani = null;
         }
     }
+
+	void OnSceneGUI(SceneView sceneView) {
+		// Do your drawing here using Handles.
+		Handles.BeginGUI();
+		// Do your drawing here using GUI.
+		Handles.EndGUI();    
+
+		if (this.call4OnSceneViewGUI != null) {
+			this.call4OnSceneViewGUI (sceneView);
+		}
+
+	}
     #endregion
 }

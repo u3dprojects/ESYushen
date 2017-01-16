@@ -56,6 +56,10 @@ public class EMT_Event{
 		m_eTEvent.OnUpdate(m_CurInvUp * curSpeed);
         m_CurInvUp = 0.0f;
     }
+
+	public void OnSceneGUI(){
+		m_eTEvent.OnSceneGUI();
+	}
     
     public void DoPause()
     {

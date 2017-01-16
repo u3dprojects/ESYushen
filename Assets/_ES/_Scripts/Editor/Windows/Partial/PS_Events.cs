@@ -47,6 +47,7 @@ public partial class PS_Events {
 
 	public void DoInit(EDW_Skill org){
 		this.m_wSkill = org;
+		this.m_wSkill.AddCall4SceneGUI (OnSceneGUI);
 	}
 
 	public void DoReInitEventJson(string json){
@@ -81,6 +82,12 @@ public partial class PS_Events {
 
 	public string ToJsonString(){
 		return m_cEvents.ToJsonString ();
+	}
+
+	void OnSceneGUI(SceneView sceneView){
+		m_cEvents.ResetOwner (this.m_wSkill.trsfEntity);
+		m_cEvents.OnSceneGUI ();
+		sceneView.Repaint();
 	}
 
 	public void DrawEvents(){
@@ -358,14 +365,6 @@ public partial class PS_Events {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			EG_GUIHelper.FEG_BeginToggleGroup("是否绘制伤害区域??", ref hurt.m_isShowArea);
-			hurt.m_fTimeOutShowArea = EditorGUILayout.FloatField("有效时间:", hurt.m_fTimeOutShowArea);
-			EG_GUIHelper.FEG_EndToggleGroup();
-		}
-		EG_GUIHelper.FEG_EndH();
-
-		EG_GUIHelper.FEG_BeginH();
-		{
 			GUILayout.Label("优先目标:", GUILayout.Width(80));
 			hurt.m_iTargetFilter = EditorGUILayout.IntField (hurt.m_iTargetFilter);
 		}
@@ -458,8 +457,23 @@ public partial class PS_Events {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("伤害范围:", GUILayout.Width(80));
+			GUILayout.Label("类型:", GUILayout.Width(80));
 			hurtArea.m_emType = (EDT_Hurt_Area.HurtAreaType)EditorGUILayout.EnumPopup ((System.Enum)hurtArea.m_emType);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			hurtArea.m_isShowArea = EditorGUILayout.Toggle ("是否绘制伤害区域??", hurtArea.m_isShowArea);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("区域颜色:", GUILayout.Width(80));
+			hurtArea.m_cAreaColor = EditorGUILayout.ColorField (hurtArea.m_cAreaColor);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);

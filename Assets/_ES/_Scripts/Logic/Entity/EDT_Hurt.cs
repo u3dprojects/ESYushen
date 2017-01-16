@@ -17,12 +17,6 @@ public class EDT_Hurt : EDT_Base {
 	// 攻击数量
 	public int m_iTargetCount;
 
-	// 是否绘制伤害区域
-	public bool m_isShowArea;
-
-	// 伤害区域显示超时时间
-	public float m_fTimeOutShowArea;
-
 	// 伤害区域列表(m_zones)
 	List<EDT_Hurt_Area> m_lHurtAreas;
 	List<EDT_Hurt_Area> m_lAreas = new List<EDT_Hurt_Area>();
@@ -136,15 +130,19 @@ public class EDT_Hurt : EDT_Base {
 		return m_lAreas;
 	}
 
-	public void DrawAreaInSceneView(){
-		if (this.m_isShowArea) {
-			List<EDT_Hurt_Area> list = GetAreaList ();
-			int lens = list.Count;
-			EDT_Hurt_Area tmp = null;
-			for (int i = 0; i < lens; i++) {
-				tmp = list [i];
-				tmp.DrawAreaInSceneView (m_trsfOwner);
-			}
+	public override void OnSceneGUI ()
+	{
+		base.OnSceneGUI ();
+		DrawAreaInSceneView ();
+	}
+
+	void DrawAreaInSceneView(){
+		List<EDT_Hurt_Area> list = GetAreaList ();
+		int lens = list.Count;
+		EDT_Hurt_Area tmp = null;
+		for (int i = 0; i < lens; i++) {
+			tmp = list [i];
+			tmp.DrawAreaInSceneView (m_trsfOwner);
 		}
 	}
 }

@@ -248,4 +248,14 @@ public class EDT_Base {
 	public virtual JsonData ToJsonData(){
 		return this.m_jsonData;
 	}
+
+	public void DoSceneGUI(){
+//		if (!this._m_isDoEvent) {
+//			return;
+//		}
+		OnSceneGUI ();
+	}
+
+	public virtual void OnSceneGUI(){
+	}
 }

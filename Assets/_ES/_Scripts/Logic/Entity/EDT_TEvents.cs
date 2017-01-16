@@ -122,12 +122,26 @@ public class EDT_TEvents  {
 		for (int i = 0; i < lens; i++)
 		{
 			m_tmpEvent = m_lEvents[i];
-			m_tmpEvent.m_trsfOwner = this.m_trsfOwner;
 			m_tmpEvent.DoUpdate(deltatime);
 			if (m_tmpEvent.m_isEnd)
 			{
 				m_tmpEvent.DoEnd();
 			}
+		}
+	}
+
+	public void OnSceneGUI()
+	{
+		lens = m_lEvents.Count;
+		if (lens <= 0)
+			return;
+
+
+		for (int i = 0; i < lens; i++)
+		{
+			m_tmpEvent = m_lEvents[i];
+			m_tmpEvent.m_trsfOwner = this.m_trsfOwner;
+			m_tmpEvent.DoSceneGUI();
 		}
 	}
 

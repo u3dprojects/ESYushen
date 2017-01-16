@@ -47,8 +47,14 @@ public class EDT_Hurt_Area {
 	// 角度[0~360] 360表示圆,0就不绘制
 	public float m_fAngle;
 
+	// 区域颜色
+	public Color m_cAreaColor = new Color(1,1,1,0.2f);
+
 	// json数据
 	public bool m_isInitedByJson = false;
+
+	// 是否绘制伤害区域
+	public bool m_isShowArea;
 
 	public void DoInit(string json){
 		JsonData org = JsonMapper.ToObject (json);
@@ -140,6 +146,10 @@ public class EDT_Hurt_Area {
 
 	// 在区域里面绘制
 	public void DrawAreaInSceneView(Transform trsfOrg){
+		if (!m_isShowArea) {
+			return;
+		}
+
 		#if UNITY_EDITOR
 		if(trsfOrg == null){
 			return;
@@ -159,31 +169,33 @@ public class EDT_Hurt_Area {
 			}
 		}
 
+		Handles.color = this.m_cAreaColor;
+
 		Vector3 pos = trsfOrg.position + new Vector3 (this.m_v3Offset.x, 0, this.m_v3Offset.z);
-		Quaternion rotation = Quaternion.Euler(new Vector3(0,this.m_fAngle + trsfOrg.eulerAngles.y,0));
+		float eulerAngle = this.m_fRotation + trsfOrg.eulerAngles.y;
+		Vector3 v3EulerAngle = trsfOrg.forward * eulerAngle;
+		v3EulerAngle = Vector3.zero;
+
 		switch (m_emType) {
 		case HurtAreaType.Arc:
 			Handles.DrawSolidArc(pos,Vector3.up,trsfOrg.forward,this.m_fAngle,this.m_fRange);
-			// Handles.DrawWireArc(pos,Vector3.up,trsfOrg.forward,this.m_fAngle,this.m_fRange);
 			break;
 		case HurtAreaType.Circle:
-			// Handles.CircleCap(0,pos,rotation,this.m_fRange);
-			Handles.DrawSolidDisc(pos,Vector3.up,this.m_fRange);
+			 Handles.DrawSolidDisc(pos,Vector3.up,this.m_fRange);
 			break;
 		case HurtAreaType.Rectangle:
-			Handles.RectangleCap(0,pos,rotation,this.m_fRange);
-
-//			float hfw = this.m_fWidth / 2;
-//			float hfr = this.m_fRange / 2;
-//			Vector3[] verts = new Vector3[] { 
-//				new Vector3(pos.x - hfw,pos.y,pos.z - hfr),
-//				new Vector3(pos.x - hfw,pos.y,pos.z + hfr),
-//				new Vector3(pos.x + hfw,pos.y,pos.z + hfr),
-//				new Vector3(pos.x + hfw,pos.y,pos.z - hfr) 
-//			};
-//			Handles.DrawSolidRectangleWithOutline(verts,new Color( 1, 1, 1, 0.2f ), new Color( 0, 0, 0, 1 ));
+			float hfw = this.m_fWidth / 2;
+			float hfr = this.m_fRange / 2;
+			Vector3[] verts = new Vector3[] { 
+				new Vector3(pos.x - hfw,pos.y,pos.z - hfr) - v3EulerAngle,
+				new Vector3(pos.x - hfw,pos.y,pos.z + hfr) + v3EulerAngle,
+				new Vector3(pos.x + hfw,pos.y,pos.z + hfr) - v3EulerAngle,
+				new Vector3(pos.x + hfw,pos.y,pos.z - hfr) + v3EulerAngle 
+			};
+			Handles.DrawSolidRectangleWithOutline(verts,this.m_cAreaColor, new Color( 0, 0, 0, 1 ));
 			break;
 		}
+		Handles.color = Color.white;
 		#endif
 	}
 
