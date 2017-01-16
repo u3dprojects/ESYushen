@@ -14,6 +14,9 @@ public class ED_DT2 : MonoBehaviour {
 	EN_Effect _m_eEffect;
 	EN_Time _m_eTime = new EN_Time();
 
+	// 添加绘制圆区域
+	public float shieldArea = 5;
+
     [InitializeOnLoadMethod]
     static public void Test()
     {
