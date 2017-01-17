@@ -171,26 +171,44 @@ public class EDT_Hurt_Area {
 
 		Handles.color = this.m_cAreaColor;
 
-		Vector3 pos = trsfOrg.position + new Vector3 (this.m_v3Offset.x, 0, this.m_v3Offset.z);
-		float eulerAngle = this.m_fRotation + trsfOrg.eulerAngles.y;
-		Vector3 v3EulerAngle = trsfOrg.forward * eulerAngle;
-		v3EulerAngle = Vector3.zero;
+		Vector3 posOrg = trsfOrg.position;
+		Vector3 dirOrg = trsfOrg.forward;
+
+		Vector3 pos = posOrg + new Vector3 (this.m_v3Offset.x, 0, this.m_v3Offset.z);
+		Quaternion quaternion = Quaternion.AngleAxis(m_fRotation,Vector3.up);
+		Vector3 dir = (quaternion * dirOrg).normalized;
 
 		switch (m_emType) {
 		case HurtAreaType.Arc:
-			Handles.DrawSolidArc(pos,Vector3.up,trsfOrg.forward,this.m_fAngle,this.m_fRange);
+			dir = (Quaternion.AngleAxis(-(m_fAngle / 2),Vector3.up) * dir).normalized;
+			Handles.DrawSolidArc(pos,Vector3.up,dir,this.m_fAngle,this.m_fRange);
 			break;
 		case HurtAreaType.Circle:
 			 Handles.DrawSolidDisc(pos,Vector3.up,this.m_fRange);
 			break;
 		case HurtAreaType.Rectangle:
 			float hfw = this.m_fWidth / 2;
-			float hfr = this.m_fRange / 2;
+			float hfl = this.m_fRange / 2;
+			float hfr = Mathf.Sqrt(Mathf.Pow(this.m_fWidth,2)+Mathf.Pow(this.m_fRange,2));
+
+			Vector3 pos01 = new Vector3(pos.x - hfw,0,pos.z - hfl);
+			Vector3 pos1 = quaternion * pos01.normalized * hfr;
+			pos1.y = pos.y;
+
+			Vector3 pos02 = new Vector3(pos.x - hfw,0,pos.z + hfl);
+			Vector3 pos2 = quaternion * pos02.normalized * hfr;
+			pos2.y = pos.y;
+
+			Vector3 pos03 = new Vector3(pos.x + hfw,0,pos.z + hfl);
+			Vector3 pos3 = quaternion * pos03.normalized * hfr;
+			pos3.y = pos.y;
+
+			Vector3 pos04 = new Vector3(pos.x + hfw,0,pos.z - hfl);
+			Vector3 pos4 = quaternion * pos04.normalized * hfr;
+			pos4.y = pos.y;
+
 			Vector3[] verts = new Vector3[] { 
-				new Vector3(pos.x - hfw,pos.y,pos.z - hfr) - v3EulerAngle,
-				new Vector3(pos.x - hfw,pos.y,pos.z + hfr) + v3EulerAngle,
-				new Vector3(pos.x + hfw,pos.y,pos.z + hfr) - v3EulerAngle,
-				new Vector3(pos.x + hfw,pos.y,pos.z - hfr) + v3EulerAngle 
+				pos1,pos2,pos3,pos4
 			};
 			Handles.DrawSolidRectangleWithOutline(verts,this.m_cAreaColor, new Color( 0, 0, 0, 1 ));
 			break;

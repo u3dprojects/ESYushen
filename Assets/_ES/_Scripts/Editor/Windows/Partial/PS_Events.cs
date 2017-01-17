@@ -490,7 +490,7 @@ public partial class PS_Events {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label(strDesc, GUILayout.Width(80));
-			hurtArea.m_fRange = EditorGUILayout.FloatField (hurtArea.m_fRange);
+			hurtArea.m_fRange = EditorGUILayout.Slider (hurtArea.m_fRange,0f,1000f);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
@@ -502,7 +502,7 @@ public partial class PS_Events {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("旋转角度:", GUILayout.Width(80));
-			hurtArea.m_fRotation = EditorGUILayout.FloatField (hurtArea.m_fRotation);
+			hurtArea.m_fRotation = EditorGUILayout.Slider (hurtArea.m_fRotation,0f,360f);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
@@ -512,7 +512,7 @@ public partial class PS_Events {
 			EG_GUIHelper.FEG_BeginH();
 			{
 				GUILayout.Label("宽度:", GUILayout.Width(80));
-				hurtArea.m_fWidth = EditorGUILayout.FloatField (hurtArea.m_fWidth);
+				hurtArea.m_fWidth = EditorGUILayout.Slider (hurtArea.m_fWidth,0f,1000f);
 			}
 			EG_GUIHelper.FEG_EndH();
 			EG_GUIHelper.FG_Space(5);
@@ -521,7 +521,7 @@ public partial class PS_Events {
 			EG_GUIHelper.FEG_BeginH();
 			{
 				GUILayout.Label("弧度的角度值:", GUILayout.Width(80));
-				hurtArea.m_fAngle = EditorGUILayout.Slider (hurtArea.m_fAngle,0.1f,360f);
+				hurtArea.m_fAngle = EditorGUILayout.Slider (hurtArea.m_fAngle,0f,360f);
 			}
 			EG_GUIHelper.FEG_EndH();
 			EG_GUIHelper.FG_Space(5);
