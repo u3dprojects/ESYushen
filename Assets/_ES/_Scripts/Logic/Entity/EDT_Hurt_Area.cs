@@ -174,7 +174,10 @@ public class EDT_Hurt_Area {
 		Vector3 posOrg = trsfOrg.position;
 		Vector3 dirOrg = trsfOrg.forward;
 
-		Vector3 pos = posOrg + new Vector3 (this.m_v3Offset.x, 0, this.m_v3Offset.z);
+
+		Vector3 pos = posOrg + this.m_v3Offset;
+		pos.y = posOrg.y;
+
 		Quaternion quaternion = Quaternion.AngleAxis(m_fRotation,Vector3.up);
 		Vector3 dir = (quaternion * dirOrg).normalized;
 
@@ -190,21 +193,22 @@ public class EDT_Hurt_Area {
 			float hfw = this.m_fWidth / 2;
 			float hfl = this.m_fRange / 2;
 			float hfr = Mathf.Sqrt(Mathf.Pow(this.m_fWidth,2)+Mathf.Pow(this.m_fRange,2));
+			pos = posOrg;
 
 			Vector3 pos01 = new Vector3(pos.x - hfw,0,pos.z - hfl);
-			Vector3 pos1 = quaternion * pos01.normalized * hfr;
+			Vector3 pos1 = quaternion * pos01.normalized * hfr + this.m_v3Offset;
 			pos1.y = pos.y;
 
 			Vector3 pos02 = new Vector3(pos.x - hfw,0,pos.z + hfl);
-			Vector3 pos2 = quaternion * pos02.normalized * hfr;
+			Vector3 pos2 = quaternion * pos02.normalized * hfr + this.m_v3Offset;
 			pos2.y = pos.y;
 
 			Vector3 pos03 = new Vector3(pos.x + hfw,0,pos.z + hfl);
-			Vector3 pos3 = quaternion * pos03.normalized * hfr;
+			Vector3 pos3 = quaternion * pos03.normalized * hfr + this.m_v3Offset;
 			pos3.y = pos.y;
 
 			Vector3 pos04 = new Vector3(pos.x + hfw,0,pos.z - hfl);
-			Vector3 pos4 = quaternion * pos04.normalized * hfr;
+			Vector3 pos4 = quaternion * pos04.normalized * hfr + this.m_v3Offset;
 			pos4.y = pos.y;
 
 			Vector3[] verts = new Vector3[] { 
