@@ -115,14 +115,16 @@ public class EN_Particle : System.Object {
 
     public void DoDestory()
     {
-        gobjEdtity.SetActive(false);
-#if UNITY_EDITOR
-        GameObject.DestroyImmediate(gobjEdtity);
-#else
-        GameObject.Destroy(gobj);
-#endif
+		if (gobjEdtity != null) {
+			gobjEdtity.SetActive(false);
+			#if UNITY_EDITOR
+			GameObject.DestroyImmediate(gobjEdtity);
+			#else
+			GameObject.Destroy(gobjEdtity);
+			#endif
+		}
+
         DoClear();
-        
     }
 
     public void DoClear() {

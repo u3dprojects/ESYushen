@@ -120,4 +120,17 @@ public class EMT_Event{
 			return m_eTEvent.GetLHurts ();
 		}
 	}
+
+	// 打击点绘制
+	public void NewAudio(){
+		m_eTEvent.NewEvent<EDT_Audio>();
+	}
+
+	public List<EDT_Audio> m_lAudios
+	{
+		get
+		{
+			return m_eTEvent.GetLAudios ();
+		}
+	}
 }

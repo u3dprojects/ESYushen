@@ -36,6 +36,8 @@ public partial class PS_Events {
 
 	bool isEffectJoinSelf = false;
 
+	bool _m_isEffectTime = false;
+
 	#endregion
 
 	public PS_Events(){
@@ -94,11 +96,16 @@ public partial class PS_Events {
 		GUIStyle style = EditorStyles.label;
 		style.alignment = TextAnchor.MiddleLeft;
 
+		_DrawEvents4Audio ();
+
+		EG_GUIHelper.FG_Space(10);
+
 		_DrawEvents4Effect ();
 
 		EG_GUIHelper.FG_Space(10);
 
 		_DrawEvents4Hurt ();
+
 	}
 
 	void _DrawEvents4Effect(){
@@ -187,9 +194,16 @@ public partial class PS_Events {
 		EG_GUIHelper.FG_Space(5);
 
 		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("触发时间:", GUILayout.Width(80));
-			effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+		{	
+			_m_isEffectTime = EditorGUILayout.ToggleLeft ("手动触发时间??", _m_isEffectTime);
+
+			GUILayout.Label("触发时间:");
+
+			if (_m_isEffectTime) {
+				effect.m_fCastTime = EditorGUILayout.FloatField (effect.m_fCastTime);
+			} else {
+				effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+			}
 		}
 		EG_GUIHelper.FEG_EndH();
 
@@ -267,6 +281,135 @@ public partial class PS_Events {
 
 }
 
+/// <summary>
+/// 类名 : 绘制时间事件 之 技能音效
+/// 作者 : Canyon
+/// 日期 : 2017-01-17 17:30
+/// 功能 : 
+/// </summary>
+public partial class PS_Events {
+	List<bool> m_audio_fodeOut = new List<bool>();
+	bool _m_isAudioTime = false;
+
+	void _DrawEvents4Audio(){
+		EG_GUIHelper.FG_BeginVAsArea();
+		{
+			{
+				// 上
+				EG_GUIHelper.FEG_BeginH();
+				Color def = GUI.backgroundColor;
+				GUI.backgroundColor = Color.black;
+				GUI.color = Color.white;
+
+				EditorGUILayout.LabelField("技能音效列表", EditorStyles.textArea);
+
+				GUI.backgroundColor = def;
+
+				GUI.color = Color.green;
+				if (GUILayout.Button("+", GUILayout.Width(50)))
+				{
+					m_cEvents.NewAudio();
+				}
+				GUI.color = Color.white;
+				EG_GUIHelper.FEG_EndV();
+			}
+
+			{
+				// 中
+				List<EDT_Audio> list = m_cEvents.m_lAudios;
+				int lens = list.Count;
+				if (lens > 0)
+				{
+					for (int i = 0; i < lens; i++)
+					{
+						m_audio_fodeOut.Add (false);
+						_DrawOneAudio(i, list[i]);
+					}
+				}
+				else
+				{
+					m_audio_fodeOut.Clear();
+				}
+			}
+		}
+		EG_GUIHelper.FG_EndV();
+	}
+
+	void _DrawOneAudio(int index, EDT_Audio audio)
+	{
+
+		bool isEmptyName = string.IsNullOrEmpty(audio.m_sName);
+
+		EG_GUIHelper.FEG_BeginV();
+		{
+			EG_GUIHelper.FEG_BeginH();
+			{
+				m_audio_fodeOut[index] = EditorGUILayout.Foldout(m_audio_fodeOut[index], "音效 - " + (isEmptyName ? "未指定" : audio.m_sName));
+				GUI.color = Color.red;
+				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
+				{
+					m_cEvents.RmEvent(audio);
+					m_audio_fodeOut.RemoveAt(index);
+				}
+				GUI.color = Color.white;
+			}
+			EG_GUIHelper.FEG_EndH();
+
+			EG_GUIHelper.FG_Space(5);
+
+			if (m_audio_fodeOut[index])
+			{
+				_DrawOneAudioAttrs(audio);
+			}
+		}
+		EG_GUIHelper.FEG_EndV();
+	}
+
+	void _DrawOneAudioAttrs(EDT_Audio audio)
+	{
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("音效文件:", GUILayout.Width(80));
+			audio.m_objOrg = EditorGUILayout.ObjectField(audio.m_objOrg, typeof(AudioClip), false) as AudioClip;
+		}
+		EG_GUIHelper.FEG_EndH();
+
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			_m_isAudioTime = EditorGUILayout.ToggleLeft ("手动触发时间??", _m_isAudioTime);
+
+			GUILayout.Label("触发时间:");
+
+			if (_m_isAudioTime) {
+				audio.m_fCastTime = EditorGUILayout.FloatField (audio.m_fCastTime);
+			} else {
+				audio.m_fCastTime = EditorGUILayout.Slider(audio.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+			}
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("音量:", GUILayout.Width(80));
+			audio.m_fVolume = EditorGUILayout.Slider (audio.m_fVolume,0f,1f);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("是否循环:", GUILayout.Width(80));
+			audio.m_isLoop = EditorGUILayout.Toggle (audio.m_isLoop);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+	}
+}
+
 
 /// <summary>
 /// 类名 : 绘制时间事件 之 打击事件
@@ -281,6 +424,8 @@ public partial class PS_Events {
 	List<bool> m_hurt_fodeOut = new List<bool>();
 
 	List<bool> m_hurtArea_fodeOut = new List<bool>();
+
+	bool _m_isHurtTime = false;
 
 	void _DrawEvents4Hurt(){
 		EG_GUIHelper.FG_BeginVAsArea();
@@ -358,8 +503,15 @@ public partial class PS_Events {
 	{
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("触发时间:", GUILayout.Width(80));
-			hurt.m_fCastTime = EditorGUILayout.Slider(hurt.m_fCastTime, this.m_wSkill.m_midRight.beforeRoll, this.m_wSkill.m_midRight.afterRoll);
+			_m_isHurtTime = EditorGUILayout.ToggleLeft ("手动触发时间??", _m_isHurtTime);
+
+			GUILayout.Label("触发时间:");
+
+			if (_m_isHurtTime) {
+				hurt.m_fCastTime = EditorGUILayout.FloatField (hurt.m_fCastTime);
+			} else {
+				hurt.m_fCastTime = EditorGUILayout.Slider(hurt.m_fCastTime, this.m_wSkill.m_midRight.beforeRoll, this.m_wSkill.m_midRight.afterRoll);
+			}
 		}
 		EG_GUIHelper.FEG_EndH();
 

@@ -28,6 +28,9 @@ public class EDT_TEvents  {
 	// 伤害事件
 	List<EDT_Hurt> m_lHurts = new List<EDT_Hurt>();
 
+	// 技能主动音效
+	List<EDT_Audio> m_lAudios = new List<EDT_Audio>();
+
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
 		T ret = new T();
@@ -99,6 +102,11 @@ public class EDT_TEvents  {
 	public List<EDT_Hurt> GetLHurts(){
 		GetList<EDT_Hurt> (ref m_lHurts);
 		return m_lHurts;
+	}
+
+	public List<EDT_Audio> GetLAudios(){
+		GetList<EDT_Audio> (ref m_lAudios);
+		return m_lAudios;
 	}
 
 	public void DoStart()
@@ -224,7 +232,7 @@ public class EDT_TEvents  {
 		NewEvent<EDT_Effect> (time,data);
 	}
 
-	// 转为特效事件
+	// 转为打击点事件
 	void ToHurt(float time,JsonData data){
 		NewEvent<EDT_Hurt> (time,data);
 	}
