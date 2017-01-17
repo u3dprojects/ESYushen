@@ -276,6 +276,8 @@ public partial class PS_Events {
 /// </summary>
 public partial class PS_Events {
 
+	#region ==== 伤害区域 ====
+
 	List<bool> m_hurt_fodeOut = new List<bool>();
 
 	List<bool> m_hurtArea_fodeOut = new List<bool>();
@@ -528,4 +530,6 @@ public partial class PS_Events {
 			break;
 		}
 	}
+
+	#endregion
 }
