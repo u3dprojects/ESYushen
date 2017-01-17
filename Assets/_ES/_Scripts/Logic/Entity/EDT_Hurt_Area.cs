@@ -48,7 +48,7 @@ public class EDT_Hurt_Area {
 	public float m_fAngle;
 
 	// 区域颜色
-	public Color m_cAreaColor = new Color(1,1,1,0.2f);
+	public Color m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.15f);
 
 	// json数据
 	public bool m_isInitedByJson = false;
