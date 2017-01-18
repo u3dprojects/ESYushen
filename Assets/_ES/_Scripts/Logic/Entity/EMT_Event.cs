@@ -108,7 +108,7 @@ public class EMT_Event{
 		}
 	}
 
-	// 打击点绘制
+	// 打击点
 	public void NewHurt(){
 		m_eTEvent.NewEvent<EDT_Hurt>();
 	}
@@ -121,7 +121,7 @@ public class EMT_Event{
 		}
 	}
 
-	// 打击点绘制
+	// 音效
 	public void NewAudio(){
 		m_eTEvent.NewEvent<EDT_Audio>();
 	}
@@ -131,6 +131,19 @@ public class EMT_Event{
 		get
 		{
 			return m_eTEvent.GetLAudios ();
+		}
+	}
+
+	// 震屏
+	public void NewShake(){
+		m_eTEvent.NewEvent<EDT_Shake>();
+	}
+
+	public List<EDT_Shake> m_lShakes
+	{
+		get
+		{
+			return m_eTEvent.GetLShakes();
 		}
 	}
 }

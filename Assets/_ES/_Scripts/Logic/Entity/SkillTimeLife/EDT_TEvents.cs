@@ -31,6 +31,9 @@ public class EDT_TEvents  {
 	// 技能主动音效
 	List<EDT_Audio> m_lAudios = new List<EDT_Audio>();
 
+	// 技能主动震屏
+	List<EDT_Shake> m_lShakes = new List<EDT_Shake>();
+
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
 		T ret = new T();
@@ -94,19 +97,57 @@ public class EDT_TEvents  {
 		}
 	}
 
-	public List<EDT_Effect> GetLEffects(){
-		GetList<EDT_Effect> (ref m_lEffects);
-		return m_lEffects;
-	}
+	public string ToStrJsonData(){
+		lens = m_lEvents.Count;
+		if (lens <= 0) {
+			return "";
+		}
 
-	public List<EDT_Hurt> GetLHurts(){
-		GetList<EDT_Hurt> (ref m_lHurts);
-		return m_lHurts;
-	}
+		Dictionary<float,List<EDT_Base>> tmpDic = new Dictionary<float, List<EDT_Base>> ();
+		List<EDT_Base> tmpList = null;
+		for (int i = 0; i < lens; i++)
+		{
+			m_tmpEvent = m_lEvents[i];
+			if (!m_tmpEvent.m_isInitedFab)
+				continue;
 
-	public List<EDT_Audio> GetLAudios(){
-		GetList<EDT_Audio> (ref m_lAudios);
-		return m_lAudios;
+			if (tmpDic.ContainsKey (m_tmpEvent.m_fCastTime)) {
+				tmpList = tmpDic [m_tmpEvent.m_fCastTime];
+			} else {
+				tmpList = new List<EDT_Base> ();
+				tmpDic.Add (m_tmpEvent.m_fCastTime, tmpList);
+			}
+
+			tmpList.Add (m_tmpEvent);
+		}
+
+		if (tmpDic.Count <= 0) {
+			return "";
+		}
+
+		JsonData tmpData = new JsonData ();
+		tmpData.SetJsonType (JsonType.Array);
+
+		JsonData tmpData2, tmpData3,tmpData4;
+
+		foreach (KeyValuePair<float,List<EDT_Base>> item in tmpDic) {
+			tmpData2 = new JsonData ();
+			tmpData2 ["m_timing"] = EDT_Base.Round2D(item.Key,2);
+
+			tmpData3 = new JsonData ();
+			tmpData3.SetJsonType (JsonType.Array);
+			foreach (EDT_Base one in item.Value) {
+				tmpData4 = one.ToJsonData ();
+				if (tmpData4 == null)
+					continue;
+				tmpData3.Add (tmpData4);
+			}
+			tmpData2 ["m_castEvts"] = tmpData3;
+
+			tmpData.Add (tmpData2);
+		}
+
+		return JsonMapper.ToJson (tmpData);
 	}
 
 	public void DoStart()
@@ -222,6 +263,9 @@ public class EDT_TEvents  {
 				case 2:
 					ToAudio(casttime, tmpJsonData [j]);
 					break;
+				case 3:
+					ToShake(casttime, tmpJsonData [j]);
+					break;
 				case 6:
 					ToHurt(casttime, tmpJsonData [j]);
 					break;
@@ -245,56 +289,28 @@ public class EDT_TEvents  {
 		NewEvent<EDT_Audio> (time,data);
 	}
 
-	public string ToStrJsonData(){
-		lens = m_lEvents.Count;
-		if (lens <= 0) {
-			return "";
-		}
+	// 转为技能震屏
+	void ToShake(float time,JsonData data){
+		NewEvent<EDT_Shake> (time,data);
+	}
 
-		Dictionary<float,List<EDT_Base>> tmpDic = new Dictionary<float, List<EDT_Base>> ();
-		List<EDT_Base> tmpList = null;
-		for (int i = 0; i < lens; i++)
-		{
-			m_tmpEvent = m_lEvents[i];
-			if (!m_tmpEvent.m_isInitedFab)
-				continue;
-			
-			if (tmpDic.ContainsKey (m_tmpEvent.m_fCastTime)) {
-				tmpList = tmpDic [m_tmpEvent.m_fCastTime];
-			} else {
-				tmpList = new List<EDT_Base> ();
-				tmpDic.Add (m_tmpEvent.m_fCastTime, tmpList);
-			}
+	public List<EDT_Effect> GetLEffects(){
+		GetList<EDT_Effect> (ref m_lEffects);
+		return m_lEffects;
+	}
 
-			tmpList.Add (m_tmpEvent);
-		}
+	public List<EDT_Hurt> GetLHurts(){
+		GetList<EDT_Hurt> (ref m_lHurts);
+		return m_lHurts;
+	}
 
-		if (tmpDic.Count <= 0) {
-			return "";
-		}
+	public List<EDT_Audio> GetLAudios(){
+		GetList<EDT_Audio> (ref m_lAudios);
+		return m_lAudios;
+	}
 
-		JsonData tmpData = new JsonData ();
-		tmpData.SetJsonType (JsonType.Array);
-
-		JsonData tmpData2, tmpData3,tmpData4;
-
-		foreach (KeyValuePair<float,List<EDT_Base>> item in tmpDic) {
-			tmpData2 = new JsonData ();
-			tmpData2 ["m_timing"] = EDT_Base.Round2D(item.Key,2);
-
-			tmpData3 = new JsonData ();
-			tmpData3.SetJsonType (JsonType.Array);
-			foreach (EDT_Base one in item.Value) {
-				tmpData4 = one.ToJsonData ();
-				if (tmpData4 == null)
-					continue;
-				tmpData3.Add (tmpData4);
-			}
-			tmpData2 ["m_castEvts"] = tmpData3;
-
-			tmpData.Add (tmpData2);
-		}
-
-		return JsonMapper.ToJson (tmpData);
+	public List<EDT_Shake> GetLShakes(){
+		GetList<EDT_Shake> (ref m_lShakes);
+		return m_lShakes;
 	}
 }
