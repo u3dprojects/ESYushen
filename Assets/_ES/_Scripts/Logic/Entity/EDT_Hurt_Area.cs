@@ -51,7 +51,7 @@ public class EDT_Hurt_Area {
 	public Color m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.15f);
 
 	// json数据
-	public bool m_isInitedByJson = false;
+	protected bool m_isInitedByJson = false;
 
 	// 是否绘制伤害区域
 	public bool m_isShowArea;

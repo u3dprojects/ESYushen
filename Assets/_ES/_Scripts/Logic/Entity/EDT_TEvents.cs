@@ -217,7 +217,10 @@ public class EDT_TEvents  {
 				typeInt = (int)((tmpJsonData [j]) ["m_typeInt"]);
 				switch (typeInt) {
 				case 1:
-					ToEffect (casttime, tmpJsonData [j]);
+					ToEffect(casttime, tmpJsonData [j]);
+					break;
+				case 2:
+					ToAudio(casttime, tmpJsonData [j]);
 					break;
 				case 6:
 					ToHurt(casttime, tmpJsonData [j]);
@@ -235,6 +238,11 @@ public class EDT_TEvents  {
 	// 转为打击点事件
 	void ToHurt(float time,JsonData data){
 		NewEvent<EDT_Hurt> (time,data);
+	}
+
+	// 转为技能声音
+	void ToAudio(float time,JsonData data){
+		NewEvent<EDT_Audio> (time,data);
 	}
 
 	public string ToStrJsonData(){

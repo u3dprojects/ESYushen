@@ -82,7 +82,7 @@ public class EDT_Base {
 		this.m_jsonData = jsonData;
 	}
 
-	public bool DoReInit(string objName,int type)
+	protected bool DoReInit(string objName,int type)
     {
         string path = GetPathByNameType(objName, type);
         bool isExists = File.Exists(path);

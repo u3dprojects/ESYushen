@@ -18,8 +18,11 @@ public class EDT_Hurt : EDT_Base {
 	public int m_iTargetCount;
 
 	// 伤害区域列表(m_zones)
-	List<EDT_Hurt_Area> m_lHurtAreas;
-	List<EDT_Hurt_Area> m_lAreas = new List<EDT_Hurt_Area>();
+	List<EDT_Hurt_Area> m_lHurtAreas = new List<EDT_Hurt_Area>();
+	List<EDT_Hurt_Area> m_lCurHurtAreas = new List<EDT_Hurt_Area>();
+
+	// 受击方收到的伤害状态(伤害值，特效等)
+	EDT_Hurt_BeHitter m_eBeHitter = new EDT_Hurt_BeHitter();
 
 	public EDT_Hurt():base(){
 		this.m_iCurType = 6;
@@ -31,8 +34,6 @@ public class EDT_Hurt : EDT_Base {
 
 		this.m_iTargetFilter = (int)jsonData ["m_targetFilter"];
 		this.m_iTargetCount = (int)jsonData ["m_targetCount"];
-
-		m_lHurtAreas = new List<EDT_Hurt_Area> ();
 
 		IDictionary dicJsonData = (IDictionary)jsonData;
 
@@ -56,13 +57,18 @@ public class EDT_Hurt : EDT_Base {
 			}
 		}
 
+		if (dicJsonData.Contains ("m_shotEvents")) {
+			tmp = jsonData ["m_shotEvents"];
+			m_eBeHitter.DoInit (tmp);
+		}
+
 		this.m_isJsonDataToSelfSuccessed = true;
 		this.m_isInitedFab = true;
 	}
 
 	public override JsonData ToJsonData ()
 	{
-		if (!this.m_isInitedFab || this.m_lHurtAreas == null || this.m_lHurtAreas.Count <= 0)
+		if (!this.m_isInitedFab || this.m_lHurtAreas.Count <= 0)
 			return null;
 
 		JsonData ret = new JsonData ();
@@ -85,11 +91,17 @@ public class EDT_Hurt : EDT_Base {
 		tmp ["m_zones"] = tmp2;
 		ret["m_zoneHelper"] = tmp;
 
+		tmp2 = this.m_eBeHitter.ToJsonData ();
+		ret["m_shotEvents"] = tmp2;
 		return ret;
 	}
 
 	protected override bool OnCallEvent ()
 	{
+		if (m_eBeHitter.m_isCanShow) {
+			m_eBeHitter.DoStart ();
+		}
+
 		Debug.Log ("=hurt=");
 		return true;
 	}
@@ -104,11 +116,11 @@ public class EDT_Hurt : EDT_Base {
 		base.OnClear ();
 
 		this.m_iCurType = 6;
-		if (m_lHurtAreas != null) {
-			m_lHurtAreas.Clear ();
-			m_lHurtAreas = null;
-		}
-		m_lAreas.Clear ();
+
+		m_lHurtAreas.Clear ();
+		m_lCurHurtAreas.Clear ();
+
+		m_eBeHitter.DoClear ();
 	}
 
 	public void NewHurtArea(){
@@ -123,11 +135,11 @@ public class EDT_Hurt : EDT_Base {
 	}
 
 	public List<EDT_Hurt_Area> GetAreaList(){
-		m_lAreas.Clear ();
+		m_lCurHurtAreas.Clear ();
 		if (m_lHurtAreas != null && m_lHurtAreas.Count > 0) {
-			m_lAreas.AddRange (m_lHurtAreas);
+			m_lCurHurtAreas.AddRange (m_lHurtAreas);
 		}
-		return m_lAreas;
+		return m_lCurHurtAreas;
 	}
 
 	public override void OnSceneGUI ()
@@ -145,4 +157,31 @@ public class EDT_Hurt : EDT_Base {
 			tmp.DrawAreaInSceneView (m_trsfOwner);
 		}
 	}
+
+	#region === 受击者相关信息绘制 ===
+
+	public bool m_isShowBeHitterWhenPlay{
+		get{ return m_eBeHitter.m_isCanShow; }
+		set{
+			m_eBeHitter.m_isCanShow = value;
+		}
+	}
+
+	public void NewBeHitStatus(){
+		m_eBeHitter.NewStatus ();
+	}
+
+	public List<EDT_Hurt_BeHitStatus> GetHitStatusList(){
+		return m_eBeHitter.GetListStatus ();
+	}
+
+	public void RemoveBeHitStatus(EDT_Hurt_BeHitStatus rm){
+		m_eBeHitter.RemoveStatus(rm);
+	}
+
+	public EDT_Audio GetBeHitAudio(){
+		return m_eBeHitter.m_eAuido;
+	}
+
+	#endregion
 }

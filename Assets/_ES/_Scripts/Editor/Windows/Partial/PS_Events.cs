@@ -36,8 +36,6 @@ public partial class PS_Events {
 
 	bool isEffectJoinSelf = false;
 
-	bool _m_isEffectTime = false;
-
 	#endregion
 
 	public PS_Events(){
@@ -128,7 +126,7 @@ public partial class PS_Events {
 					m_cEvents.NewEffect();
 				}
 				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndV();
+				EG_GUIHelper.FEG_EndH();
 			}
 
 			{
@@ -195,14 +193,11 @@ public partial class PS_Events {
 
 		EG_GUIHelper.FEG_BeginH();
 		{	
-			_m_isEffectTime = EditorGUILayout.ToggleLeft ("手动触发时间??", _m_isEffectTime);
-
 			GUILayout.Label("触发时间:");
-
-			if (_m_isEffectTime) {
-				effect.m_fCastTime = EditorGUILayout.FloatField (effect.m_fCastTime);
-			} else {
+			if (m_isPlan) {
 				effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+			} else {
+				effect.m_fCastTime = EditorGUILayout.FloatField (effect.m_fCastTime);
 			}
 		}
 		EG_GUIHelper.FEG_EndH();
@@ -289,7 +284,6 @@ public partial class PS_Events {
 /// </summary>
 public partial class PS_Events {
 	List<bool> m_audio_fodeOut = new List<bool>();
-	bool _m_isAudioTime = false;
 
 	void _DrawEvents4Audio(){
 		EG_GUIHelper.FG_BeginVAsArea();
@@ -301,7 +295,7 @@ public partial class PS_Events {
 				GUI.backgroundColor = Color.black;
 				GUI.color = Color.white;
 
-				EditorGUILayout.LabelField("技能音效列表", EditorStyles.textArea);
+				EditorGUILayout.LabelField("音效列表", EditorStyles.textArea);
 
 				GUI.backgroundColor = def;
 
@@ -311,7 +305,7 @@ public partial class PS_Events {
 					m_cEvents.NewAudio();
 				}
 				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndV();
+				EG_GUIHelper.FEG_EndH();
 			}
 
 			{
@@ -379,14 +373,11 @@ public partial class PS_Events {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			_m_isAudioTime = EditorGUILayout.ToggleLeft ("手动触发时间??", _m_isAudioTime);
-
 			GUILayout.Label("触发时间:");
-
-			if (_m_isAudioTime) {
-				audio.m_fCastTime = EditorGUILayout.FloatField (audio.m_fCastTime);
-			} else {
+			if (m_isPlan) {
 				audio.m_fCastTime = EditorGUILayout.Slider(audio.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+			} else {
+				audio.m_fCastTime = EditorGUILayout.FloatField (audio.m_fCastTime);
 			}
 		}
 		EG_GUIHelper.FEG_EndH();
@@ -419,13 +410,13 @@ public partial class PS_Events {
 /// </summary>
 public partial class PS_Events {
 
-	#region ==== 伤害区域 ====
+	#region ==== 打击点 ====
 
 	List<bool> m_hurt_fodeOut = new List<bool>();
 
 	List<bool> m_hurtArea_fodeOut = new List<bool>();
 
-	bool _m_isHurtTime = false;
+	List<bool> m_beHitStatus_fodeOut = new List<bool>();
 
 	void _DrawEvents4Hurt(){
 		EG_GUIHelper.FG_BeginVAsArea();
@@ -437,7 +428,7 @@ public partial class PS_Events {
 				GUI.backgroundColor = Color.black;
 				GUI.color = Color.white;
 
-				EditorGUILayout.LabelField("打击点列表", EditorStyles.textArea);
+				EditorGUILayout.LabelField("依靠碰撞区域检测来确定攻击目标的列表", EditorStyles.textArea);
 
 				GUI.backgroundColor = def;
 
@@ -447,11 +438,11 @@ public partial class PS_Events {
 					m_cEvents.NewHurt ();
 				}
 				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndV();
+				EG_GUIHelper.FEG_EndH();
 			}
 
 			{
-				// 中
+				// 
 				List<EDT_Hurt> list = m_cEvents.m_lHurts;
 				int lens = list.Count;
 				if (lens > 0)
@@ -478,7 +469,7 @@ public partial class PS_Events {
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_hurt_fodeOut[index] = EditorGUILayout.Foldout(m_hurt_fodeOut[index], "打击点 - ");
+				m_hurt_fodeOut[index] = EditorGUILayout.Foldout(m_hurt_fodeOut[index], "列表 - " + index);
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -503,14 +494,11 @@ public partial class PS_Events {
 	{
 		EG_GUIHelper.FEG_BeginH();
 		{
-			_m_isHurtTime = EditorGUILayout.ToggleLeft ("手动触发时间??", _m_isHurtTime);
-
 			GUILayout.Label("触发时间:");
-
-			if (_m_isHurtTime) {
-				hurt.m_fCastTime = EditorGUILayout.FloatField (hurt.m_fCastTime);
-			} else {
+			if (m_isPlan) {
 				hurt.m_fCastTime = EditorGUILayout.Slider(hurt.m_fCastTime, this.m_wSkill.m_midRight.beforeRoll, this.m_wSkill.m_midRight.afterRoll);
+			} else {
+				hurt.m_fCastTime = EditorGUILayout.FloatField (hurt.m_fCastTime);
 			}
 		}
 		EG_GUIHelper.FEG_EndH();
@@ -533,9 +521,20 @@ public partial class PS_Events {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
+		// 伤害区域
+		_DrawOneHurt_HurtAreas(hurt);
+
+		// 受击者
+		_DrawOneHurt_BeHitter(hurt);
+	}
+
+	#endregion
+
+	#region ==== 伤害区域 ====
+
+	void _DrawOneHurt_HurtAreas(EDT_Hurt hurt){
 		EG_GUIHelper.FEG_BeginVAsArea ();
 		{
-			//伤害区域
 			{
 				// 上
 				EG_GUIHelper.FEG_BeginH();
@@ -553,11 +552,10 @@ public partial class PS_Events {
 					hurt.NewHurtArea ();
 				}
 				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndV();
+				EG_GUIHelper.FEG_EndH();
 			}
 
 			{
-				// 中
 				List<EDT_Hurt_Area> list = hurt.GetAreaList();
 				int lens = list.Count;
 				if (lens > 0)
@@ -585,7 +583,7 @@ public partial class PS_Events {
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_hurtArea_fodeOut[index] = EditorGUILayout.Foldout(m_hurtArea_fodeOut[index], "伤害区域 - ");
+				m_hurtArea_fodeOut[index] = EditorGUILayout.Foldout(m_hurtArea_fodeOut[index], "伤害区域 - " + index);
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -681,6 +679,146 @@ public partial class PS_Events {
 			EG_GUIHelper.FG_Space(5);
 			break;
 		}
+	}
+
+	#endregion
+
+	#region ==== 受击者 - 命中事件 ====
+
+	void _DrawOneHurt_BeHitter(EDT_Hurt hurt){
+		EG_GUIHelper.FG_BeginVAsArea();
+		{
+			EG_GUIHelper.FEG_BeginH();
+			{
+				// 上
+				EG_GUIHelper.FEG_BeginH();
+				Color def = GUI.backgroundColor;
+				GUI.backgroundColor = Color.black;
+				GUI.color = Color.white;
+
+				GUILayout.Label("命中事件", EditorStyles.textArea);
+				GUI.backgroundColor = def;		
+				GUI.color = Color.white;
+				EG_GUIHelper.FEG_EndH();
+			}
+			EG_GUIHelper.FEG_EndH();
+			EG_GUIHelper.FG_Space(5);
+
+			EG_GUIHelper.FEG_BeginH();
+			{
+				hurt.m_isShowBeHitterWhenPlay = EditorGUILayout.Toggle ("播放命中的事件??", hurt.m_isShowBeHitterWhenPlay);
+			}
+			EG_GUIHelper.FEG_EndH();
+			EG_GUIHelper.FG_Space(5);
+
+			EG_GUIHelper.FG_BeginVAsArea();
+			{
+				EG_GUIHelper.FEG_BeginH ();
+				{
+					GUILayout.Label ("命中音效:", GUILayout.Width (80));
+				}
+				EG_GUIHelper.FEG_EndH ();
+				EG_GUIHelper.FG_Space (5);
+				_DrawOneAudioAttrs (hurt.GetBeHitAudio ());
+			}
+			EG_GUIHelper.FG_EndV();
+			EG_GUIHelper.FG_Space(5);
+
+			_DrawBeHitStatus (hurt);
+		}
+		EG_GUIHelper.FG_EndV();
+	}
+
+	void _DrawBeHitStatus(EDT_Hurt hurt){
+		EG_GUIHelper.FG_BeginVAsArea();
+		{
+			{
+				// 上
+				EG_GUIHelper.FEG_BeginH();
+				Color def = GUI.backgroundColor;
+				GUI.backgroundColor = Color.black;
+				GUI.color = Color.white;
+
+				EditorGUILayout.LabelField("命中状态列表", EditorStyles.textArea);
+
+				GUI.backgroundColor = def;
+
+				GUI.color = Color.green;
+				if (GUILayout.Button("+", GUILayout.Width(50)))
+				{
+					hurt.NewBeHitStatus ();
+				}
+				GUI.color = Color.white;
+				EG_GUIHelper.FEG_EndH();
+			}
+
+			{
+				// 中
+				List<EDT_Hurt_BeHitStatus> list = hurt.GetHitStatusList();
+				int lens = list.Count;
+				if (lens > 0)
+				{
+					for (int i = 0; i < lens; i++)
+					{
+						m_beHitStatus_fodeOut.Add (false);
+						_DrawOneBeHitStatus(i, list[i],hurt);
+					}
+				}
+				else
+				{
+					m_beHitStatus_fodeOut.Clear();
+				}
+			}
+		}
+		EG_GUIHelper.FG_EndV();
+	}
+
+	void _DrawOneBeHitStatus(int index, EDT_Hurt_BeHitStatus beStatus,EDT_Hurt hurt)
+	{
+		
+		EG_GUIHelper.FEG_BeginV();
+		{
+			EG_GUIHelper.FEG_BeginH();
+			{
+				m_beHitStatus_fodeOut[index] = EditorGUILayout.Foldout(m_beHitStatus_fodeOut[index], "命中状态 - " + beStatus.m_iGid);
+				GUI.color = Color.red;
+				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
+				{
+					hurt.RemoveBeHitStatus (beStatus);
+					m_beHitStatus_fodeOut.RemoveAt(index);
+				}
+				GUI.color = Color.white;
+			}
+			EG_GUIHelper.FEG_EndH();
+
+			EG_GUIHelper.FG_Space(5);
+
+			if (m_beHitStatus_fodeOut[index])
+			{
+				_DrawOneBeHitStatusAttrs(beStatus);
+			}
+		}
+		EG_GUIHelper.FEG_EndV();
+	}
+
+	void _DrawOneBeHitStatusAttrs(EDT_Hurt_BeHitStatus beStatus)
+	{
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("分类:", GUILayout.Width(80));
+			beStatus.m_iGid = EditorGUILayout.IntField (beStatus.m_iGid);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("参数:", GUILayout.Width(80));
+			beStatus.m_sPars = EditorGUILayout.TextArea (beStatus.m_sPars);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
 	}
 
 	#endregion

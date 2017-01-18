@@ -44,10 +44,25 @@ public partial class PS_MidRight{
     int ms_ID;
     string ms_name;
 
+	string ms_desc;
+	int ms_nameId;
+	int ms_descId;
+
     int ms_actId;
 
-    string[] CastTypes = { "默认技能","打断式技能","位移控制技能"};
-    int ms_castType;
+	string[] SkillTypes = { 
+		"主角普攻",
+		"主角技能_1",
+		"主角技能_2",
+		"主角技能_3",
+		"主角技能_4",
+		"主角技能_5",
+		"雇佣兵大招" ,
+		"雇佣兵普攻" ,
+		"雇佣兵技能_1",
+		"怪物技能"
+	};
+	int ms_skillType;
 
     string[] ElementType = {"物理","冰","火"};
     int ms_elementType;
@@ -74,6 +89,11 @@ public partial class PS_MidRight{
 	public float afterRoll = 0;
 
 	string ms_sEvtStr;
+
+	// 是否可以移动
+	bool ms_isCanMove = false;
+
+	int ms_iNextSkillId = 0;
 
 	// 暂停按钮控制
 	bool isPauseing = false;
@@ -214,6 +234,21 @@ public partial class PS_MidRight{
         EG_GUIHelper.FEG_EndH();
         EG_GUIHelper.FG_Space(5);
 
+		EG_GUIHelper.FEG_BeginH();
+		ms_nameId = EditorGUILayout.IntField("技能名称ID:", ms_nameId);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		ms_desc = EditorGUILayout.TextField("技能描述:", ms_desc);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		ms_descId = EditorGUILayout.IntField("技能描述ID:", ms_descId);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
         EG_GUIHelper.FEG_BeginH();
         ms_actId = EditorGUILayout.IntField("SkillIndex:", ms_actId);
 
@@ -224,7 +259,7 @@ public partial class PS_MidRight{
         EG_GUIHelper.FG_Space(5);
 
         EG_GUIHelper.FEG_BeginH();
-        ms_castType = EditorGUILayout.Popup("释放类型:", ms_castType, CastTypes);
+        ms_skillType = EditorGUILayout.Popup("释放类型:", ms_skillType, SkillTypes);
         EG_GUIHelper.FEG_EndH();
         EG_GUIHelper.FG_Space(5);
 
@@ -339,26 +374,33 @@ public partial class PS_MidRight{
     {
         if(ms_curSkill != null)
         {
-            this.ms_ID = this.ms_curSkill.c00_ID;
-            this.ms_name = this.ms_curSkill.c01_Name;
-            this.ms_actId = this.ms_curSkill.c02_ActId;
-            this.ms_castType = this.ms_curSkill.c03_CastType_Int;
-            this.ms_elementType = this.ms_curSkill.c04_ElementType_Int;
-            this.ms_elmDamageRate = this.ms_curSkill.c05_DmgAdditional;
-            this.ms_belongType = this.ms_curSkill.c06_SlotObjTp_Int;
-            this.ms_slotIdx_Int = this.ms_curSkill.c07_SlotIdx_Int;
-            this.ms_lockType = this.ms_curSkill.c08_LockTp_Int;
-            this.maxDistance = this.ms_curSkill.c09_CastDistFarthest;
-            this.minDistance = this.ms_curSkill.c10_CastDistNearest;
-            this.cooldown = this.ms_curSkill.c11_CD;
-            this.duration = this.ms_curSkill.c12_Duration;
-            this.beforeRoll = this.ms_curSkill.c14_PreCastTiming;
-            this.afterRoll = this.ms_curSkill.c15_PostCastTiming;
+            this.ms_ID = this.ms_curSkill.ID;
+            this.ms_name = this.ms_curSkill.Name;
+            this.ms_actId = this.ms_curSkill.ActId;
+			this.ms_skillType = this.ms_curSkill.SkillType;
+            this.ms_elementType = this.ms_curSkill.ElementType_Int;
+            this.ms_elmDamageRate = this.ms_curSkill.DmgAdditional;
+            this.ms_belongType = this.ms_curSkill.SlotObjTp_Int;
+            this.ms_slotIdx_Int = this.ms_curSkill.SlotIdx_Int;
+            this.ms_lockType = this.ms_curSkill.LockTp_Int;
+            this.maxDistance = this.ms_curSkill.CastDistFarthest;
+            this.minDistance = this.ms_curSkill.CastDistNearest;
+            this.cooldown = this.ms_curSkill.CD;
+            this.duration = this.ms_curSkill.Duration;
+            this.beforeRoll = this.ms_curSkill.PreCastTiming;
+            this.afterRoll = this.ms_curSkill.PostCastTiming;
 
             // 事件处理有点麻烦，单独出来写
-            this.ms_sEvtStr = this.ms_curSkill.c13_CastEvent_Str;
+            this.ms_sEvtStr = this.ms_curSkill.CastEvent_Str;
 
 			m_ePSEvents.DoReInitEventJson (this.ms_sEvtStr);
+
+			this.ms_nameId = this.ms_curSkill.NameID;
+			this.ms_desc = this.ms_curSkill.Desc;
+			this.ms_descId = this.ms_curSkill.DescID;
+
+			this.ms_isCanMove = this.ms_curSkill.CanMove == 1;
+			this.ms_iNextSkillId = this.ms_curSkill.NextSkillID;
         }
     }
 
@@ -366,23 +408,29 @@ public partial class PS_MidRight{
     {
         ms_curSkill = optSkill.GetOrNew(ms_ID);
 
-        this.ms_curSkill.c00_ID = this.ms_ID;
-        this.ms_curSkill.c01_Name = this.ms_name;
-        this.ms_curSkill.c02_ActId = this.ms_actId;
-        this.ms_curSkill.c03_CastType_Int = this.ms_castType;
-        this.ms_curSkill.c04_ElementType_Int = this.ms_elementType;
-        this.ms_curSkill.c05_DmgAdditional = this.ms_elmDamageRate;
-        this.ms_curSkill.c06_SlotObjTp_Int = this.ms_belongType;
-        this.ms_curSkill.c07_SlotIdx_Int = this.ms_slotIdx_Int;
-        this.ms_curSkill.c08_LockTp_Int = this.ms_lockType;
-        this.ms_curSkill.c09_CastDistFarthest = this.maxDistance;
-        this.ms_curSkill.c10_CastDistNearest = this.minDistance;
-        this.ms_curSkill.c11_CD = this.cooldown;
-        this.ms_curSkill.c12_Duration = this.duration;
-        this.ms_curSkill.c14_PreCastTiming = this.beforeRoll;
-        this.ms_curSkill.c15_PostCastTiming = this.afterRoll;
+        this.ms_curSkill.ID = this.ms_ID;
+        this.ms_curSkill.Name = this.ms_name;
+        this.ms_curSkill.ActId = this.ms_actId;
+		this.ms_curSkill.SkillType = this.ms_skillType;
+        this.ms_curSkill.ElementType_Int = this.ms_elementType;
+        this.ms_curSkill.DmgAdditional = this.ms_elmDamageRate;
+        this.ms_curSkill.SlotObjTp_Int = this.ms_belongType;
+        this.ms_curSkill.SlotIdx_Int = this.ms_slotIdx_Int;
+        this.ms_curSkill.LockTp_Int = this.ms_lockType;
+        this.ms_curSkill.CastDistFarthest = this.maxDistance;
+        this.ms_curSkill.CastDistNearest = this.minDistance;
+        this.ms_curSkill.CD = this.cooldown;
+        this.ms_curSkill.Duration = this.duration;
+        this.ms_curSkill.PreCastTiming = this.beforeRoll;
+        this.ms_curSkill.PostCastTiming = this.afterRoll;
 
-        this.ms_curSkill.c13_CastEvent_Str = this.ms_sEvtStr;
+        this.ms_curSkill.CastEvent_Str = this.ms_sEvtStr;
+
+		this.ms_curSkill.NameID = this.ms_nameId;
+		this.ms_curSkill.Desc = this.ms_desc;
+		this.ms_curSkill.DescID = this.ms_descId;
+		this.ms_curSkill.CanMove = this.ms_isCanMove ? 1 : 0;
+		this.ms_curSkill.NextSkillID = this.ms_iNextSkillId;
     }
 
 	void _DrawOptBtns()

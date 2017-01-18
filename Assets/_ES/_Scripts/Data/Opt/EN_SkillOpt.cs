@@ -25,8 +25,7 @@ public class EN_SkillOpt
 
     private EN_SkillOpt() { }
 
-    public int NumberOfRow = 0;
-    public int NumberOfColumns = 16;
+    int NumberOfRow = 0;
     NH_Sheet m_sheet = null;
     List<EN_Skill> list = null;
 
@@ -73,7 +72,7 @@ public class EN_SkillOpt
         int lens = this.list.Count;
         for (int i = 0; i < lens; i++)
         {
-            if (this.list[i].c00_ID == ID)
+            if (this.list[i].ID == ID)
                 return this.list[i];
         }
         return null;

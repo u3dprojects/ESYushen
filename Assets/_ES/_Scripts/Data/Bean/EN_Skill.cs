@@ -12,43 +12,61 @@ public class EN_Skill{
     public int rowIndex;
     public NH_Sheet sheet;
 
-    public int c00_ID;
-    public string c01_Name;
-    public int c02_ActId;
-    public int c03_CastType_Int;
-    public int c04_ElementType_Int;
-    public float c05_DmgAdditional;
-    public int c06_SlotObjTp_Int;
-    public int c07_SlotIdx_Int;
-    public int c08_LockTp_Int;
-    public float c09_CastDistFarthest;
-    public float c10_CastDistNearest;
-    public float c11_CD;
-    public float c12_Duration;
-    public string c13_CastEvent_Str;
-    public float c14_PreCastTiming;
-    public float c15_PostCastTiming;
+    public int ID;
+    public string Name;
+
+	public string Desc;
+	// 语言表里面的ID
+	public int NameID;
+	// 语言表里面的ID
+	public int DescID;
+
+    public int ActId;
+    public int SkillType;
+    public int ElementType_Int;
+    public float DmgAdditional;
+    public int SlotObjTp_Int;
+    public int SlotIdx_Int;
+    public int LockTp_Int;
+    public float CastDistFarthest;
+    public float CastDistNearest;
+    public float CD;
+    public float Duration;
+    public string CastEvent_Str;
+    public float PreCastTiming;
+    public float PostCastTiming;
+
+	public int CanMove;
+	public int NextSkillID;
 
     object[] Columns
     {
         get { 
             object[] ret = {
-                this.c00_ID,
-                this.c01_Name,
-                this.c02_ActId,
-                this.c03_CastType_Int,
-                this.c04_ElementType_Int,
-                this.c05_DmgAdditional,
-                this.c06_SlotObjTp_Int,
-                this.c07_SlotIdx_Int,
-                this.c08_LockTp_Int,
-                this.c09_CastDistFarthest,
-                this.c10_CastDistNearest,
-                this.c11_CD,
-                this.c12_Duration,
-                this.c13_CastEvent_Str,
-                this.c14_PreCastTiming,
-                this.c15_PostCastTiming
+                this.ID,
+                this.Name,
+
+				this.Desc,
+				this.NameID,
+				this.DescID,
+
+                this.ActId,
+                this.SkillType,
+                this.ElementType_Int,
+                this.DmgAdditional,
+                this.SlotObjTp_Int,
+                this.SlotIdx_Int,
+                this.LockTp_Int,
+                this.CastDistFarthest,
+                this.CastDistNearest,
+                this.CD,
+                this.Duration,
+                this.CastEvent_Str,
+                this.PreCastTiming,
+                this.PostCastTiming,
+
+				this.CanMove,
+				this.NextSkillID
             };
             return ret;
         }
@@ -70,23 +88,31 @@ public class EN_Skill{
         one.rowIndex = rowIndex;
         one.sheet = sheet;
 
-        one.c00_ID = sheet.GetInt(rowIndex, 0);
-        one.c01_Name = sheet.GetString(rowIndex, 1);
-        one.c02_ActId = sheet.GetInt(rowIndex, 2);
-        one.c03_CastType_Int = sheet.GetInt(rowIndex, 3);
-        one.c04_ElementType_Int = sheet.GetInt(rowIndex, 4);
-        one.c05_DmgAdditional = sheet.GetFloat(rowIndex, 5);
-        one.c06_SlotObjTp_Int = sheet.GetInt(rowIndex, 6);
-        one.c07_SlotIdx_Int = sheet.GetInt(rowIndex, 7);
-        one.c08_LockTp_Int = sheet.GetInt(rowIndex, 8);
-        one.c09_CastDistFarthest = sheet.GetFloat(rowIndex, 9);
-        one.c10_CastDistNearest = sheet.GetFloat(rowIndex, 10);
-        one.c11_CD = sheet.GetFloat(rowIndex, 11);
-        one.c12_Duration = sheet.GetFloat(rowIndex, 12);
-        one.c13_CastEvent_Str = sheet.GetString(rowIndex, 13);
-        one.c14_PreCastTiming = sheet.GetFloat(rowIndex, 14);
-        one.c15_PostCastTiming = sheet.GetFloat(rowIndex, 15);
+		int colIndex = 0;
+		one.ID = sheet.GetInt(rowIndex, colIndex++);
+		one.Name = sheet.GetString(rowIndex, colIndex++);
 
+		one.Desc = sheet.GetString(rowIndex, colIndex++);
+		one.NameID = sheet.GetInt(rowIndex, colIndex++);
+		one.DescID = sheet.GetInt(rowIndex, colIndex++);
+
+		one.ActId = sheet.GetInt(rowIndex, colIndex++);
+		one.SkillType = sheet.GetInt(rowIndex, colIndex++);
+		one.ElementType_Int = sheet.GetInt(rowIndex, colIndex++);
+		one.DmgAdditional = sheet.GetFloat(rowIndex, colIndex++);
+		one.SlotObjTp_Int = sheet.GetInt(rowIndex, colIndex++);
+		one.SlotIdx_Int = sheet.GetInt(rowIndex, colIndex++);
+		one.LockTp_Int = sheet.GetInt(rowIndex, colIndex++);
+		one.CastDistFarthest = sheet.GetFloat(rowIndex, colIndex++);
+		one.CastDistNearest = sheet.GetFloat(rowIndex, colIndex++);
+		one.CD = sheet.GetFloat(rowIndex, colIndex++);
+		one.Duration = sheet.GetFloat(rowIndex, colIndex++);
+		one.CastEvent_Str = sheet.GetString(rowIndex, colIndex++);
+		one.PreCastTiming = sheet.GetFloat(rowIndex, colIndex++);
+		one.PostCastTiming = sheet.GetFloat(rowIndex, colIndex++);
+
+		one.CanMove = sheet.GetInt(rowIndex, colIndex++);
+		one.NextSkillID = sheet.GetInt(rowIndex, colIndex++);
         return one;
     }
 }

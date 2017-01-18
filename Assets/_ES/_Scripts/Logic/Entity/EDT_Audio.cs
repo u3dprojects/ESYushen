@@ -27,11 +27,25 @@ public class EDT_Audio : EDT_Base {
 	public override void OnReInit (float castTime, LitJson.JsonData jsonData)
 	{
 		base.OnReInit (castTime, jsonData);
+
+		string resName = (string)jsonData ["m_audioName"];
+		bool isOkey = DoReInit (resName, 2);
+		if (!isOkey) {
+			return;
+		}
+
+		this.m_isJsonDataToSelfSuccessed = true;
 	}
 
 	public override JsonData ToJsonData ()
 	{
-		return base.ToJsonData ();
+		if (!this.m_isInitedFab)
+			return null;
+
+		JsonData ret = new JsonData ();
+		ret["m_typeInt"] = this.m_iCurType;
+		ret["m_audioName"] = this.m_sNameNoSuffix;
+		return ret;
 	}
 
 	protected override bool OnCallEvent ()
