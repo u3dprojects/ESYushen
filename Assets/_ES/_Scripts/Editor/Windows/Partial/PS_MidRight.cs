@@ -51,6 +51,7 @@ public partial class PS_MidRight{
     int ms_actId;
 
 	string[] SkillTypes = { 
+		"暂未选择",
 		"主角普攻",
 		"主角技能_1",
 		"主角技能_2",
@@ -62,7 +63,7 @@ public partial class PS_MidRight{
 		"雇佣兵技能_1",
 		"怪物技能"
 	};
-	int ms_skillType;
+	int ms_skillType = 1;
 
     string[] ElementType = {"物理","冰","火"};
     int ms_elementType;
@@ -317,6 +318,16 @@ public partial class PS_MidRight{
 		afterRoll = EditorGUILayout.Slider("后摇开始点(单位秒):", afterRoll,beforeRoll,duration);
         EG_GUIHelper.FEG_EndH();
         EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		ms_isCanMove = EditorGUILayout.Toggle("是否可移动? ",ms_isCanMove);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		ms_iNextSkillId = EditorGUILayout.IntField ("下个技能ID:",ms_iNextSkillId);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
 
         // 绘制技能事件
         EG_GUIHelper.FG_BeginVAsArea();
