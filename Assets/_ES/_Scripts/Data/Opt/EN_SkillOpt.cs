@@ -25,106 +25,28 @@ public class EN_SkillOpt
 
     private EN_SkillOpt() { }
 
-    int NumberOfRow = 0;
-    NH_Sheet m_sheet = null;
-    List<EN_Skill> list = null;
+	EN_BaseXlsOpt<EN_Skill> m_eOptXls = new EN_BaseXlsOpt<EN_Skill>();
 
     public bool isInitSuccessed = false;
 
     public void DoInit(string path, int sheetIndex)
     {
-        DoClear();
-        try
-        {
-            this.m_sheet = new NH_Sheet(path, sheetIndex);
-            this.list = new List<EN_Skill>();
-
-            EN_Skill tmp = null;
-            object obj = null;
-
-            for (int i = 4; i < this.m_sheet.maxRow; i++)
-            {
-                obj = this.m_sheet.GetNCell(i, 0).val;
-                if (obj == null || string.IsNullOrEmpty(obj.ToString()))
-                {
-                    break;
-                }
-
-                tmp = EN_Skill.NewSkill(i, this.m_sheet);
-                this.list.Add(tmp);
-                this.NumberOfRow = i + 1;
-            }
-
-            isInitSuccessed = true;
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("你选取的Excel表正在编辑中，请关闭Excel表。" + ex);
-        }
-
+		m_eOptXls.DoInit (path, sheetIndex);
+		isInitSuccessed = m_eOptXls.isInitSuccessed;
     }
 
     public EN_Skill GetEnSkill(int ID)
     {
-        if (this.list == null || this.list.Count <= 0)
-            return null;
-
-        int lens = this.list.Count;
-        for (int i = 0; i < lens; i++)
-        {
-            if (this.list[i].ID == ID)
-                return this.list[i];
-        }
-        return null;
+		return m_eOptXls.GetEntity (ID);
     }
 
     public EN_Skill GetOrNew(int ID)
     {
-        EN_Skill ret = GetEnSkill(ID);
-        if (ret == null)
-        {
-            ret = new EN_Skill();
-            ret.sheet = m_sheet;
-            ret.rowIndex = NumberOfRow;
-
-            NumberOfRow++;
-
-            this.list.Add(ret);
-        }
-        return ret;
-    }
-
-    void ToNSList()
-    {
-        if (this.list == null || this.list.Count <= 0)
-            return;
-
-        int lens = this.list.Count;
-        for (int i = 0; i < lens; i++)
-        {
-            (list[i]).ToNSCell();
-        }
+		return m_eOptXls.GetOrNew(ID);
     }
 
     public void Save(string savePath)
     {
-        if (!isInitSuccessed)
-            return;
-
-        ToNSList();
-        NPOIHssfEx.ToFile(m_sheet.ToWorkbook(), savePath);
-    }
-
-    public void DoClear()
-    {
-        this.m_sheet = null;
-        if (this.list != null)
-        {
-            this.list.Clear();
-            this.list = null;
-        }
-
-        NumberOfRow = 0;
-        isInitSuccessed = false;
+		m_eOptXls.Save (savePath);
     }
 }

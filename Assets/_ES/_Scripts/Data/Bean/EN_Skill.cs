@@ -5,14 +5,11 @@ using System.Collections.Generic;
 /// <summary>
 /// 类名 : excel技能实体对象
 /// 作者 : Canyon
-/// 日期 : 2016-12-29 17:10:00
+/// 日期 : 2016-12-29 17:10
 /// 功能 : 
 /// </summary>
-public class EN_Skill{
-    public int rowIndex;
-    public NH_Sheet sheet;
-
-    public int ID;
+public class EN_Skill : EN_BaseXls{
+    // public int ID;
     public string Name;
 
 	public string Desc;
@@ -39,7 +36,10 @@ public class EN_Skill{
 	public int CanMove;
 	public int NextSkillID;
 
-    object[] Columns
+	public EN_Skill():base(){
+	}
+
+	protected override object[] Columns
     {
         get { 
             object[] ret = {
@@ -72,47 +72,41 @@ public class EN_Skill{
         }
     }
 
-    public void ToNSCell()
-    {
-        object[] columns = Columns;
-        int lens = columns.Length;
-        for(int i = 0; i < lens; i++)
-        {
-            this.sheet.SaveValueToCache(this.rowIndex, i, columns[i]);
-        }
-    }
-    
+	public override void DoInit (int rowIndex, NH_Sheet sheet)
+	{
+		base.DoInit (rowIndex, sheet);
+
+		int colIndex = 0;
+		this.ID = sheet.GetInt(rowIndex, colIndex++);
+		this.Name = sheet.GetString(rowIndex, colIndex++);
+
+		this.Desc = sheet.GetString(rowIndex, colIndex++);
+		this.NameID = sheet.GetInt(rowIndex, colIndex++);
+		this.DescID = sheet.GetInt(rowIndex, colIndex++);
+
+		this.ActId = sheet.GetInt(rowIndex, colIndex++);
+		this.SkillType = sheet.GetInt(rowIndex, colIndex++);
+		this.ElementType_Int = sheet.GetInt(rowIndex, colIndex++);
+		this.DmgAdditional = sheet.GetFloat(rowIndex, colIndex++);
+		this.SlotObjTp_Int = sheet.GetInt(rowIndex, colIndex++);
+		this.SlotIdx_Int = sheet.GetInt(rowIndex, colIndex++);
+		this.LockTp_Int = sheet.GetInt(rowIndex, colIndex++);
+		this.CastDistFarthest = sheet.GetFloat(rowIndex, colIndex++);
+		this.CastDistNearest = sheet.GetFloat(rowIndex, colIndex++);
+		this.CD = sheet.GetFloat(rowIndex, colIndex++);
+		this.Duration = sheet.GetFloat(rowIndex, colIndex++);
+		this.CastEvent_Str = sheet.GetString(rowIndex, colIndex++);
+		this.PreCastTiming = sheet.GetFloat(rowIndex, colIndex++);
+		this.PostCastTiming = sheet.GetFloat(rowIndex, colIndex++);
+
+		this.CanMove = sheet.GetInt(rowIndex, colIndex++);
+		this.NextSkillID = sheet.GetInt(rowIndex, colIndex++);
+	}
+
     static public EN_Skill NewSkill(int rowIndex, NH_Sheet sheet)
     {
         EN_Skill one = new EN_Skill();
-        one.rowIndex = rowIndex;
-        one.sheet = sheet;
-
-		int colIndex = 0;
-		one.ID = sheet.GetInt(rowIndex, colIndex++);
-		one.Name = sheet.GetString(rowIndex, colIndex++);
-
-		one.Desc = sheet.GetString(rowIndex, colIndex++);
-		one.NameID = sheet.GetInt(rowIndex, colIndex++);
-		one.DescID = sheet.GetInt(rowIndex, colIndex++);
-
-		one.ActId = sheet.GetInt(rowIndex, colIndex++);
-		one.SkillType = sheet.GetInt(rowIndex, colIndex++);
-		one.ElementType_Int = sheet.GetInt(rowIndex, colIndex++);
-		one.DmgAdditional = sheet.GetFloat(rowIndex, colIndex++);
-		one.SlotObjTp_Int = sheet.GetInt(rowIndex, colIndex++);
-		one.SlotIdx_Int = sheet.GetInt(rowIndex, colIndex++);
-		one.LockTp_Int = sheet.GetInt(rowIndex, colIndex++);
-		one.CastDistFarthest = sheet.GetFloat(rowIndex, colIndex++);
-		one.CastDistNearest = sheet.GetFloat(rowIndex, colIndex++);
-		one.CD = sheet.GetFloat(rowIndex, colIndex++);
-		one.Duration = sheet.GetFloat(rowIndex, colIndex++);
-		one.CastEvent_Str = sheet.GetString(rowIndex, colIndex++);
-		one.PreCastTiming = sheet.GetFloat(rowIndex, colIndex++);
-		one.PostCastTiming = sheet.GetFloat(rowIndex, colIndex++);
-
-		one.CanMove = sheet.GetInt(rowIndex, colIndex++);
-		one.NextSkillID = sheet.GetInt(rowIndex, colIndex++);
+		one.DoInit (rowIndex, sheet);
         return one;
     }
 }
