@@ -49,4 +49,9 @@ public class EN_SkillOpt
     {
 		m_eOptXls.Save (savePath);
     }
+
+	public void DoClear(){
+		m_eOptXls.DoClear ();
+		isInitSuccessed = false;
+	}
 }

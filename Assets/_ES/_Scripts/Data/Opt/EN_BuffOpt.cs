@@ -35,7 +35,7 @@ public class EN_BuffOpt {
 		isInitSuccessed = m_eOptXls.isInitSuccessed;
 	}
 
-	public EN_Buff GetEnSkill(int ID)
+	public EN_Buff GetEntity(int ID)
 	{
 		return m_eOptXls.GetEntity (ID);
 	}
@@ -48,6 +48,11 @@ public class EN_BuffOpt {
 	public void Save(string savePath)
 	{
 		m_eOptXls.Save (savePath);
+	}
+
+	public void DoClear(){
+		m_eOptXls.DoClear ();
+		isInitSuccessed = false;
 	}
 
 }
