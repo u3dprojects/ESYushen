@@ -22,6 +22,7 @@ public class EDT_Audio : EDT_Base {
 	public EDT_Audio() : base()
 	{
 		this.m_iCurType = 2;
+		this.m_fVolume = 1;
 	}
 
 	public override void OnReInit (float castTime, LitJson.JsonData jsonData)

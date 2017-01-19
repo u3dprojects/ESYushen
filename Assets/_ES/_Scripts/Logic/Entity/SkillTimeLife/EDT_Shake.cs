@@ -17,6 +17,7 @@ public class EDT_Shake : EDT_Base {
 	public float m_fStrength;
 
 	public EDT_Shake():base(){
+		this.m_iCurType = 3;
 	}
 
 	public override void OnReInit (float castTime, LitJson.JsonData jsonData)
