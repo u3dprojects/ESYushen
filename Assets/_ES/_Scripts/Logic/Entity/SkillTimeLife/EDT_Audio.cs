@@ -73,7 +73,7 @@ public class EDT_Audio : EDT_Base {
 		if (type != 2) {
 			return "类型不对";
 		}
-		return "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+objName+".prefab";
+		return "Assets\\PackResources\\Arts\\Sound\\"+objName+".mp3";
 	}
 
 	public override void OnClear ()
