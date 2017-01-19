@@ -82,7 +82,7 @@ public class EDW_Skill : EditorWindow
 	public SpriteJoint m_eCsJoin;
 
     PS_MidLeft m_midLeft;
-    public PS_MidRight m_midRight;
+    PS_MidRight m_midRight;
 
     #endregion
 

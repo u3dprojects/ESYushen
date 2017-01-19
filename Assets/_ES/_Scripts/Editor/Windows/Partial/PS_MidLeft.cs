@@ -387,7 +387,7 @@ public class PS_MidLeft{
 
     void _DrawEvents()
     {
-		m_ePSEvents.DrawEvents();
+		m_ePSEvents.DrawEvents(m_curAni.CurLens,0,m_curAni.CurLens);
     }
 
     void _DrawOptBtns()

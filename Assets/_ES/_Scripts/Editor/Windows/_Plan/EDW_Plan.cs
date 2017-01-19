@@ -56,6 +56,11 @@ public class EDW_Plan : EditorWindow {
 		vwWindow = null;
 	}
 
+	public enum EmExcelTable{
+		Buffer,
+		Bullet,
+		Skill
+	}
 	#region  == Member Attribute ===
 
 	Vector2 scrollPos;
@@ -66,13 +71,13 @@ public class EDW_Plan : EditorWindow {
 	float minWidth = 440;
 	float curWidth = 0;
 
-	int m_indExcelTable;
-	int _m_preIndexET = 0;
-	string[] ExcelTable = { "Buffer表","子弹表" };
+	EmExcelTable m_emType = EmExcelTable.Buffer;
+	EmExcelTable m_emPreType = EmExcelTable.Buffer;
 
 	string pathOpenExcel;
 
 	EG_Buff m_egBuff = new EG_Buff();
+	EG_Skill m_egSkill = new EG_Skill();
 
 	// delegate 更新
 	System.Action call4OnUpdate;
@@ -117,8 +122,9 @@ public class EDW_Plan : EditorWindow {
 			EG_GUIHelper.FEG_EndH ();
 
 			EG_GUIHelper.FEG_BeginH ();
-			m_indExcelTable = EditorGUILayout.Popup ("选择表类型:", m_indExcelTable, ExcelTable);
-			if (_m_preIndexET != m_indExcelTable) {
+			m_emType = (EmExcelTable)EditorGUILayout.EnumPopup ("选择表类型:",(System.Enum)m_emType);
+
+			if (m_emType != m_emPreType) {
 				DoClear ();
 			}
 			EG_GUIHelper.FEG_EndH ();
@@ -130,11 +136,7 @@ public class EDW_Plan : EditorWindow {
 			EG_GUIHelper.FEG_BeginScroll(ref scrollPos,0,curWidth,curScrollH);
 			_DrawSearchExcel();
 
-			switch (m_indExcelTable) {
-			case 0:
-				m_egBuff.DrawExcel ();
-				break;
-			}
+			ShowExcel ();
 
 			EG_GUIHelper.FEG_EndScroll();
 
@@ -178,6 +180,7 @@ public class EDW_Plan : EditorWindow {
 	void DoClear()
 	{
 		m_egBuff.DoClear ();
+		m_egSkill.DoClear ();
 	}
 
 	void OnSceneGUI(SceneView sceneView) {
@@ -240,17 +243,44 @@ public class EDW_Plan : EditorWindow {
 	}
 
 	bool isReady(){
-		switch (m_indExcelTable) {
-		case 0:
+		switch (m_emType) {
+		case EmExcelTable.Buffer:
 			return m_egBuff.isInited;
+		case EmExcelTable.Skill:
+			return m_egSkill.isInited;
 		}
 		return false;
 	}
 
+	void InitExcel(string pathOpen){
+		switch (m_emType) {
+		case EmExcelTable.Buffer:
+			m_egBuff.DoInit(pathOpen);
+			break;
+		case EmExcelTable.Skill:
+			m_egSkill.DoInit (pathOpen);
+			break;
+		}
+	}
+
 	void SaveExcel(string savePath){
-		switch (m_indExcelTable) {
-		case 0:
+		switch (m_emType) {
+		case EmExcelTable.Buffer:
 			m_egBuff.SaveExcel (savePath);
+			break;
+		case EmExcelTable.Skill:
+			m_egSkill.SaveExcel (savePath);
+			break;
+		}
+	}
+
+	void ShowExcel(){
+		switch (m_emType) {
+		case EmExcelTable.Buffer:
+			m_egBuff.DrawShow ();
+			break;
+		case EmExcelTable.Skill:
+			m_egSkill.DrawShow ();
 			break;
 		}
 	}
@@ -265,11 +295,7 @@ public class EDW_Plan : EditorWindow {
 		if (GUILayout.Button("选取Excel表"))
 		{
 			this.pathOpenExcel = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
-			switch (m_indExcelTable) {
-			case 0:
-				m_egBuff.DoInit(this.pathOpenExcel);
-				break;
-			}
+			InitExcel (this.pathOpenExcel);
 		}
 		EG_GUIHelper.FEG_EndH();
 
@@ -283,7 +309,7 @@ public class EDW_Plan : EditorWindow {
 		}else
 		{
 			EG_GUIHelper.FEG_BeginH();
-			EG_GUIHelper.FG_Label("SkillPath:" + this.pathOpenExcel);
+			EG_GUIHelper.FG_Label("Excel表路径:" + this.pathOpenExcel);
 			EG_GUIHelper.FEG_EndH();
 		}
 

@@ -103,6 +103,41 @@ public class EN_Skill : EN_BaseXls{
 		this.NextSkillID = sheet.GetInt(rowIndex, colIndex++);
 	}
 
+	public override void DoClone (EN_BaseXls org)
+	{
+		if (!(org is EN_Skill)) {
+			return;
+		}
+
+		EN_Skill tmp = (EN_Skill)org;
+
+		base.DoClone (tmp);
+		this.ID = tmp.ID;
+		this.Name = tmp.Name;
+
+		this.Desc = tmp.Desc;
+		this.NameID = tmp.NameID;
+		this.DescID = tmp.DescID;
+
+		this.ActId = tmp.ActId;
+		this.SkillType = tmp.SkillType;
+		this.ElementType_Int = tmp.ElementType_Int;
+		this.DmgAdditional = tmp.DmgAdditional;
+		this.SlotObjTp_Int = tmp.SlotObjTp_Int;
+		this.SlotIdx_Int = tmp.SlotIdx_Int;
+		this.LockTp_Int = tmp.LockTp_Int;
+		this.CastDistFarthest = tmp.CastDistFarthest;
+		this.CastDistNearest = tmp.CastDistNearest;
+		this.CD = tmp.CD;
+		this.Duration = tmp.Duration;
+		this.CastEvent_Str = tmp.CastEvent_Str;
+		this.PreCastTiming = tmp.PreCastTiming;
+		this.PostCastTiming = tmp.PostCastTiming;
+
+		this.CanMove = tmp.CanMove;
+		this.NextSkillID = tmp.NextSkillID;
+	}
+
     static public EN_Skill NewSkill(int rowIndex, NH_Sheet sheet)
     {
         EN_Skill one = new EN_Skill();

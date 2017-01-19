@@ -36,6 +36,15 @@ public partial class PS_Events {
 
 	bool isEffectJoinSelf = false;
 
+	// 总时长
+	float duration = 0;
+
+	// 前摇结束点
+	float beforeRoll = 0;
+
+	// 后摇开始点
+	float afterRoll = 0;
+
 	#endregion
 
 	public PS_Events(){
@@ -90,7 +99,14 @@ public partial class PS_Events {
 		sceneView.Repaint();
 	}
 
-	public void DrawEvents(){
+	public void DrawEvents(float duration,float bef,float aft){
+		this.duration = duration;
+		this.beforeRoll = bef;
+		this.afterRoll = aft;
+		DrawEvents ();
+	}
+
+	void DrawEvents(){
 		GUIStyle style = EditorStyles.label;
 		style.alignment = TextAnchor.MiddleLeft;
 
@@ -199,7 +215,7 @@ public partial class PS_Events {
 		{	
 			GUILayout.Label("触发时间:");
 			if (m_isPlan) {
-				effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+				effect.m_fCastTime = EditorGUILayout.Slider(effect.m_fCastTime, 0, duration);
 			} else {
 				effect.m_fCastTime = EditorGUILayout.FloatField (effect.m_fCastTime);
 			}
@@ -379,7 +395,7 @@ public partial class PS_Events {
 		{
 			GUILayout.Label("触发时间:");
 			if (m_isPlan) {
-				audio.m_fCastTime = EditorGUILayout.Slider(audio.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+				audio.m_fCastTime = EditorGUILayout.Slider(audio.m_fCastTime, 0, duration);
 			} else {
 				audio.m_fCastTime = EditorGUILayout.FloatField (audio.m_fCastTime);
 			}
@@ -499,7 +515,7 @@ public partial class PS_Events {
 		{
 			GUILayout.Label("触发时间:");
 			if (m_isPlan) {
-				hurt.m_fCastTime = EditorGUILayout.Slider(hurt.m_fCastTime, this.m_wSkill.m_midRight.beforeRoll, this.m_wSkill.m_midRight.afterRoll);
+				hurt.m_fCastTime = EditorGUILayout.Slider(hurt.m_fCastTime, beforeRoll, afterRoll);
 			} else {
 				hurt.m_fCastTime = EditorGUILayout.FloatField (hurt.m_fCastTime);
 			}
@@ -915,7 +931,7 @@ public partial class PS_Events {
 		{
 			GUILayout.Label("触发时间:");
 			if (m_isPlan) {
-				shake.m_fCastTime = EditorGUILayout.Slider(shake.m_fCastTime, 0, this.m_wSkill.m_midRight.duration);
+				shake.m_fCastTime = EditorGUILayout.Slider(shake.m_fCastTime, 0, duration);
 			} else {
 				shake.m_fCastTime = EditorGUILayout.FloatField (shake.m_fCastTime);
 			}

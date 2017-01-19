@@ -41,10 +41,21 @@ public class EN_BaseXls : System.Object {
 		this.sheet = sheet;
 	}
 
+	public virtual void DoClone(EN_BaseXls org){
+		this.rowIndex = org.rowIndex;
+		this.sheet = org.sheet;
+	}
+
 	static public T NewTEntity<T>(int rowIndex, NH_Sheet sheet) where T : EN_BaseXls,new()
 	{
 		T one = new T();
 		one.DoInit (rowIndex, sheet);
+		return one;
+	}
+
+	static public T CloneEntity<T>(T t) where T : EN_BaseXls,new(){
+		T one = new T();
+		one.DoClone (t);
 		return one;
 	}
 }

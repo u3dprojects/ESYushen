@@ -85,6 +85,36 @@ public class EN_Buff : EN_BaseXls{
 		this.strEvtDuration = sheet.GetString(rowIndex, colIndex++);
 	}
 
+	public override void DoClone (EN_BaseXls org)
+	{
+		if (!(org is EN_Buff)) {
+			return;
+		}
+
+		EN_Buff tmp = (EN_Buff)org;
+
+		base.DoClone (tmp);
+
+		this.ID = tmp.ID;
+		this.Name = tmp.Name;
+
+		this.Desc = tmp.Desc;
+		this.NameID = tmp.NameID;
+		this.DescID = tmp.DescID;
+
+		this.Icon = tmp.Icon;
+		this.EffectResName = tmp.EffectResName;
+		this.JoinId = tmp.JoinId;
+		this.MateChange = tmp.MateChange;
+		this.Tag = tmp.Tag;
+		this.GID = tmp.GID;
+		this.IsResetWhenGet = tmp.IsResetWhenGet;
+		this.strEvtInterval = tmp.strEvtInterval;
+		this.strEvtOnce = tmp.strEvtOnce;
+		this.Interval = tmp.Interval;
+		this.strEvtDuration = tmp.strEvtDuration;
+	}
+
 	static public EN_Buff NewBuff(int rowIndex, NH_Sheet sheet)
 	{
 		EN_Buff one = new EN_Buff();

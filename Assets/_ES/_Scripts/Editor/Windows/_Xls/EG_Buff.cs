@@ -5,22 +5,14 @@ using UnityEditor;
 /// <summary>
 /// 类名 : buff 在 windows的视图
 /// 作者 : Canyon
-/// 日期 : 2017-01-19 17:10
+/// 日期 : 2017-01-19 16:10
 /// 功能 : 
 /// </summary>
 public class EG_Buff {
 
-	EN_Buff ms_curEnity;
+	EN_Buff ms_entity = new EN_Buff ();
 
-	int ms_ID;
-	string ms_name;
-	string ms_desc;
-	int ms_nameId;
-	int ms_descId;
-	string ms_icon;
 	GameObject ms_gobjEffect;
-	string ms_res = "";
-	int ms_join;
 	string[] JoinType = {
 		"原点",
 		"头部",
@@ -31,21 +23,14 @@ public class EG_Buff {
 		"左武器攻击点",
 		"右武器攻击点"
 	};
-	string ms_mate;
-	int ms_tag;
 	string[] TagType = {
 		"增益",
 		"减益"
 	};
-	int ms_gid;
 	string[] GIDType = {
 		"占位"
 	};
 	bool ms_isRest;
-	string ms_sInv;
-	string ms_sOne;
-	float ms_fInv;
-	string ms_sDur;
 
 	EN_BuffOpt optBuff{
 		get{
@@ -67,16 +52,16 @@ public class EG_Buff {
 		optBuff.DoClear ();
 	}
 
-	public void DrawExcel()
+	public void DrawShow()
 	{
 		EG_GUIHelper.FEG_BeginH();
-		ms_ID = EditorGUILayout.IntField("ID:",ms_ID);
+		ms_entity.ID = EditorGUILayout.IntField("ID:",ms_entity.ID);
 		if (GUILayout.Button("查询"))
 		{
 			if (optBuff.isInitSuccessed)
 			{
-				ms_curEnity = optBuff.GetEntity(ms_ID);
-				OnInitEntity2Attrs();
+				EN_Buff ms_curEnity = optBuff.GetEntity(ms_entity.ID);
+				OnInitEntity2Attrs(ms_curEnity);
 			}
 			else{
 				EditorUtility.DisplayDialog("Tips","没有选则技能表，不能进行查询搜索!","Okey");
@@ -85,100 +70,70 @@ public class EG_Buff {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
-		ms_name = EditorGUILayout.TextField("名称:", ms_name);
+		ms_entity.Name = EditorGUILayout.TextField("名称:", ms_entity.Name);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_nameId = EditorGUILayout.IntField("名称ID:", ms_nameId);
+		ms_entity.NameID = EditorGUILayout.IntField("名称ID:", ms_entity.NameID);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_desc = EditorGUILayout.TextField("描述:", ms_desc);
+		ms_entity.Desc = EditorGUILayout.TextField("描述:", ms_entity.Desc);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_descId = EditorGUILayout.IntField("描述ID:", ms_descId);
+		ms_entity.DescID = EditorGUILayout.IntField("描述ID:", ms_entity.DescID);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_icon = EditorGUILayout.TextField("图标Icon:", ms_icon);
+		ms_entity.Icon = EditorGUILayout.TextField("图标Icon:", ms_entity.Icon);
 		EG_GUIHelper.FG_Space(5);
 
 		ms_gobjEffect = EditorGUILayout.ObjectField ("资源:", ms_gobjEffect, typeof(GameObject), false) as GameObject;
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("名称:" + ms_res);
+		EditorGUILayout.LabelField ("名称:" + ms_entity.EffectResName);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_join = EditorGUILayout.Popup("挂节点:", ms_join, JoinType);
+		ms_entity.JoinId = EditorGUILayout.Popup("挂节点:", ms_entity.JoinId, JoinType);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_mate = EditorGUILayout.TextField("材质变化:", ms_mate);
+		ms_entity.MateChange = EditorGUILayout.TextField("材质变化:", ms_entity.MateChange);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_tag = EditorGUILayout.Popup("主类型:", ms_tag, TagType);
+		ms_entity.Tag = EditorGUILayout.Popup("主类型:", ms_entity.Tag, TagType);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_gid = EditorGUILayout.Popup("子类型:", ms_gid, GIDType);
+		ms_entity.GID = EditorGUILayout.Popup("子类型:", ms_entity.GID, GIDType);
 		EG_GUIHelper.FG_Space(5);
 
 		ms_isRest = EditorGUILayout.Toggle("替代是否重置:", ms_isRest);
+		ms_entity.IsResetWhenGet = ms_isRest ? 1 : 0;
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("持续效果:", ms_sInv);
+		EditorGUILayout.LabelField ("持续效果:", ms_entity.strEvtInterval);
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("瞬时效果:", ms_sInv);
+		EditorGUILayout.LabelField ("瞬时效果:", ms_entity.strEvtOnce);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_fInv = EditorGUILayout.FloatField ("持续效果的间隔时间(单位秒):", ms_fInv);
+		ms_entity.Interval = EditorGUILayout.FloatField ("持续效果的间隔时间(单位秒):", ms_entity.Interval);
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("特殊效果:", ms_sDur);
+		EditorGUILayout.LabelField ("特殊效果:", ms_entity.strEvtDuration);
 		EG_GUIHelper.FG_Space(5);
 	}
 
-	void OnInitEntity2Attrs()
+	void OnInitEntity2Attrs(EN_Buff entity)
 	{
-		if(ms_curEnity != null)
+		if(entity != null)
 		{
-			this.ms_ID = this.ms_curEnity.ID;
-			this.ms_name = this.ms_curEnity.Name;
-			this.ms_nameId = this.ms_curEnity.NameID;
-			this.ms_desc = this.ms_curEnity.Desc;
-			this.ms_descId = this.ms_curEnity.DescID;
-
-			this.ms_icon = this.ms_curEnity.Icon;
-
-			this.ms_res = this.ms_curEnity.EffectResName;
-			this.ms_join = this.ms_curEnity.JoinId;
-			this.ms_mate = this.ms_curEnity.MateChange;
-			this.ms_tag = this.ms_curEnity.Tag;
-			this.ms_gid = this.ms_curEnity.GID;
-			this.ms_isRest = this.ms_curEnity.IsResetWhenGet == 1 ? true : false;
-			this.ms_sInv = this.ms_curEnity.strEvtInterval;
-			this.ms_sOne = this.ms_curEnity.strEvtOnce;
-			this.ms_fInv = this.ms_curEnity.Interval;
-			this.ms_sDur = this.ms_curEnity.strEvtDuration;
+			ms_entity.DoClone (entity);
+			this.ms_isRest = ms_entity.IsResetWhenGet == 1 ? true : false;
 		}
 	}
 
 	void OnInitAttrs2Entity()
 	{
-		ms_curEnity = optBuff.GetOrNew(ms_ID);
-		this.ms_curEnity.ID = this.ms_ID;
-		this.ms_curEnity.Name = this.ms_name;
-		this.ms_curEnity.NameID = this.ms_nameId;
-		this.ms_curEnity.Desc = this.ms_desc;
-		this.ms_curEnity.DescID = this.ms_descId;
-
-		this.ms_curEnity.Icon = this.ms_icon;
-		this.ms_curEnity.EffectResName = this.ms_res;
-		this.ms_curEnity.JoinId = this.ms_join;
-		this.ms_curEnity.MateChange = this.ms_mate;
-		this.ms_curEnity.Tag = this.ms_tag;
-		this.ms_curEnity.GID = this.ms_gid;
-		this.ms_curEnity.IsResetWhenGet = this.ms_isRest ? 1 : 0;
-		this.ms_curEnity.strEvtInterval = this.ms_sInv;
-		this.ms_curEnity.strEvtOnce = this.ms_sOne;
-		this.ms_curEnity.Interval = this.ms_fInv;
-		this.ms_curEnity.strEvtDuration = this.ms_sDur;
+		EN_Buff entity = optBuff.GetOrNew(ms_entity.ID);
+		ms_entity.rowIndex = entity.rowIndex;
+		entity.DoClone (ms_entity);
 	}
 
 	public void SaveExcel(string savePath){
