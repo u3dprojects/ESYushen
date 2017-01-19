@@ -30,6 +30,9 @@ public partial class PS_MidRight{
 	PS_Events m_ePSEvents = new PS_Events(true);
 
     Vector2 scrollPos;
+	float topDescH = 20;
+	float botBtnH = 45;
+
     float minScrollH = 260;
     float curScrollH = 260;
     float minWidth = 440;
@@ -136,7 +139,7 @@ public partial class PS_MidRight{
         if (this.m_wSkill != null)
         {
             // 100 - 是主界面顶部高度 20 - 是误差偏移
-            curScrollH = (m_wSkill.position.height - 100) - 20;
+			curScrollH = (m_wSkill.position.height - 100) - topDescH - botBtnH;
             curScrollH = Mathf.Max(curScrollH, minScrollH);
 
             curWidth = (m_wSkill.position.width - 10) / 2;
@@ -161,13 +164,13 @@ public partial class PS_MidRight{
 
                     _DrawSkill();
 
-					_DrawOptBtns();
-
-					_DrawOptExcelBtns ();
-
                 }
 
                 EG_GUIHelper.FEG_EndScroll();
+
+				_DrawOptBtns();
+
+				_DrawOptExcelBtns ();
             }
         }
         EG_GUIHelper.FEG_EndV();

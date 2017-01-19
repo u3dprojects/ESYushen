@@ -37,6 +37,7 @@ public class EMT_Event{
     public void DoStart()
     {
 		m_eTEvent.DoStart ();
+		isPause = false;
     }
     
     public void OnUpdate(float deltatime, bool isImm = false)
