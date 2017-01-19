@@ -80,6 +80,7 @@ public class EDT_Audio : EDT_Base {
 	{
 		base.OnClear ();
 		this.m_iCurType = 2;
+		this.m_fVolume = 1;
 
 		OnClearAudio ();
 	}
