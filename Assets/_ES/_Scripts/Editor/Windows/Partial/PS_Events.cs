@@ -241,11 +241,13 @@ public partial class PS_Events {
 	{
 		EG_GUIHelper.FEG_BeginH();
 		effect.m_iJoint = EditorGUILayout.Popup("挂节点:", effect.m_iJoint, JoinType);
-		if (m_wSkill.m_eCsJoin == null) {
-			isEffectJoinSelf = true;
-		} else {
-			if (!isEffectJoinSelf) {
-				effect.m_trsfParent = m_wSkill.m_eCsJoin.jointArray[effect.m_iJoint];
+		if (m_wSkill != null) {
+			if (m_wSkill.m_eCsJoin == null) {
+				isEffectJoinSelf = true;
+			} else {
+				if (!isEffectJoinSelf) {
+					effect.m_trsfParent = m_wSkill.m_eCsJoin.jointArray [effect.m_iJoint];
+				}
 			}
 		}
 		EG_GUIHelper.FEG_EndH();
