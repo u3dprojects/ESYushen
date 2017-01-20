@@ -18,19 +18,16 @@ public class PS_EvtAudio {
 	float duration;
 	string m_title;
 
-	bool isInit = false;
+	public bool m_isDrawTime = false;
 
 	List<bool> m_lFodeout = new List<bool>();
 
-	public void DoInit(string m_title,bool m_isPlan,System.Action m_callNew,System.Action<EDT_Audio> m_callRemove){
-		if (isInit)
-			return;
-		
-		isInit = true;
+	public PS_EvtAudio(string m_title,bool m_isPlan,System.Action m_callNew,System.Action<EDT_Audio> m_callRemove,bool isDrawTime){
 		this.m_title = m_title;
 		this.m_callNew = m_callNew;
 		this.m_callRemove = m_callRemove;
 		this.m_isPlan = m_isPlan;
+		this.m_isDrawTime = isDrawTime;
 	}
 
 	public void DoDraw(float duration,List<EDT_Audio> list){
@@ -124,17 +121,19 @@ public class PS_EvtAudio {
 
 		EG_GUIHelper.FG_Space(5);
 
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("触发时间:");
-			if (m_isPlan) {
-				one.m_fCastTime = EditorGUILayout.Slider(one.m_fCastTime, 0, duration);
-			} else {
-				one.m_fCastTime = EditorGUILayout.FloatField (one.m_fCastTime);
+		if (this.m_isDrawTime) {
+			EG_GUIHelper.FEG_BeginH ();
+			{
+				GUILayout.Label ("触发时间:");
+				if (m_isPlan) {
+					one.m_fCastTime = EditorGUILayout.Slider (one.m_fCastTime, 0, duration);
+				} else {
+					one.m_fCastTime = EditorGUILayout.FloatField (one.m_fCastTime);
+				}
 			}
+			EG_GUIHelper.FEG_EndH ();
+			EG_GUIHelper.FG_Space (5);
 		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
 
 		EG_GUIHelper.FEG_BeginH();
 		{

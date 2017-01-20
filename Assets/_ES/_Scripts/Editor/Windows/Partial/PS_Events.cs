@@ -112,10 +112,13 @@ public partial class PS_Events {
 	}
 
 	// 绘制 特效
-	PS_EvtEffect m_psEffect = new PS_EvtEffect();
+	PS_EvtEffect m_psEffect;
 
 	void _DrawEvents4Effect(){
-		m_psEffect.DoInit("特效列表",m_isPlan,_NewEffect,RemoveEvent);
+		if (m_psEffect == null) {
+			m_psEffect = new PS_EvtEffect("特效列表",m_isPlan,_NewEffect,RemoveEvent,true);
+		}
+
 		SpriteJoint m_eCsJoin = null;
 		if (m_wSkill != null && m_wSkill.m_eCsJoin != null) {
 			m_eCsJoin = m_wSkill.m_eCsJoin;
@@ -136,10 +139,11 @@ public partial class PS_Events {
 /// </summary>
 public partial class PS_Events {
 	// 绘制 音效
-	PS_EvtAudio m_psAudio = new PS_EvtAudio();
-
+	PS_EvtAudio m_psAudio;
 	void _DrawEvents4Audio(){
-		m_psAudio.DoInit("音效列表",m_isPlan,_NewAudio,RemoveEvent);
+		if (m_psAudio == null) {
+			m_psAudio = new PS_EvtAudio("音效列表",m_isPlan,_NewAudio,RemoveEvent,true);
+		}
 		m_psAudio.DoDraw (duration, m_cEvents.GetLAudios ());
 	}
 
@@ -466,13 +470,15 @@ public partial class PS_Events {
 	}
 
 	// 绘制 音效
-	PS_EvtAudio m_psBeHitAudio = new PS_EvtAudio();
+	PS_EvtAudio m_psBeHitAudio;
 	void _DrawBeHitAudio(EDT_Hurt hurt){
-		m_psBeHitAudio.DoInit("命中音效:",m_isPlan,delegate {
-			hurt.NewBeHitAudio();
-		},delegate (EDT_Audio one){
-			hurt.RemoveEvent(one);
-		});
+		if (m_psBeHitAudio == null) {
+			m_psBeHitAudio = new PS_EvtAudio("命中音效:",m_isPlan,delegate {
+				hurt.NewBeHitAudio();
+			},delegate (EDT_Audio one){
+				hurt.RemoveEvent(one);
+			},false);
+		}
 
 		m_psBeHitAudio.DoDraw (duration, hurt.GetHitAudioList ());
 	}
@@ -589,10 +595,12 @@ public partial class PS_Events {
 /// </summary>
 public partial class PS_Events {
 
-	PS_EvtShake m_psShake = new PS_EvtShake();
+	PS_EvtShake m_psShake;
 
 	void _DrawEvents4Shake(){
-		m_psShake.DoInit("震屏列表",m_isPlan,_NewShake,RemoveEvent);
+		if (m_psShake == null) {
+			m_psShake = new PS_EvtShake("震屏列表", m_isPlan, _NewShake, RemoveEvent,true);
+		}
 		m_psShake.DoDraw (duration, m_cEvents.GetLShakes());
 	}
 
