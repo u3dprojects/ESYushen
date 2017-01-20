@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 
 /// <summary>
-/// 类名 : 绘制 音效
+/// 类名 : 绘制 音效事件
 /// 作者 : Canyon
 /// 日期 : 2017-01-17 17:30
 /// 功能 : 
@@ -34,11 +34,11 @@ public class PS_EvtAudio {
 	public void DoDraw(float duration,List<EDT_Audio> list){
 		this.duration = duration;
 		this.list = list;
-		_DrawEvents4Audio ();
+		_DrawEvents ();
 	}
 
 	List<bool> m_audio_fodeOut = new List<bool>();
-	void _DrawEvents4Audio(){
+	void _DrawEvents(){
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
 			{
@@ -69,7 +69,7 @@ public class PS_EvtAudio {
 				if (lens > 0) {
 					for (int i = 0; i < lens; i++) {
 						m_audio_fodeOut.Add (false);
-						_DrawOneAudio (i, list [i]);
+						_DrawOneEvnet (i, list [i]);
 					}
 				} else {
 					m_audio_fodeOut.Clear();
@@ -79,7 +79,7 @@ public class PS_EvtAudio {
 		EG_GUIHelper.FG_EndV();
 	}
 
-	void _DrawOneAudio(int index, EDT_Audio audio)
+	void _DrawOneEvnet(int index, EDT_Audio audio)
 	{
 
 		bool isEmptyName = string.IsNullOrEmpty(audio.m_sName);
@@ -105,13 +105,13 @@ public class PS_EvtAudio {
 
 			if (m_audio_fodeOut[index])
 			{
-				_DrawOneAudioAttrs(audio);
+				_DrawOneEventAttrs(audio);
 			}
 		}
 		EG_GUIHelper.FEG_EndV();
 	}
 
-	void _DrawOneAudioAttrs(EDT_Audio audio)
+	void _DrawOneEventAttrs(EDT_Audio audio)
 	{
 
 		EG_GUIHelper.FEG_BeginH();
