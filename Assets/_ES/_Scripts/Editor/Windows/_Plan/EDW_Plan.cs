@@ -126,6 +126,7 @@ public class EDW_Plan : EditorWindow {
 
 			if (m_emType != m_emPreType) {
 				DoClear ();
+				m_emPreType = m_emType;
 			}
 			EG_GUIHelper.FEG_EndH ();
 
