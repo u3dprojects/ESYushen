@@ -72,6 +72,14 @@ public class EDT_Base {
         this.m_iCurID = ++EVENT_CORE_CURSOR;
     }
 
+	~ EDT_Base(){
+		DoClear ();
+	}
+
+	public void DoReInit(JsonData jsonData){
+		DoReInit (0, jsonData);
+	}
+
 	public void DoReInit(float castTime, JsonData jsonData){
 		DoClear ();
 		OnReInit (castTime, jsonData);
@@ -258,4 +266,24 @@ public class EDT_Base {
 
 	public virtual void OnSceneGUI(){
 	}
+
+	#region == 新对象静态方法 ==
+
+	static public T NewEntity<T>() where T : EDT_Base,new(){
+		return new T();
+	}
+
+	static public T NewEntity<T>(JsonData jsonData,float castTime = 0) where T : EDT_Base,new()
+	{
+		T one = new T();
+		one.DoReInit (castTime, jsonData);
+		if (one.m_isJsonDataToSelfSuccessed) {
+			return one;
+		} else {
+			one.DoClear ();
+		}
+		return null;
+	}
+
+	#endregion
 }

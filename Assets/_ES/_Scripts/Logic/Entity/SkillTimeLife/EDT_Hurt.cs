@@ -171,11 +171,11 @@ public class EDT_Hurt : EDT_Base {
 		m_eBeHitter.NewStatus ();
 	}
 
-	public List<EDT_Hurt_BeHitStatus> GetHitStatusList(){
+	public List<EDT_Property> GetHitStatusList(){
 		return m_eBeHitter.GetListStatus ();
 	}
 
-	public void RemoveBeHitStatus(EDT_Hurt_BeHitStatus rm){
+	public void RemoveBeHitStatus(EDT_Property rm){
 		m_eBeHitter.RemoveStatus(rm);
 	}
 

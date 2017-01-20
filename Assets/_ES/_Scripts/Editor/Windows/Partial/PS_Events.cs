@@ -760,7 +760,7 @@ public partial class PS_Events {
 				GUI.backgroundColor = Color.black;
 				GUI.color = Color.white;
 
-				EditorGUILayout.LabelField("命中状态列表", EditorStyles.textArea);
+				EditorGUILayout.LabelField("命中属性修改列表", EditorStyles.textArea);
 
 				GUI.backgroundColor = def;
 
@@ -775,7 +775,7 @@ public partial class PS_Events {
 
 			{
 				// 中
-				List<EDT_Hurt_BeHitStatus> list = hurt.GetHitStatusList();
+				List<EDT_Property> list = hurt.GetHitStatusList();
 				int lens = list.Count;
 				if (lens > 0)
 				{
@@ -794,14 +794,14 @@ public partial class PS_Events {
 		EG_GUIHelper.FG_EndV();
 	}
 
-	void _DrawOneBeHitStatus(int index, EDT_Hurt_BeHitStatus beStatus,EDT_Hurt hurt)
+	void _DrawOneBeHitStatus(int index, EDT_Property beStatus,EDT_Hurt hurt)
 	{
 		
 		EG_GUIHelper.FEG_BeginV();
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_beHitStatus_fodeOut[index] = EditorGUILayout.Foldout(m_beHitStatus_fodeOut[index], "命中状态 - " + beStatus.m_iGid);
+				m_beHitStatus_fodeOut[index] = EditorGUILayout.Foldout(m_beHitStatus_fodeOut[index], "属性修改 - " + EnumExtension.GetDescription(beStatus.m_emTag));
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -822,13 +822,21 @@ public partial class PS_Events {
 		EG_GUIHelper.FEG_EndV();
 	}
 
-	void _DrawOneBeHitStatusAttrs(EDT_Hurt_BeHitStatus beStatus)
+	void _DrawOneBeHitStatusAttrs(EDT_Property beStatus)
 	{
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("分类:", GUILayout.Width(80));
-			beStatus.m_iGid = EditorGUILayout.IntField (beStatus.m_iGid);
+			GUILayout.Label("主分类:", GUILayout.Width(80));
+			beStatus.m_emTag = (EDT_Property.PropretyTag)EditorGUILayout.EnumPopup ((System.Enum)beStatus.m_emTag);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("子分类:", GUILayout.Width(80));
+			beStatus.m_iGID = EditorGUILayout.IntField (beStatus.m_iGID);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);

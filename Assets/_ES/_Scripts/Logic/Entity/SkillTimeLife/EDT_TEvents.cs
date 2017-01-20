@@ -36,22 +36,18 @@ public class EDT_TEvents  {
 
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
-		T ret = new T();
+		T ret = EDT_Base.NewEntity<T>();
 		m_lEvents.Add(ret);
 		return ret;
 	}
 
 	public T NewEvent<T>(float castTime,JsonData jsonData) where T : EDT_Base,new()
 	{
-		T ret = new T();
-		ret.DoReInit (castTime, jsonData);
-		if (ret.m_isJsonDataToSelfSuccessed) {
+		T ret = EDT_Base.NewEntity<T>(jsonData, castTime);
+		if (ret != null) {
 			m_lEvents.Add (ret);
-			return ret;
-		} else {
-			ret.DoClear ();
 		}
-		return null;
+		return ret;
 	}
 
 	public void RmEvent(EDT_Base en)
