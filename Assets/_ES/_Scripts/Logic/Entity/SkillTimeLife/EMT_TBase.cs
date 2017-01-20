@@ -16,6 +16,10 @@ public class EMT_TBases {
 	protected EDT_Base m_tmpEvent;
 	protected int lens = 0;
 
+	// 数据转换(ToJsonString)时候用
+	Dictionary<float,List<EDT_Base>> dicTimeEvents = new Dictionary<float, List<EDT_Base>> ();
+	List<float> lstTimeKeys = new List<float> ();
+
 	// 特效事件
 	List<EDT_Effect> m_lEffects = new List<EDT_Effect>();
 
@@ -27,6 +31,9 @@ public class EMT_TBases {
 
 	// 震屏事件
 	List<EDT_Shake> m_lShakes = new List<EDT_Shake>();
+
+	// buff 事件
+	List<EDT_Buff> m_lBuffs = new List<EDT_Buff>();
 
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
@@ -208,7 +215,9 @@ public class EMT_TBases {
 			return "";
 		}
 
-		Dictionary<float,List<EDT_Base>> tmpDic = new Dictionary<float, List<EDT_Base>> ();
+		dicTimeEvents.Clear ();
+		lstTimeKeys.Clear ();
+
 		List<EDT_Base> tmpList = null;
 		for (int i = 0; i < lens; i++)
 		{
@@ -216,30 +225,43 @@ public class EMT_TBases {
 			if (!m_tmpEvent.m_isInitedFab)
 				continue;
 
-			if (tmpDic.ContainsKey (m_tmpEvent.m_fCastTime)) {
-				tmpList = tmpDic [m_tmpEvent.m_fCastTime];
+			if (dicTimeEvents.ContainsKey (m_tmpEvent.m_fCastTime)) {
+				tmpList = dicTimeEvents [m_tmpEvent.m_fCastTime];
 			} else {
 				tmpList = new List<EDT_Base> ();
-				tmpDic.Add (m_tmpEvent.m_fCastTime, tmpList);
+				dicTimeEvents.Add (m_tmpEvent.m_fCastTime, tmpList);
+				lstTimeKeys.Add (m_tmpEvent.m_fCastTime);
 			}
 
 			tmpList.Add (m_tmpEvent);
 		}
 
-		if (tmpDic.Count <= 0) {
+		if (dicTimeEvents.Count <= 0) {
 			return "";
 		}
 
 		JsonData tmpData = new JsonData ();
 		tmpData.SetJsonType (JsonType.Array);
-
 		JsonData tmpData2;
-		foreach (KeyValuePair<float,List<EDT_Base>> item in tmpDic) {
+
+		lstTimeKeys.Sort ((x,y) => {
+			return x < y ? -1 : 1;
+		});
+
+		foreach (var key in lstTimeKeys) {
+			tmpList = dicTimeEvents[key];
 			tmpData2 = new JsonData ();
-			tmpData2 ["m_timing"] = EDT_Base.Round2D(item.Key,2);
-			tmpData2 ["m_castEvts"] = ToArrayJsonData (item.Value);
+			tmpData2 ["m_timing"] = EDT_Base.Round2D(key,2);
+			tmpData2 ["m_castEvts"] = ToArrayJsonData (tmpList);
 			tmpData.Add (tmpData2);
 		}
+
+//		foreach (KeyValuePair<float,List<EDT_Base>> item in tmpDic) {
+//			tmpData2 = new JsonData ();
+//			tmpData2 ["m_timing"] = EDT_Base.Round2D(item.Key,2);
+//			tmpData2 ["m_castEvts"] = ToArrayJsonData (item.Value);
+//			tmpData.Add (tmpData2);
+//		}
 
 		return JsonMapper.ToJson (tmpData);
 	}
@@ -276,14 +298,19 @@ public class EMT_TBases {
 		NewEvent<EDT_Hurt> (time,data);
 	}
 
-	// 转为技能声音
+	// 转为声音事件
 	protected void ToAudio(float time,JsonData data){
 		NewEvent<EDT_Audio> (time,data);
 	}
 
-	// 转为技能震屏
+	// 转为震屏事件
 	protected void ToShake(float time,JsonData data){
 		NewEvent<EDT_Shake> (time,data);
+	}
+
+	// 转为 Buff事件
+	protected void ToBuff(float time,JsonData data){
+		NewEvent<EDT_Buff>(time,data);
 	}
 
 	public List<EDT_Effect> GetLEffects(){
@@ -304,6 +331,11 @@ public class EMT_TBases {
 	public List<EDT_Shake> GetLShakes(){
 		GetList<EDT_Shake> (ref m_lShakes);
 		return m_lShakes;
+	}
+
+	public List<EDT_Buff> GetLBuffs(){
+		GetList<EDT_Buff> (ref m_lBuffs);
+		return m_lBuffs;
 	}
 
 	#endregion
