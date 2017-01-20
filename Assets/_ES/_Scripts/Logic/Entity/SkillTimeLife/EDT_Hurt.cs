@@ -22,7 +22,7 @@ public class EDT_Hurt : EDT_Base {
 	List<EDT_Hurt_Area> m_lCurHurtAreas = new List<EDT_Hurt_Area>();
 
 	// 受击方收到的伤害状态(伤害值，特效等)
-	EDT_Hurt_BeHitter m_eBeHitter = new EDT_Hurt_BeHitter();
+	EMT_HitEvent m_eHitEvent = new EMT_HitEvent();
 
 	public EDT_Hurt():base(){
 		this.m_iCurType = 6;
@@ -59,7 +59,7 @@ public class EDT_Hurt : EDT_Base {
 
 		if (dicJsonData.Contains ("m_shotEvents")) {
 			tmp = jsonData ["m_shotEvents"];
-			m_eBeHitter.DoInit (tmp);
+			m_eHitEvent.DoReInit(tmp);
 		}
 
 		this.m_isJsonDataToSelfSuccessed = true;
@@ -91,15 +91,15 @@ public class EDT_Hurt : EDT_Base {
 		tmp ["m_zones"] = tmp2;
 		ret["m_zoneHelper"] = tmp;
 
-		tmp2 = this.m_eBeHitter.ToJsonData ();
+		tmp2 = this.m_eHitEvent.ToJsonData ();
 		ret["m_shotEvents"] = tmp2;
 		return ret;
 	}
 
 	protected override bool OnCallEvent ()
 	{
-		if (m_eBeHitter.m_isCanShow) {
-			m_eBeHitter.DoStart ();
+		if (m_eHitEvent.m_isCanShow) {
+			m_eHitEvent.DoStart ();
 		}
 
 		Debug.Log ("=hurt=");
@@ -120,7 +120,7 @@ public class EDT_Hurt : EDT_Base {
 		m_lHurtAreas.Clear ();
 		m_lCurHurtAreas.Clear ();
 
-		m_eBeHitter.DoClear ();
+		m_eHitEvent.DoClear ();
 	}
 
 	public void NewHurtArea(){
@@ -142,45 +142,49 @@ public class EDT_Hurt : EDT_Base {
 		return m_lCurHurtAreas;
 	}
 
-	public override void OnSceneGUI ()
+	public override void OnSceneGUI (Transform trsfOrg)
 	{
-		base.OnSceneGUI ();
-		DrawAreaInSceneView ();
+		base.OnSceneGUI (trsfOrg);
+		DrawAreaInSceneView (trsfOrg);
 	}
 
-	void DrawAreaInSceneView(){
+	void DrawAreaInSceneView(Transform trsfOrg){
 		List<EDT_Hurt_Area> list = GetAreaList ();
 		int lens = list.Count;
 		EDT_Hurt_Area tmp = null;
 		for (int i = 0; i < lens; i++) {
 			tmp = list [i];
-			tmp.DrawAreaInSceneView (m_trsfOwner);
+			tmp.DrawAreaInSceneView (trsfOrg);
 		}
 	}
 
 	#region === 受击者相关信息绘制 ===
 
 	public bool m_isShowBeHitterWhenPlay{
-		get{ return m_eBeHitter.m_isCanShow; }
+		get{ return m_eHitEvent.m_isCanShow; }
 		set{
-			m_eBeHitter.m_isCanShow = value;
+			m_eHitEvent.m_isCanShow = value;
 		}
 	}
 
+	public void RemoveEvent(EDT_Base evt){
+		m_eHitEvent.RmEvent (evt);
+	}
+
 	public void NewBeHitStatus(){
-		m_eBeHitter.NewStatus ();
+		m_eHitEvent.NewEvent<EDT_Property>();
 	}
 
 	public List<EDT_Property> GetHitStatusList(){
-		return m_eBeHitter.GetListStatus ();
+		return m_eHitEvent.GetLAttrs ();
 	}
 
-	public void RemoveBeHitStatus(EDT_Property rm){
-		m_eBeHitter.RemoveStatus(rm);
+	public void NewBeHitAudio(){
+		m_eHitEvent.NewEvent<EDT_Audio>();
 	}
 
-	public EDT_Audio GetBeHitAudio(){
-		return m_eBeHitter.m_eAuido;
+	public List<EDT_Audio> GetHitAudioList(){
+		return m_eHitEvent.GetLAudios ();
 	}
 
 	#endregion

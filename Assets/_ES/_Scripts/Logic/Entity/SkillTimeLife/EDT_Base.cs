@@ -64,9 +64,6 @@ public class EDT_Base {
 
 	public bool m_isInitedFab = false;
 
-	// 属于谁(谁放的，谁造成的)
-	public Transform m_trsfOwner;
-
     public EDT_Base()
     {
         this.m_iCurID = ++EVENT_CORE_CURSOR;
@@ -178,8 +175,6 @@ public class EDT_Base {
 
 		m_isInitedFab = false;
 
-		m_trsfOwner = null;
-
         OnClear();
     }
 
@@ -257,14 +252,14 @@ public class EDT_Base {
 		return this.m_jsonData;
 	}
 
-	public void DoSceneGUI(){
+	public void DoSceneGUI(Transform trsfOrg){
 //		if (!this._m_isDoEvent) {
 //			return;
 //		}
-		OnSceneGUI ();
+		OnSceneGUI (trsfOrg);
 	}
 
-	public virtual void OnSceneGUI(){
+	public virtual void OnSceneGUI(Transform trsfOrg){
 	}
 
 	#region == 新对象静态方法 ==

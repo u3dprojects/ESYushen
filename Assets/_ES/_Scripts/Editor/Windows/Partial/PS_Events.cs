@@ -76,7 +76,6 @@ public partial class PS_Events {
 	}
 
 	public void OnUpdate(float deltatime,float speed){
-		m_cEvents.ResetOwner (this.m_wSkill.trsfEntity);
 		m_cEvents.SetSpeed (speed);
 		m_cEvents.OnUpdate (deltatime);
 	}
@@ -94,8 +93,7 @@ public partial class PS_Events {
 	}
 
 	void OnSceneGUI(SceneView sceneView){
-		m_cEvents.ResetOwner (this.m_wSkill.trsfEntity);
-		m_cEvents.OnSceneGUI ();
+		m_cEvents.OnSceneGUI (this.m_wSkill.trsfEntity);
 		sceneView.Repaint();
 	}
 
@@ -143,7 +141,7 @@ public partial class PS_Events {
 				GUI.color = Color.green;
 				if (GUILayout.Button("+", GUILayout.Width(50)))
 				{
-					m_cEvents.NewEffect();
+					m_cEvents.NewEvent<EDT_Effect> ();
 				}
 				GUI.color = Color.white;
 				EG_GUIHelper.FEG_EndH();
@@ -151,7 +149,7 @@ public partial class PS_Events {
 
 			{
 				// 中
-				List<EDT_Effect> list = m_cEvents.m_lEffects;
+				List<EDT_Effect> list = m_cEvents.GetLEffects();
 				int lens = list.Count;
 				if (lens > 0)
 				{
@@ -305,121 +303,20 @@ public partial class PS_Events {
 /// 功能 : 
 /// </summary>
 public partial class PS_Events {
-	List<bool> m_audio_fodeOut = new List<bool>();
+	// 绘制 音效
+	PS_EvtAudio m_psAudio = new PS_EvtAudio();
 
 	void _DrawEvents4Audio(){
-		EG_GUIHelper.FG_BeginVAsArea();
-		{
-			{
-				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField("音效列表", EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					m_cEvents.NewAudio();
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
-			}
-
-			{
-				// 中
-				List<EDT_Audio> list = m_cEvents.m_lAudios;
-				int lens = list.Count;
-				if (lens > 0)
-				{
-					for (int i = 0; i < lens; i++)
-					{
-						m_audio_fodeOut.Add (false);
-						_DrawOneAudio(i, list[i]);
-					}
-				}
-				else
-				{
-					m_audio_fodeOut.Clear();
-				}
-			}
-		}
-		EG_GUIHelper.FG_EndV();
+		m_psAudio.DoInit("音效列表",m_isPlan,NewActiveAudio,RemoveActiveAudio);
+		m_psAudio.DoDraw (duration, m_cEvents.GetLAudios ());
 	}
 
-	void _DrawOneAudio(int index, EDT_Audio audio)
-	{
-
-		bool isEmptyName = string.IsNullOrEmpty(audio.m_sName);
-
-		EG_GUIHelper.FEG_BeginV();
-		{
-			EG_GUIHelper.FEG_BeginH();
-			{
-				m_audio_fodeOut[index] = EditorGUILayout.Foldout(m_audio_fodeOut[index], "音效 - " + (isEmptyName ? "未指定" : audio.m_sName));
-				GUI.color = Color.red;
-				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
-				{
-					m_cEvents.RmEvent(audio);
-					m_audio_fodeOut.RemoveAt(index);
-				}
-				GUI.color = Color.white;
-			}
-			EG_GUIHelper.FEG_EndH();
-
-			EG_GUIHelper.FG_Space(5);
-
-			if (m_audio_fodeOut[index])
-			{
-				_DrawOneAudioAttrs(audio);
-			}
-		}
-		EG_GUIHelper.FEG_EndV();
+	void NewActiveAudio(){
+		m_cEvents.NewEvent<EDT_Audio> ();
 	}
 
-	void _DrawOneAudioAttrs(EDT_Audio audio)
-	{
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("音效文件:", GUILayout.Width(80));
-			audio.m_objOrg = EditorGUILayout.ObjectField(audio.m_objOrg, typeof(AudioClip), false) as AudioClip;
-		}
-		EG_GUIHelper.FEG_EndH();
-
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("触发时间:");
-			if (m_isPlan) {
-				audio.m_fCastTime = EditorGUILayout.Slider(audio.m_fCastTime, 0, duration);
-			} else {
-				audio.m_fCastTime = EditorGUILayout.FloatField (audio.m_fCastTime);
-			}
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("音量:", GUILayout.Width(80));
-			audio.m_fVolume = EditorGUILayout.Slider (audio.m_fVolume,0f,1f);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("是否循环:", GUILayout.Width(80));
-			audio.m_isLoop = EditorGUILayout.Toggle (audio.m_isLoop);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
+	void RemoveActiveAudio(EDT_Audio one){
+		m_cEvents.RmEvent(one);
 	}
 }
 
@@ -456,7 +353,7 @@ public partial class PS_Events {
 				GUI.color = Color.green;
 				if (GUILayout.Button("+", GUILayout.Width(50)))
 				{
-					m_cEvents.NewHurt ();
+					m_cEvents.NewEvent<EDT_Hurt> ();
 				}
 				GUI.color = Color.white;
 				EG_GUIHelper.FEG_EndH();
@@ -464,7 +361,7 @@ public partial class PS_Events {
 
 			{
 				// 
-				List<EDT_Hurt> list = m_cEvents.m_lHurts;
+				List<EDT_Hurt> list = m_cEvents.GetLHurts();
 				int lens = list.Count;
 				if (lens > 0)
 				{
@@ -732,22 +629,24 @@ public partial class PS_Events {
 			EG_GUIHelper.FEG_EndH();
 			EG_GUIHelper.FG_Space(5);
 
-			EG_GUIHelper.FG_BeginVAsArea();
-			{
-				EG_GUIHelper.FEG_BeginH ();
-				{
-					GUILayout.Label ("命中音效:", GUILayout.Width (80));
-				}
-				EG_GUIHelper.FEG_EndH ();
-				EG_GUIHelper.FG_Space (5);
-				_DrawOneAudioAttrs (hurt.GetBeHitAudio ());
-			}
-			EG_GUIHelper.FG_EndV();
+			_DrawBeHitAudio (hurt);
 			EG_GUIHelper.FG_Space(5);
 
 			_DrawBeHitStatus (hurt);
 		}
 		EG_GUIHelper.FG_EndV();
+	}
+
+	// 绘制 音效
+	PS_EvtAudio m_psBeHitAudio = new PS_EvtAudio();
+	void _DrawBeHitAudio(EDT_Hurt hurt){
+		m_psBeHitAudio.DoInit("命中音效:",m_isPlan,delegate {
+			hurt.NewBeHitAudio();
+		},delegate (EDT_Audio one){
+			hurt.RemoveEvent(one);
+		});
+
+		m_psBeHitAudio.DoDraw (duration, hurt.GetHitAudioList ());
 	}
 
 	void _DrawBeHitStatus(EDT_Hurt hurt){
@@ -805,7 +704,7 @@ public partial class PS_Events {
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
-					hurt.RemoveBeHitStatus (beStatus);
+					hurt.RemoveEvent (beStatus);
 					m_beHitStatus_fodeOut.RemoveAt(index);
 				}
 				GUI.color = Color.white;
@@ -880,7 +779,7 @@ public partial class PS_Events {
 				GUI.color = Color.green;
 				if (GUILayout.Button("+", GUILayout.Width(50)))
 				{
-					m_cEvents.NewShake ();
+					m_cEvents.NewEvent<EDT_Shake> ();
 				}
 				GUI.color = Color.white;
 				EG_GUIHelper.FEG_EndH();
@@ -888,7 +787,7 @@ public partial class PS_Events {
 
 			{
 				// 中
-				List<EDT_Shake> list = m_cEvents.m_lShakes;
+				List<EDT_Shake> list = m_cEvents.GetLShakes();
 				int lens = list.Count;
 				if (lens > 0)
 				{
