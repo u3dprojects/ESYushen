@@ -111,6 +111,50 @@ public class PS_EvtBuff {
 
 	void _DrawOneEventAttrs(EDT_Buff one)
 	{
-		
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("BuffID:", GUILayout.Width(80));
+			one.m_iBuffId = EditorGUILayout.IntField(one.m_iBuffId);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		if (this.m_isDrawTime) {
+			EG_GUIHelper.FEG_BeginH ();
+			{
+				GUILayout.Label ("触发时间:");
+				if (m_isPlan) {
+					one.m_fCastTime = EditorGUILayout.Slider (one.m_fCastTime, 0, duration);
+				} else {
+					one.m_fCastTime = EditorGUILayout.FloatField (one.m_fCastTime);
+				}
+			}
+			EG_GUIHelper.FEG_EndH ();
+			EG_GUIHelper.FG_Space (5);
+		}
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("Buff等级:", GUILayout.Width(80));
+			one.m_iLevel = EditorGUILayout.IntField(one.m_iLevel);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("持续时间:", GUILayout.Width(80));
+			one.m_fDuration = EditorGUILayout.Slider (one.m_fDuration,0f,60f);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("触发概率:", GUILayout.Width(80));
+			one.m_iRate = EditorGUILayout.IntSlider (one.m_iRate,0,10000);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
 	}
 }
