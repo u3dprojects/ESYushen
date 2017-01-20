@@ -75,6 +75,10 @@ public partial class PS_Events {
 		return m_cEvents.ToJsonString ();
 	}
 
+	void RemoveEvent(EDT_Base one){
+		m_cEvents.RmEvent (one);
+	}
+
 	void OnSceneGUI(SceneView sceneView){
 		m_cEvents.OnSceneGUI (this.m_wSkill.trsfEntity);
 		sceneView.Repaint();
@@ -111,7 +115,7 @@ public partial class PS_Events {
 	PS_EvtEffect m_psEffect = new PS_EvtEffect();
 
 	void _DrawEvents4Effect(){
-		m_psEffect.DoInit("特效列表",m_isPlan,_NewEffect,_RmEffect);
+		m_psEffect.DoInit("特效列表",m_isPlan,_NewEffect,RemoveEvent);
 		SpriteJoint m_eCsJoin = null;
 		if (m_wSkill != null && m_wSkill.m_eCsJoin != null) {
 			m_eCsJoin = m_wSkill.m_eCsJoin;
@@ -121,10 +125,6 @@ public partial class PS_Events {
 
 	void _NewEffect(){
 		m_cEvents.NewEvent<EDT_Effect>();
-	}
-
-	void _RmEffect(EDT_Effect one){
-		m_cEvents.RmEvent (one);
 	}
 }
 
@@ -139,16 +139,12 @@ public partial class PS_Events {
 	PS_EvtAudio m_psAudio = new PS_EvtAudio();
 
 	void _DrawEvents4Audio(){
-		m_psAudio.DoInit("音效列表",m_isPlan,NewActiveAudio,RemoveActiveAudio);
+		m_psAudio.DoInit("音效列表",m_isPlan,_NewAudio,RemoveEvent);
 		m_psAudio.DoDraw (duration, m_cEvents.GetLAudios ());
 	}
 
-	void NewActiveAudio(){
+	void _NewAudio(){
 		m_cEvents.NewEvent<EDT_Audio> ();
-	}
-
-	void RemoveActiveAudio(EDT_Audio one){
-		m_cEvents.RmEvent(one);
 	}
 }
 
@@ -592,108 +588,15 @@ public partial class PS_Events {
 /// 功能 : 
 /// </summary>
 public partial class PS_Events {
-	List<bool> m_shake_fodeOut = new List<bool>();
+
+	PS_EvtShake m_psShake = new PS_EvtShake();
 
 	void _DrawEvents4Shake(){
-		EG_GUIHelper.FG_BeginVAsArea();
-		{
-			{
-				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField("震屏列表", EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					m_cEvents.NewEvent<EDT_Shake> ();
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
-			}
-
-			{
-				// 中
-				List<EDT_Shake> list = m_cEvents.GetLShakes();
-				int lens = list.Count;
-				if (lens > 0)
-				{
-					for (int i = 0; i < lens; i++)
-					{
-						m_shake_fodeOut.Add (false);
-						_DrawOneShake(i, list[i]);
-					}
-				}
-				else
-				{
-					m_shake_fodeOut.Clear();
-				}
-			}
-		}
-		EG_GUIHelper.FG_EndV();
+		m_psShake.DoInit("震屏列表",m_isPlan,_NewShake,RemoveEvent);
+		m_psShake.DoDraw (duration, m_cEvents.GetLShakes());
 	}
 
-	void _DrawOneShake(int index, EDT_Shake shake)
-	{
-
-		EG_GUIHelper.FEG_BeginV();
-		{
-			EG_GUIHelper.FEG_BeginH();
-			{
-				m_shake_fodeOut[index] = EditorGUILayout.Foldout(m_shake_fodeOut[index], "震屏 - " + index);
-				GUI.color = Color.red;
-				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
-				{
-					m_cEvents.RmEvent(shake);
-					m_shake_fodeOut.RemoveAt(index);
-				}
-				GUI.color = Color.white;
-			}
-			EG_GUIHelper.FEG_EndH();
-
-			EG_GUIHelper.FG_Space(5);
-
-			if (m_shake_fodeOut[index])
-			{
-				_DrawOneShakeAttrs(shake);
-			}
-		}
-		EG_GUIHelper.FEG_EndV();
-	}
-
-	void _DrawOneShakeAttrs(EDT_Shake shake)
-	{
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("触发时间:");
-			if (m_isPlan) {
-				shake.m_fCastTime = EditorGUILayout.Slider(shake.m_fCastTime, 0, duration);
-			} else {
-				shake.m_fCastTime = EditorGUILayout.FloatField (shake.m_fCastTime);
-			}
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("持续时间:", GUILayout.Width(80));
-			shake.m_fDuration = EditorGUILayout.Slider (shake.m_fDuration,0f,60f);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("震动强度:", GUILayout.Width(80));
-			shake.m_fStrength = EditorGUILayout.Slider (shake.m_fStrength,0f,1f);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
+	void _NewShake(){
+		m_cEvents.NewEvent<EDT_Shake> ();
 	}
 }

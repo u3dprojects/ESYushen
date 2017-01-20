@@ -6,7 +6,7 @@ using UnityEditor;
 /// <summary>
 /// 类名 : 绘制 特效事件
 /// 作者 : Canyon
-/// 日期 : 2017-01-17 17:30
+/// 日期 : 2017-01-10 10:10
 /// 功能 : 
 /// </summary>
 public class PS_EvtEffect {
