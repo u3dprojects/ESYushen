@@ -59,7 +59,7 @@ public class EDT_Hurt : EDT_Base {
 
 		if (dicJsonData.Contains ("m_shotEvents")) {
 			tmp = jsonData ["m_shotEvents"];
-			m_eHitEvent.DoReInit(tmp);
+			m_eHitEvent.DoReInit(tmp,castTime);
 		}
 
 		this.m_isJsonDataToSelfSuccessed = true;
@@ -185,6 +185,14 @@ public class EDT_Hurt : EDT_Base {
 
 	public List<EDT_Audio> GetHitAudioList(){
 		return m_eHitEvent.GetLAudios ();
+	}
+
+	public void NewHitBuff(){
+		m_eHitEvent.NewEvent<EDT_Buff>();
+	}
+
+	public List<EDT_Buff> GetHitBuffList(){
+		return m_eHitEvent.GetLBuffs ();
 	}
 
 	#endregion

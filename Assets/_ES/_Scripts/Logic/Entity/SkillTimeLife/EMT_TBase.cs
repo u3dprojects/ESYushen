@@ -33,7 +33,7 @@ public class EMT_TBases {
 	List<EDT_Shake> m_lShakes = new List<EDT_Shake>();
 
 	// buff 事件
-	List<EDT_Buff> m_lBuffs = new List<EDT_Buff>();
+	// List<EDT_Buff> m_lBuffs = new List<EDT_Buff>();
 
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
@@ -75,7 +75,7 @@ public class EMT_TBases {
 		return ret;
 	}
 
-	public void GetList<T>(ref List<T> ret) where T : EDT_Base
+	protected void GetList<T>(ref List<T> ret) where T : EDT_Base
 	{
 		if (ret == null) {
 			ret = new List<T> ();
@@ -333,10 +333,10 @@ public class EMT_TBases {
 		return m_lShakes;
 	}
 
-	public List<EDT_Buff> GetLBuffs(){
-		GetList<EDT_Buff> (ref m_lBuffs);
-		return m_lBuffs;
-	}
+//	public List<EDT_Buff> GetLBuffs(){
+//		GetList<EDT_Buff> (ref m_lBuffs);
+//		return m_lBuffs;
+//	}
 
 	#endregion
 }

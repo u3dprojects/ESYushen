@@ -17,24 +17,45 @@ public class EMT_HitEvent : EMT_TBases {
 	// 修改属性事件
 	List<EDT_Property> m_lAttrs = new List<EDT_Property>();
 
+	// buff 事件
+	List<EDT_Buff> m_lBuffs = new List<EDT_Buff>();
+
+	public override void DoClear ()
+	{
+		base.DoClear ();
+		m_lAttrs.Clear ();
+		m_lBuffs.Clear ();
+	}
+
+	public JsonData ToJsonData(){
+		return ToArrayJsonData(m_lEvents);
+	}
+
 	public override int OninitOne (LitJson.JsonData one, float castTime = 0)
 	{
 		int typeInt = base.OninitOne (one, castTime);
 		switch (typeInt) {
 		case 7:
 		case 8:
-			ToChangeAttrs (one,typeInt);
+			ToChangeAttrs (one,castTime,typeInt);
+			break;
+		case 9:
+			ToBuff (one,castTime);
 			break;
 		}
 		return typeInt;
 	}
 
-	void ToChangeAttrs(JsonData jsonData,int tpInt){
-		EDT_Property status = EDT_Property.NewEntity<EDT_Property>(jsonData);
+	void ToChangeAttrs(JsonData jsonData,float castTime,int tpInt){
+		EDT_Property status = EDT_Property.NewEntity<EDT_Property>(jsonData,castTime);
 		if (status != null) {
 			status.m_emTag = (EDT_Property.PropretyTag)(tpInt - 7);
 			m_lEvents.Add (status);
 		}
+	}
+
+	void ToBuff(JsonData jsonData,float castTime){
+		EDT_Buff.NewEntity<EDT_Buff>(jsonData,castTime);
 	}
 
 	public List<EDT_Property> GetLAttrs(){
@@ -42,13 +63,8 @@ public class EMT_HitEvent : EMT_TBases {
 		return m_lAttrs;
 	}
 
-	public override void DoClear ()
-	{
-		base.DoClear ();
-		m_lAttrs.Clear ();
-	}
-
-	public JsonData ToJsonData(){
-		return ToArrayJsonData(m_lEvents);
+	public List<EDT_Buff> GetLBuffs(){
+		GetList<EDT_Buff> (ref m_lBuffs);
+		return m_lBuffs;
 	}
 }
