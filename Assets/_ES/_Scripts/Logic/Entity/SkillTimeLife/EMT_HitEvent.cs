@@ -47,7 +47,7 @@ public class EMT_HitEvent : EMT_TBases {
 	}
 
 	void ToChangeAttrs(JsonData jsonData,float castTime,int tpInt){
-		EDT_Property status = EDT_Property.NewEntity<EDT_Property>(jsonData,castTime);
+		EDT_Property status = NewEvent<EDT_Property>(castTime,jsonData);
 		if (status != null) {
 			status.m_emTag = (EDT_Property.PropretyTag)(tpInt - 7);
 			m_lEvents.Add (status);
@@ -55,7 +55,7 @@ public class EMT_HitEvent : EMT_TBases {
 	}
 
 	void ToBuff(JsonData jsonData,float castTime){
-		EDT_Buff.NewEntity<EDT_Buff>(jsonData,castTime);
+		NewEvent<EDT_Buff>(castTime,jsonData);
 	}
 
 	public List<EDT_Property> GetLAttrs(){

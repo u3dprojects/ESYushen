@@ -122,8 +122,9 @@ public class EMT_TBases {
 		case 3:
 			ToShake(castTime, one);
 			break;
+		case 5:
 		case 6:
-			ToHurt(castTime, one);
+			ToHurt(castTime, one,typeInt);
 			break;
 		}
 		return typeInt;
@@ -294,8 +295,11 @@ public class EMT_TBases {
 	}
 
 	// 转为打击点事件
-	protected void ToHurt(float time,JsonData data){
-		NewEvent<EDT_Hurt> (time,data);
+	protected void ToHurt(float time,JsonData data,int typeInt){
+		EDT_Hurt en = NewEvent<EDT_Hurt> (time,data);
+		if (typeInt == 5) {
+			en.m_emType = EDT_Hurt.HurtType.OneTarget;
+		}
 	}
 
 	// 转为声音事件

@@ -92,7 +92,7 @@ public class PS_EvtHurt {
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "列表 - " + index);
+				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "列表 - " + EnumExtension.GetDescription(one.m_emType));
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -131,23 +131,33 @@ public class PS_EvtHurt {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("优先目标:", GUILayout.Width(80));
-			one.m_iTargetFilter = EditorGUILayout.IntField (one.m_iTargetFilter);
+			GUILayout.Label("类型:", GUILayout.Width(80));
+			one.m_emType = (EDT_Hurt.HurtType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emType);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("目标数量:", GUILayout.Width(80));
-			one.m_iTargetCount = EditorGUILayout.IntField (one.m_iTargetCount);
+		if (one.m_emType == EDT_Hurt.HurtType.MoveTarget) {
+			EG_GUIHelper.FEG_BeginH ();
+			{
+				GUILayout.Label ("优先目标:", GUILayout.Width (80));
+				one.m_iTargetFilter = EditorGUILayout.IntField (one.m_iTargetFilter);
+			}
+			EG_GUIHelper.FEG_EndH ();
+			EG_GUIHelper.FG_Space (5);
+
+			EG_GUIHelper.FEG_BeginH ();
+			{
+				GUILayout.Label ("目标数量:", GUILayout.Width (80));
+				one.m_iTargetCount = EditorGUILayout.IntField (one.m_iTargetCount);
+			}
+			EG_GUIHelper.FEG_EndH ();
+			EG_GUIHelper.FG_Space (5);
+
+			// 伤害区域
+			_DrawOneHurt_HurtAreas (one);
+
 		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		// 伤害区域
-		_DrawOneHurt_HurtAreas(one);
-
 		// 受击者
 		_DrawOneHurt_BeHitter(one);
 	}

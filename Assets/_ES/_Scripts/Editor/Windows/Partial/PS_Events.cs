@@ -164,7 +164,7 @@ public partial class PS_Events {
 
 	void _DrawEvents4Hurt(){
 		if (m_psHitArea == null) {
-			m_psHitArea = new PS_EvtHurt("依靠碰撞区域检测来确定攻击目标的列表",m_isPlan,_NewHitArea,RemoveEvent,true);
+			m_psHitArea = new PS_EvtHurt("目标事件列表",m_isPlan,_NewHitArea,RemoveEvent,true);
 		}
 		m_psHitArea.DoDraw (beforeRoll,afterRoll, m_cEvents.GetLHurts ());
 	}

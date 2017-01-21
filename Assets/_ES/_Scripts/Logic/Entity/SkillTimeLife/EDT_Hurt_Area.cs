@@ -111,22 +111,22 @@ public class EDT_Hurt_Area : EDT_Base{
 
 		JsonData ret = new JsonData ();
 		ret ["m_id"] = (int)this.m_emType;
-		ret ["m_offsetX"] = EDT_Hurt.Round2D(m_v3Offset.x,2);
-		ret ["m_offsetZ"] = EDT_Hurt.Round2D(m_v3Offset.z,2);
+		ret ["m_offsetX"] = Round2D(m_v3Offset.x,2);
+		ret ["m_offsetZ"] = Round2D(m_v3Offset.z,2);
 
 		switch (m_emType) {
 		case HurtAreaType.Arc:
-			ret ["m_r"] = EDT_Hurt.Round2D(m_fRange,2);
-			ret ["m_rad"] = EDT_Hurt.Round2D(m_fAngle,2);
-			ret ["m_rot"] = EDT_Hurt.Round2D(m_fRotation,2);
+			ret ["m_r"] = Round2D(m_fRange,2);
+			ret ["m_rad"] = Round2D(m_fAngle,2);
+			ret ["m_rot"] = Round2D(m_fRotation,2);
 			break;
 		case HurtAreaType.Circle:
-			ret ["m_r"] = EDT_Hurt.Round2D(m_fRange,2);
+			ret ["m_r"] = Round2D(m_fRange,2);
 			break;
 		case HurtAreaType.Rectangle:
-			ret ["m_len"] = EDT_Hurt.Round2D(m_fRange,2);
-			ret ["m_width"] = EDT_Hurt.Round2D(m_fWidth,2);
-			ret ["m_rot"] = EDT_Hurt.Round2D(m_fRotation,2);
+			ret ["m_len"] = Round2D(m_fRange,2);
+			ret ["m_width"] = Round2D(m_fWidth,2);
+			ret ["m_rot"] = Round2D(m_fRotation,2);
 			break;
 		}
 		return ret;

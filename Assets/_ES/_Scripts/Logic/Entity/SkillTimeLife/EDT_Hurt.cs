@@ -2,6 +2,7 @@
 using System.Collections;
 using LitJson;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 /// <summary>
 /// 类名 : Editor 下面的时间轴上的伤害处理(打击点检测hitCheck)
@@ -10,6 +11,25 @@ using System.Collections.Generic;
 /// 功能 : 
 /// </summary>
 public class EDT_Hurt : EDT_Base {
+
+	public enum HurtType
+	{
+		[Description("攻击锁定目标")]
+		OneTarget = 0,
+
+		[Description("区域内攻击目标")]
+		MoveTarget = 1
+	}
+
+	HurtType _m_emType = HurtType.MoveTarget;
+
+	public HurtType  m_emType{
+		get{ return _m_emType; }
+		set{
+			_m_emType = value;
+			this.m_iCurType = _m_emType == HurtType.OneTarget ? 5 : 6;
+		}
+	}
 
 	// 优先目标
 	public int m_iTargetFilter;
@@ -25,17 +45,23 @@ public class EDT_Hurt : EDT_Base {
 	EMT_HitEvent m_eHitEvent = new EMT_HitEvent();
 
 	public EDT_Hurt():base(){
-		this.m_iCurType = 6;
+		m_emType = HurtType.MoveTarget;
 	}
 
 	public override void OnReInit (float castTime, JsonData jsonData)
 	{
 		base.OnReInit (castTime, jsonData);
 
-		this.m_iTargetFilter = (int)jsonData ["m_targetFilter"];
-		this.m_iTargetCount = (int)jsonData ["m_targetCount"];
-
 		IDictionary dicJsonData = (IDictionary)jsonData;
+
+		if (dicJsonData.Contains ("m_targetFilter")) {
+			this.m_iTargetFilter = (int)jsonData ["m_targetFilter"];
+		}
+
+		if (dicJsonData.Contains ("m_targetCount")) {
+			this.m_iTargetCount = (int)jsonData ["m_targetCount"];
+		}
+
 
 		JsonData tmp = null;
 		JsonData tmp2 = null;
@@ -73,26 +99,31 @@ public class EDT_Hurt : EDT_Base {
 
 		JsonData ret = new JsonData ();
 		ret["m_typeInt"] = this.m_iCurType;
-		ret["m_targetFilter"] = this.m_iTargetFilter;
-		ret["m_targetCount"] = this.m_iTargetCount;
+		JsonData tmp;
 
-		JsonData tmp = new JsonData ();
-		JsonData tmp2 = new JsonData ();
-		JsonData tmp3;
+		if (m_emType == HurtType.MoveTarget) {
+			ret ["m_targetFilter"] = this.m_iTargetFilter;
+			ret ["m_targetCount"] = this.m_iTargetCount;
 
-		foreach (var item in this.m_lHurtAreas) {
-			tmp3 = item.ToJsonData ();
-			if (tmp3 == null) {
-				continue;
+			tmp = new JsonData ();
+			JsonData tmp2 = new JsonData ();
+			JsonData tmp3;
+
+			foreach (var item in this.m_lHurtAreas) {
+				tmp3 = item.ToJsonData ();
+				if (tmp3 == null) {
+					continue;
+				}
+				tmp2.Add (tmp3);
 			}
-			tmp2.Add (tmp3);
-		}
-		tmp2.SetJsonType (JsonType.Array);
-		tmp ["m_zones"] = tmp2;
-		ret["m_zoneHelper"] = tmp;
+			tmp2.SetJsonType (JsonType.Array);
+			tmp ["m_zones"] = tmp2;
+			ret ["m_zoneHelper"] = tmp;
 
-		tmp2 = this.m_eHitEvent.ToJsonData ();
-		ret["m_shotEvents"] = tmp2;
+		}
+
+		tmp = this.m_eHitEvent.ToJsonData ();
+		ret["m_shotEvents"] = tmp;
 		return ret;
 	}
 
@@ -118,7 +149,7 @@ public class EDT_Hurt : EDT_Base {
 	{
 		base.OnClear ();
 
-		this.m_iCurType = 6;
+		m_emType = HurtType.MoveTarget;
 
 		m_lHurtAreas.Clear ();
 		m_lCurHurtAreas.Clear ();
