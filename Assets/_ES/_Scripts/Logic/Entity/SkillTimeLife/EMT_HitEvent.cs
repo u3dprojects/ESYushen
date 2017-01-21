@@ -46,6 +46,16 @@ public class EMT_HitEvent : EMT_TBases {
 		return typeInt;
 	}
 
+	public override string ToJsonString ()
+	{
+		JsonData data = ToArrayJsonData (m_lEvents);
+		if (data == null) {
+			return "";
+		}
+
+		return JsonMapper.ToJson (data);
+	}
+
 	void ToChangeAttrs(JsonData jsonData,float castTime,int tpInt){
 		EDT_Property status = NewEvent<EDT_Property>(castTime,jsonData);
 		if (status != null) {

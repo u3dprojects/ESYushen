@@ -74,7 +74,9 @@ public class PS_EvtHurt {
 				int lens = list.Count;
 				if (lens > 0) {
 					for (int i = 0; i < lens; i++) {
-						m_lFodeout.Add (false);
+						if (m_lFodeout.Count <= i) {
+							m_lFodeout.Add (false);
+						}
 						_DrawOneEvnet (i, list [i]);
 					}
 				} else {
