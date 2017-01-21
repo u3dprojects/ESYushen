@@ -48,7 +48,7 @@ public class EDT_Hurt : EDT_Base {
 				if (tmp2.IsArray) {
 					EDT_Hurt_Area hurtArea = null;
 					for (int i = 0; i < tmp2.Count; i++) {
-						hurtArea = EDT_Hurt_Area.NewHurtArea (tmp2 [i]);
+						hurtArea = EDT_Hurt_Area.NewEntity<EDT_Hurt_Area>(tmp2 [i],castTime);
 						if (hurtArea != null) {
 							m_lHurtAreas.Add (hurtArea);
 						}
@@ -154,7 +154,7 @@ public class EDT_Hurt : EDT_Base {
 		EDT_Hurt_Area tmp = null;
 		for (int i = 0; i < lens; i++) {
 			tmp = list [i];
-			tmp.DrawAreaInSceneView (trsfOrg);
+			tmp.DoSceneGUI(trsfOrg);
 		}
 	}
 

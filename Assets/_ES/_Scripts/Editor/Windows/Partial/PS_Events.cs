@@ -164,8 +164,6 @@ public partial class PS_Events {
 
 	List<bool> m_hurt_fodeOut = new List<bool>();
 
-	List<bool> m_hurtArea_fodeOut = new List<bool>();
-
 	void _DrawEvents4Hurt(){
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
@@ -279,156 +277,18 @@ public partial class PS_Events {
 	#endregion
 
 	#region ==== 伤害区域 ====
-
+	PS_EvtHurtArea m_psBeHitArea;
 	void _DrawOneHurt_HurtAreas(EDT_Hurt hurt){
-		EG_GUIHelper.FEG_BeginVAsArea ();
-		{
-			{
-				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField("伤害区域列表", EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					hurt.NewHurtArea ();
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
-			}
-
-			{
-				List<EDT_Hurt_Area> list = hurt.GetAreaList();
-				int lens = list.Count;
-				if (lens > 0)
-				{
-					for (int i = 0; i < lens; i++)
-					{
-						m_hurtArea_fodeOut.Add (false);
-						_DrawOneHurtArea(i, list[i],hurt);
-					}
-				}
-				else
-				{
-					m_hurtArea_fodeOut.Clear();
-				}
-			}
+		if (m_psBeHitArea == null) {
+			m_psBeHitArea = new PS_EvtHurtArea("伤害区域列表:",m_isPlan,delegate {
+				hurt.NewHurtArea();
+			},delegate (EDT_Hurt_Area one){
+				hurt.RemoveHurtArea(one);
+			},false);
 		}
-		EG_GUIHelper.FEG_EndV ();
-		EG_GUIHelper.FG_Space(5);
+
+		m_psBeHitArea.DoDraw (duration, hurt.GetAreaList());
 	}
-
-	void _DrawOneHurtArea(int index, EDT_Hurt_Area hurtArea,EDT_Hurt hurt)
-	{
-
-		EG_GUIHelper.FEG_BeginV();
-		{
-			EG_GUIHelper.FEG_BeginH();
-			{
-				m_hurtArea_fodeOut[index] = EditorGUILayout.Foldout(m_hurtArea_fodeOut[index], "伤害区域 - " + index);
-				GUI.color = Color.red;
-				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
-				{
-					hurt.RemoveHurtArea(hurtArea);
-					m_hurtArea_fodeOut.RemoveAt(index);
-				}
-				GUI.color = Color.white;
-			}
-			EG_GUIHelper.FEG_EndH();
-
-			EG_GUIHelper.FG_Space(5);
-
-			if (m_hurtArea_fodeOut[index])
-			{
-				_DrawOneHurtAreaAttrs(hurtArea);
-			}
-		}
-		EG_GUIHelper.FEG_EndV();
-	}
-
-	void _DrawOneHurtAreaAttrs(EDT_Hurt_Area hurtArea)
-	{
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("类型:", GUILayout.Width(80));
-			hurtArea.m_emType = (EDT_Hurt_Area.HurtAreaType)EditorGUILayout.EnumPopup ((System.Enum)hurtArea.m_emType);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			hurtArea.m_isShowArea = EditorGUILayout.Toggle ("是否绘制伤害区域??", hurtArea.m_isShowArea);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("区域颜色:", GUILayout.Width(80));
-			hurtArea.m_cAreaColor = EditorGUILayout.ColorField (hurtArea.m_cAreaColor);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			hurtArea.m_v3Offset = EditorGUILayout.Vector3Field("偏移(y暂留):", hurtArea.m_v3Offset);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		string strDesc = hurtArea.m_emType == EDT_Hurt_Area.HurtAreaType.Rectangle ? "长度:" : "半径:";
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label(strDesc, GUILayout.Width(80));
-			hurtArea.m_fRange = EditorGUILayout.Slider (hurtArea.m_fRange,0f,100f);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		if (hurtArea.m_emType != EDT_Hurt_Area.HurtAreaType.Arc && hurtArea.m_emType != EDT_Hurt_Area.HurtAreaType.Rectangle) {
-			return;
-		}
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("旋转角度:", GUILayout.Width(80));
-			hurtArea.m_fRotation = EditorGUILayout.Slider (hurtArea.m_fRotation,0f,360f);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		switch (hurtArea.m_emType) {
-		case EDT_Hurt_Area.HurtAreaType.Rectangle:
-			EG_GUIHelper.FEG_BeginH();
-			{
-				GUILayout.Label("宽度:", GUILayout.Width(80));
-				hurtArea.m_fWidth = EditorGUILayout.Slider (hurtArea.m_fWidth,0f,100f);
-			}
-			EG_GUIHelper.FEG_EndH();
-			EG_GUIHelper.FG_Space(5);
-			break;
-		case EDT_Hurt_Area.HurtAreaType.Arc:
-			EG_GUIHelper.FEG_BeginH();
-			{
-				GUILayout.Label("弧度的角度值:", GUILayout.Width(80));
-				hurtArea.m_fAngle = EditorGUILayout.Slider (hurtArea.m_fAngle,0f,360f);
-			}
-			EG_GUIHelper.FEG_EndH();
-			EG_GUIHelper.FG_Space(5);
-			break;
-		}
-	}
-
 	#endregion
 
 	#region ==== 受击者 - 命中事件 ====

@@ -13,7 +13,7 @@ using UnityEditor;
 /// 日期 : 2017-01-13 10:30
 /// 功能 : 
 /// </summary>
-public class EDT_Hurt_Area {
+public class EDT_Hurt_Area : EDT_Base{
 	
 	public enum HurtAreaType{
 		[Description("无")]
@@ -50,26 +50,17 @@ public class EDT_Hurt_Area {
 	// 区域颜色
 	public Color m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.15f);
 
-	// json数据
-	protected bool m_isInitedByJson = false;
-
 	// 是否绘制伤害区域
 	public bool m_isShowArea;
 
-	public void DoInit(string json){
-		JsonData org = JsonMapper.ToObject (json);
-		DoInit (org);
+	public EDT_Hurt_Area() : base(){
+		m_emType = HurtAreaType.None;
 	}
 
-	public void DoInit(JsonData org){
-		DoClear();
-		OnInit (org);
-	}
+	public override void OnReInit (float castTime, JsonData jsonData)
+	{
+		base.OnReInit (castTime, jsonData);
 
-	public void OnInit(JsonData jsonData){
-		if (jsonData == null)
-			return;
-		
 		int tpId = (int)jsonData ["m_id"];
 		this.m_emType = (HurtAreaType)tpId;
 
@@ -99,14 +90,11 @@ public class EDT_Hurt_Area {
 			this.m_fWidth = float.Parse (jsonData ["m_width"].ToString ());
 		}
 
-		this.m_isInitedByJson = true;
+		this.m_isJsonDataToSelfSuccessed = true;
+		this.m_isInitedFab = true;
 	}
 
-	public void DoClear(){
-		this.m_isInitedByJson = false;
-	}
-
-	public JsonData ToJsonData(){
+	public override JsonData ToJsonData (){
 		if (this.m_fRange <= 0 || m_emType == HurtAreaType.None) {
 			return null;
 		}
@@ -144,8 +132,15 @@ public class EDT_Hurt_Area {
 		return ret;
 	}
 
+	public override void OnSceneGUI (Transform trsfOrg)
+	{
+		base.OnSceneGUI (trsfOrg);
+
+		DrawAreaInSceneView (trsfOrg);
+	}
+
 	// 在区域里面绘制
-	public void DrawAreaInSceneView(Transform trsfOrg){
+	void DrawAreaInSceneView(Transform trsfOrg){
 		if (!m_isShowArea) {
 			return;
 		}
@@ -219,16 +214,5 @@ public class EDT_Hurt_Area {
 		}
 		Handles.color = Color.white;
 		#endif
-	}
-
-	static public EDT_Hurt_Area NewHurtArea(JsonData jsonData){
-		EDT_Hurt_Area ret = new EDT_Hurt_Area ();
-		ret.DoInit (jsonData);
-		if (ret.m_isInitedByJson) {
-			return ret;
-		}else {
-			ret.DoClear ();
-		}
-		return null;
 	}
 }

@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEditor;
 
 /// <summary>
-/// 类名 : 绘制 属性事件
+/// 类名 : 绘制 伤害区域事件
 /// 作者 : Canyon
 /// 日期 : 2017-01-21 09:30
 /// 功能 : 
 /// </summary>
-public class PS_EvtAttrs {
+public class PS_EvtHurtArea {
 
 	System.Action m_callNew;
-	System.Action<EDT_Property> m_callRemove;
-	List<EDT_Property> list;
+	System.Action<EDT_Hurt_Area> m_callRemove;
+	List<EDT_Hurt_Area> list;
 	bool m_isPlan;
 	float duration;
 	string m_title;
@@ -22,7 +22,7 @@ public class PS_EvtAttrs {
 
 	List<bool> m_lFodeout = new List<bool>();
 
-	public PS_EvtAttrs(string m_title,bool m_isPlan,System.Action m_callNew,System.Action<EDT_Property> m_callRemove,bool isDrawTime){
+	public PS_EvtHurtArea(string m_title,bool m_isPlan,System.Action m_callNew,System.Action<EDT_Hurt_Area> m_callRemove,bool isDrawTime){
 		this.m_title = m_title;
 		this.m_callNew = m_callNew;
 		this.m_callRemove = m_callRemove;
@@ -30,7 +30,7 @@ public class PS_EvtAttrs {
 		this.m_isDrawTime = isDrawTime;
 	}
 
-	public void DoDraw(float duration,List<EDT_Property> list){
+	public void DoDraw(float duration,List<EDT_Hurt_Area> list){
 		this.duration = duration;
 		this.list = list;
 		_DrawEvents ();
@@ -77,14 +77,14 @@ public class PS_EvtAttrs {
 		EG_GUIHelper.FG_EndV();
 	}
 
-	void _DrawOneEvnet(int index, EDT_Property one)
+	void _DrawOneEvnet(int index, EDT_Hurt_Area one)
 	{
 		
 		EG_GUIHelper.FEG_BeginV();
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "属性修改 - " + EnumExtension.GetDescription(one.m_emTag));
+				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "伤害区域 - " + EnumExtension.GetDescription(one.m_emType));
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -107,7 +107,7 @@ public class PS_EvtAttrs {
 		EG_GUIHelper.FEG_EndV();
 	}
 
-	void _DrawOneEventAttrs(EDT_Property one)
+	void _DrawOneEventAttrs(EDT_Hurt_Area one)
 	{
 		if (this.m_isDrawTime) {
 			EG_GUIHelper.FEG_BeginH ();
@@ -125,26 +125,75 @@ public class PS_EvtAttrs {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("主分类:", GUILayout.Width(80));
-			one.m_emTag = (EDT_Property.PropretyTag)EditorGUILayout.EnumPopup ((System.Enum)one.m_emTag);
+			GUILayout.Label("类型:", GUILayout.Width(80));
+			one.m_emType = (EDT_Hurt_Area.HurtAreaType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emType);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("子分类:", GUILayout.Width(80));
-			one.m_iGID = EditorGUILayout.IntField (one.m_iGID);
+			one.m_isShowArea = EditorGUILayout.Toggle ("是否绘制伤害区域??", one.m_isShowArea);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
 		EG_GUIHelper.FEG_BeginH();
 		{
-			GUILayout.Label("参数:", GUILayout.Width(80));
-			one.m_sPars = EditorGUILayout.TextArea (one.m_sPars);
+			GUILayout.Label("区域颜色:", GUILayout.Width(80));
+			one.m_cAreaColor = EditorGUILayout.ColorField (one.m_cAreaColor);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			one.m_v3Offset = EditorGUILayout.Vector3Field("偏移(y暂留):", one.m_v3Offset);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		string strDesc = one.m_emType == EDT_Hurt_Area.HurtAreaType.Rectangle ? "长度:" : "半径:";
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label(strDesc, GUILayout.Width(80));
+			one.m_fRange = EditorGUILayout.Slider (one.m_fRange,0f,100f);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		if (one.m_emType != EDT_Hurt_Area.HurtAreaType.Arc && one.m_emType != EDT_Hurt_Area.HurtAreaType.Rectangle) {
+			return;
+		}
+
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUILayout.Label("旋转角度:", GUILayout.Width(80));
+			one.m_fRotation = EditorGUILayout.Slider (one.m_fRotation,0f,360f);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		switch (one.m_emType) {
+		case EDT_Hurt_Area.HurtAreaType.Rectangle:
+			EG_GUIHelper.FEG_BeginH();
+			{
+				GUILayout.Label("宽度:", GUILayout.Width(80));
+				one.m_fWidth = EditorGUILayout.Slider (one.m_fWidth,0f,100f);
+			}
+			EG_GUIHelper.FEG_EndH();
+			EG_GUIHelper.FG_Space(5);
+			break;
+		case EDT_Hurt_Area.HurtAreaType.Arc:
+			EG_GUIHelper.FEG_BeginH();
+			{
+				GUILayout.Label("弧度的角度值:", GUILayout.Width(80));
+				one.m_fAngle = EditorGUILayout.Slider (one.m_fAngle,0f,360f);
+			}
+			EG_GUIHelper.FEG_EndH();
+			EG_GUIHelper.FG_Space(5);
+			break;
+		}
 	}
 }
