@@ -119,7 +119,7 @@ public class PS_EvtEffect {
 
 			EG_GUIHelper.FG_Space(5);
 
-			if (m_lFodeout[index])
+			if (m_lFodeout.Count > index && m_lFodeout[index])
 			{
 				_DrawOneEventAttrs(one);
 			}
