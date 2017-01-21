@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEditor;
 using System.IO;
+using System.Collections.Generic;
 
 /// <summary>
 /// 类名 : buff 在 windows的视图
@@ -44,6 +45,8 @@ public class EG_Buff {
 	PS_EvtExcelBuff m_psOne = new PS_EvtExcelBuff();
 	PS_EvtExcelBuff m_psDua = new PS_EvtExcelBuff();
 
+	List<bool> m_lFodeout = new List<bool>(){false,false,false};
+
 	public void DoInit(string path){
 		optBuff.DoInit (path, 0);
 	}
@@ -56,6 +59,13 @@ public class EG_Buff {
 
 	public void DoClear(){
 		optBuff.DoClear ();
+		m_psInv.DoClear ();
+		m_psOne.DoClear ();
+		m_psDua.DoClear ();
+
+		m_lFodeout [0] = false;
+		m_lFodeout [1] = false;
+		m_lFodeout [2] = false;
 	}
 
 	public void DrawShow()
@@ -123,13 +133,29 @@ public class EG_Buff {
 		ms_entity.IsResetWhenGet = ms_isRest ? 1 : 0;
 		EG_GUIHelper.FG_Space(5);
 
-		ms_entity.strEvtInterval = m_psInv.DoDraw ("持续效果:");
-		ms_entity.strEvtOnce = m_psOne.DoDraw ("瞬时效果:");
-
-		ms_entity.Interval = EditorGUILayout.FloatField ("持续效果的间隔时间(单位秒):", ms_entity.Interval);
+		ms_entity.Interval = EditorGUILayout.FloatField ("[持续效果]间隔时间(单位秒):", ms_entity.Interval);
 		EG_GUIHelper.FG_Space(5);
 
-		ms_entity.strEvtDuration = m_psDua.DoDraw ("每帧效果:");
+		m_lFodeout[0] = EditorGUILayout.Foldout(m_lFodeout[0], "持续效果:");
+		EG_GUIHelper.FG_Space(5);
+		if (m_lFodeout [0]) {
+			m_psInv.DoDraw ();
+		}
+		ms_entity.strEvtInterval = m_psInv.ToJsonString ();
+
+		m_lFodeout[1] = EditorGUILayout.Foldout(m_lFodeout[1], "瞬时效果:");
+		EG_GUIHelper.FG_Space(5);
+		if (m_lFodeout [1]) {
+			m_psOne.DoDraw ();
+		}
+		ms_entity.strEvtOnce = m_psOne.ToJsonString ();
+
+		m_lFodeout[2] = EditorGUILayout.Foldout(m_lFodeout[2], "每帧效果:");
+		EG_GUIHelper.FG_Space(5);
+		if (m_lFodeout [2]) {
+			m_psDua.DoDraw ();
+		}
+		ms_entity.strEvtDuration = m_psDua.ToJsonString ();
 	}
 
 	void OnInitEntity2Attrs(EN_Buff entity)

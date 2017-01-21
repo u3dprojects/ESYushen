@@ -295,7 +295,11 @@ public class EMT_TBases {
 			}
 		}
 		m_tmpEvent = null;
-		return ret;
+
+		if (ret.Count > 0)
+			return ret;
+		
+		return null;
 	}
 
 	// 转为特效事件
