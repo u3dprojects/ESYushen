@@ -166,8 +166,6 @@ public partial class PS_Events {
 
 	List<bool> m_hurtArea_fodeOut = new List<bool>();
 
-	List<bool> m_beHitStatus_fodeOut = new List<bool>();
-
 	void _DrawEvents4Hurt(){
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
@@ -465,6 +463,9 @@ public partial class PS_Events {
 			EG_GUIHelper.FG_Space(5);
 
 			_DrawBeHitStatus (hurt);
+
+			EG_GUIHelper.FG_Space(5);
+			_DrawBeHitBuffs (hurt);
 		}
 		EG_GUIHelper.FG_EndV();
 	}
@@ -483,104 +484,32 @@ public partial class PS_Events {
 		m_psBeHitAudio.DoDraw (duration, hurt.GetHitAudioList ());
 	}
 
+	// 绘制修改属性
+	PS_EvtAttrs m_psBeHitAttrs;
 	void _DrawBeHitStatus(EDT_Hurt hurt){
-		EG_GUIHelper.FG_BeginVAsArea();
-		{
-			{
-				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField("命中属性修改列表", EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					hurt.NewBeHitStatus ();
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
-			}
-
-			{
-				// 中
-				List<EDT_Property> list = hurt.GetHitStatusList();
-				int lens = list.Count;
-				if (lens > 0)
-				{
-					for (int i = 0; i < lens; i++)
-					{
-						m_beHitStatus_fodeOut.Add (false);
-						_DrawOneBeHitStatus(i, list[i],hurt);
-					}
-				}
-				else
-				{
-					m_beHitStatus_fodeOut.Clear();
-				}
-			}
+		if (m_psBeHitAttrs == null) {
+			m_psBeHitAttrs = new PS_EvtAttrs("命中属性修改列表:",m_isPlan,delegate {
+				hurt.NewBeHitStatus();
+			},delegate (EDT_Property one){
+				hurt.RemoveEvent(one);
+			},false);
 		}
-		EG_GUIHelper.FG_EndV();
+
+		m_psBeHitAttrs.DoDraw (duration, hurt.GetHitStatusList ());
 	}
 
-	void _DrawOneBeHitStatus(int index, EDT_Property beStatus,EDT_Hurt hurt)
-	{
-		
-		EG_GUIHelper.FEG_BeginV();
-		{
-			EG_GUIHelper.FEG_BeginH();
-			{
-				m_beHitStatus_fodeOut[index] = EditorGUILayout.Foldout(m_beHitStatus_fodeOut[index], "属性修改 - " + EnumExtension.GetDescription(beStatus.m_emTag));
-				GUI.color = Color.red;
-				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
-				{
-					hurt.RemoveEvent (beStatus);
-					m_beHitStatus_fodeOut.RemoveAt(index);
-				}
-				GUI.color = Color.white;
-			}
-			EG_GUIHelper.FEG_EndH();
-
-			EG_GUIHelper.FG_Space(5);
-
-			if (m_beHitStatus_fodeOut[index])
-			{
-				_DrawOneBeHitStatusAttrs(beStatus);
-			}
+	// 绘制 buff
+	PS_EvtBuff m_psBeHitBuff;
+	void _DrawBeHitBuffs(EDT_Hurt hurt){
+		if (m_psBeHitBuff == null) {
+			m_psBeHitBuff = new PS_EvtBuff("命中Buff列表:",m_isPlan,delegate {
+				hurt.NewHitBuff();
+			},delegate (EDT_Buff one){
+				hurt.RemoveEvent(one);
+			},false);
 		}
-		EG_GUIHelper.FEG_EndV();
-	}
 
-	void _DrawOneBeHitStatusAttrs(EDT_Property beStatus)
-	{
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("主分类:", GUILayout.Width(80));
-			beStatus.m_emTag = (EDT_Property.PropretyTag)EditorGUILayout.EnumPopup ((System.Enum)beStatus.m_emTag);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("子分类:", GUILayout.Width(80));
-			beStatus.m_iGID = EditorGUILayout.IntField (beStatus.m_iGID);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		{
-			GUILayout.Label("参数:", GUILayout.Width(80));
-			beStatus.m_sPars = EditorGUILayout.TextArea (beStatus.m_sPars);
-		}
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
+		m_psBeHitBuff.DoDraw (duration, hurt.GetHitBuffList());
 	}
 
 	#endregion
