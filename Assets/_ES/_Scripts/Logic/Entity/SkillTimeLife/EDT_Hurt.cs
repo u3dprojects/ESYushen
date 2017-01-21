@@ -109,6 +109,9 @@ public class EDT_Hurt : EDT_Base {
 	protected override void OnCallUpdate (float upDeltaTime)
 	{
 		base.OnCallUpdate (upDeltaTime);
+		if (m_eHitEvent.m_isCanShow) {
+			m_eHitEvent.DoUpdate (upDeltaTime);
+		}
 	}
 
 	public override void OnClear ()
