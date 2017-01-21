@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System.IO;
 
 /// <summary>
 /// 类名 : buff 在 windows的视图
@@ -12,7 +13,7 @@ public class EG_Buff {
 
 	EN_Buff ms_entity = new EN_Buff ();
 
-	GameObject ms_gobjEffect;
+	GameObject ms_gobjEffect,ms_preGobjEffect;
 	string[] JoinType = {
 		"原点",
 		"头部",
@@ -37,6 +38,11 @@ public class EG_Buff {
 			return EN_BuffOpt.Instance;
 		}
 	}
+
+	// 事件
+	PS_EvtExcelBuff m_psInv = new PS_EvtExcelBuff();
+	PS_EvtExcelBuff m_psOne = new PS_EvtExcelBuff();
+	PS_EvtExcelBuff m_psDua = new PS_EvtExcelBuff();
 
 	public void DoInit(string path){
 		optBuff.DoInit (path, 0);
@@ -88,7 +94,17 @@ public class EG_Buff {
 		ms_gobjEffect = EditorGUILayout.ObjectField ("资源:", ms_gobjEffect, typeof(GameObject), false) as GameObject;
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("名称:" + ms_entity.EffectResName);
+		if (ms_gobjEffect != null) {
+			if (ms_preGobjEffect != ms_gobjEffect) {
+				ms_preGobjEffect = ms_gobjEffect;
+				string path = AssetDatabase.GetAssetPath (ms_gobjEffect);
+				ms_entity.EffectResName = Path.GetFileNameWithoutExtension (path);
+			}
+		} else {
+			ms_entity.EffectResName = "";
+		}
+
+		EditorGUILayout.LabelField ("资源名称:" + ms_entity.EffectResName);
 		EG_GUIHelper.FG_Space(5);
 
 		ms_entity.JoinId = EditorGUILayout.Popup("挂节点:", ms_entity.JoinId, JoinType);
@@ -107,17 +123,13 @@ public class EG_Buff {
 		ms_entity.IsResetWhenGet = ms_isRest ? 1 : 0;
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("持续效果:", ms_entity.strEvtInterval);
-		EG_GUIHelper.FG_Space(5);
-
-		EditorGUILayout.LabelField ("瞬时效果:", ms_entity.strEvtOnce);
-		EG_GUIHelper.FG_Space(5);
+		ms_entity.strEvtInterval = m_psInv.DoDraw ("持续效果:");
+		ms_entity.strEvtOnce = m_psOne.DoDraw ("瞬时效果:");
 
 		ms_entity.Interval = EditorGUILayout.FloatField ("持续效果的间隔时间(单位秒):", ms_entity.Interval);
 		EG_GUIHelper.FG_Space(5);
 
-		EditorGUILayout.LabelField ("特殊效果:", ms_entity.strEvtDuration);
-		EG_GUIHelper.FG_Space(5);
+		ms_entity.strEvtDuration = m_psDua.DoDraw ("每帧效果:");
 	}
 
 	void OnInitEntity2Attrs(EN_Buff entity)
@@ -125,7 +137,23 @@ public class EG_Buff {
 		if(entity != null)
 		{
 			ms_entity.DoClone (entity);
+
+			m_psInv.DoReInit (ms_entity.strEvtDuration);
+			m_psOne.DoReInit (ms_entity.strEvtInterval);
+			m_psDua.DoReInit (ms_entity.strEvtOnce);
+
 			this.ms_isRest = ms_entity.IsResetWhenGet == 1 ? true : false;
+			if(!string.IsNullOrEmpty(ms_entity.EffectResName)){
+				string path = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+ms_entity.EffectResName+".prefab";
+				bool isExists = File.Exists(path);
+				if (!isExists)
+				{
+					Debug.LogWarning("资源路径path = ["+path + "],不存在！！！");
+					return;
+				}
+				this.ms_gobjEffect = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
+				this.ms_preGobjEffect = this.ms_gobjEffect;
+			}
 		}
 	}
 
@@ -139,5 +167,9 @@ public class EG_Buff {
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
 		optBuff.Save (savePath);
+	}
+
+	void _DrawEvents4Inv(){
+		
 	}
 }
