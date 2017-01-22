@@ -137,8 +137,8 @@ public class EG_Bullet {
 			_DrawAreaFly();
 			EG_GUIHelper.FG_Space(8);
 
-			EditorGUILayout.LabelField ("Event:" ,EditorStyles.textArea);
-			EG_GUIHelper.FG_Space (5);
+			EG_GUIHelper.FEG_Head ("Event:");
+
 			m_psFly.DoDraw ();
 		}
 
@@ -151,8 +151,8 @@ public class EG_Bullet {
 			_DrawAreaBlowUp ();
 			EG_GUIHelper.FG_Space(8);
 
-			EditorGUILayout.LabelField ("Event:" ,EditorStyles.textArea);
-			EG_GUIHelper.FG_Space (5);
+			EG_GUIHelper.FEG_Head ("Event:");
+
 			m_psBlowUp.DoDraw ();
 		}
 

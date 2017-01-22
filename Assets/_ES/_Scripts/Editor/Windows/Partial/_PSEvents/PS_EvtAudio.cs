@@ -41,24 +41,7 @@ public class PS_EvtAudio {
 		{
 			{
 				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField(m_title, EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					if (this.m_callNew != null) {
-						this.m_callNew ();
-					}
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
+				EG_GUIHelper.FEG_Head(m_title,true,this.m_callNew);
 			}
 
 			{

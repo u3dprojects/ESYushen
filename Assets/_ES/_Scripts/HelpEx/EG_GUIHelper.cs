@@ -199,4 +199,40 @@ public static class EG_GUIHelper {
 
     #endregion
 
+	static public void FEG_Head(string title,bool isAdd = false,System.Action callFunc = null){
+		Color bgColor = Color.black;
+		Color titColor = Color.white;
+		FEG_Head (title, bgColor, titColor, isAdd, callFunc);
+	}
+
+	static public void FEG_Head(string title,Color bgColor,bool isAdd = false,System.Action callFunc = null){
+		Color titColor = Color.white;
+		FEG_Head (title, bgColor, titColor, isAdd, callFunc);
+	}
+		
+	static public void FEG_Head(string title,Color bgColor,Color titColor,bool isAdd = false,System.Action callFunc = null){
+		Color def = GUI.backgroundColor;
+		Color defGui = GUI.color;
+
+		FEG_BeginH();
+		GUI.backgroundColor = bgColor;
+		GUI.color = titColor;
+
+		EditorGUILayout.LabelField(title, EditorStyles.textArea);
+
+		GUI.backgroundColor = def;
+
+		if (isAdd) {
+			GUI.color = Color.green;
+			if (GUILayout.Button ("+", GUILayout.Width (50))) {
+				if (callFunc != null) {
+					callFunc ();
+				}
+			}
+		}
+		FEG_EndH();
+		FG_Space(5);
+
+		GUI.color = defGui;
+	}
 }

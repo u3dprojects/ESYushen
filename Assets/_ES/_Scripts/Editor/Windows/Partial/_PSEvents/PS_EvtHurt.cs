@@ -52,24 +52,7 @@ public class PS_EvtHurt {
 		{
 			{
 				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField(m_title, EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					if (this.m_callNew != null) {
-						this.m_callNew ();
-					}
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
+				EG_GUIHelper.FEG_Head(m_title,true,this.m_callNew);
 			}
 
 			{
@@ -200,21 +183,7 @@ public class PS_EvtHurt {
 	void _DrawOneHurt_BeHitter(EDT_Hurt hurt){
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
-			EG_GUIHelper.FEG_BeginH();
-			{
-				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				GUILayout.Label("命中事件", EditorStyles.textArea);
-				GUI.backgroundColor = def;		
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
-			}
-			EG_GUIHelper.FEG_EndH();
-			EG_GUIHelper.FG_Space(5);
+			EG_GUIHelper.FEG_Head("命中事件",new Color(0.1f,0.5f,0.3f,0.6f));
 
 			EG_GUIHelper.FEG_BeginH();
 			{

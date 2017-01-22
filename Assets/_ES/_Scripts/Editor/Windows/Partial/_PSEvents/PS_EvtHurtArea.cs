@@ -41,25 +41,7 @@ public class PS_EvtHurtArea {
 		{
 			{
 				// 上
-				EG_GUIHelper.FEG_BeginH();
-				Color def = GUI.backgroundColor;
-				GUI.backgroundColor = Color.black;
-				GUI.color = Color.white;
-
-				EditorGUILayout.LabelField(m_title, EditorStyles.textArea);
-
-				GUI.backgroundColor = def;
-
-				GUI.color = Color.green;
-				if (GUILayout.Button("+", GUILayout.Width(50)))
-				{
-					if (this.m_callNew != null) {
-						this.m_callNew ();
-					}
-				}
-				GUI.color = Color.white;
-				EG_GUIHelper.FEG_EndH();
-				EG_GUIHelper.FG_Space(5);
+				EG_GUIHelper.FEG_Head(m_title,true,this.m_callNew);
 
 				EditorGUILayout.LabelField(EMT_TBases.ToArrayJsonString(this.list), EditorStyles.textArea);
 				EG_GUIHelper.FG_Space(8);
