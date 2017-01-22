@@ -133,6 +133,7 @@ public class EDT_Hurt : EDT_Base {
 			m_eHitEvent.DoStart ();
 		}
 
+		OnStartArea ();
 		Debug.Log ("=hurt=");
 		return true;
 	}
@@ -143,6 +144,7 @@ public class EDT_Hurt : EDT_Base {
 		if (m_eHitEvent.m_isCanShow) {
 			m_eHitEvent.DoUpdate (upDeltaTime);
 		}
+		OnUpdateArea (upDeltaTime);
 	}
 
 	public override void OnClear ()
@@ -151,6 +153,7 @@ public class EDT_Hurt : EDT_Base {
 
 		m_emType = HurtType.MoveTarget;
 
+		OnClearArea();
 		m_lHurtAreas.Clear ();
 		m_lCurHurtAreas.Clear ();
 
@@ -190,6 +193,42 @@ public class EDT_Hurt : EDT_Base {
 			tmp = list [i];
 			tmp.DoSceneGUI(trsfOrg);
 		}
+	}
+
+	void OnStartArea(){
+		List<EDT_Hurt_Area> list = GetAreaList ();
+		int lens = list.Count;
+		EDT_Hurt_Area tmp = null;
+		for (int i = 0; i < lens; i++) {
+			tmp = list [i];
+			tmp.DoStart (true);
+		}
+	}
+
+	void OnUpdateArea(float deltatime){
+		List<EDT_Hurt_Area> list = GetAreaList ();
+		int lens = list.Count;
+		EDT_Hurt_Area tmp = null;
+		for (int i = 0; i < lens; i++) {
+			tmp = list [i];
+			tmp.DoUpdate (deltatime);
+		}
+	}
+
+	void OnClearArea(){
+		List<EDT_Hurt_Area> list = GetAreaList ();
+		int lens = list.Count;
+		EDT_Hurt_Area tmp = null;
+		for (int i = 0; i < lens; i++) {
+			tmp = list [i];
+			tmp.DoClear ();
+		}
+	}
+
+	public override void DoEnd ()
+	{
+		base.DoEnd ();
+		Debug.Log ("Hurt Do End");
 	}
 
 	#region === 受击者相关信息绘制 ===

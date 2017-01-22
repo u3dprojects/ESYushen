@@ -46,10 +46,10 @@ public class EDT_Base {
     }
 
     // 执行函数
-    bool _m_isDoEvent = false;
+	protected bool _m_isDoEvent = false;
     
     // 用来表示可以进行更新了
-    bool _m_isRunning = false;
+	protected bool _m_isRunning = false;
 
     protected float m_fProgress = 0.0f;
 

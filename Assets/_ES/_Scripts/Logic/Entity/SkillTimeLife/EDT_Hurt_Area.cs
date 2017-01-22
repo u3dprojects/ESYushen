@@ -136,6 +136,12 @@ public class EDT_Hurt_Area : EDT_Base{
 		return ret;
 	}
 
+	public override void DoStart (bool isReStart = false)
+	{
+		base.DoStart (isReStart);
+		_m_isDrawRuning = true;
+	}
+
 	public override void OnClear ()
 	{
 		base.OnClear ();
@@ -145,8 +151,11 @@ public class EDT_Hurt_Area : EDT_Base{
 
 	void _OnClearDrawGobj(){
 		if (m_gobjDraw != null) {
-			m_gobjDraw.SetActive (false);
-			GameObject.DestroyImmediate (m_gobjDraw);
+			try {
+				GameObject.DestroyImmediate(m_gobjDraw);
+			} catch (System.Exception ex) {
+				Debug.LogError ("======" + ex);
+			}
 			m_gobjDraw = null;
 		}
 	}
@@ -238,7 +247,11 @@ public class EDT_Hurt_Area : EDT_Base{
 	}
 
 	void _DrawArea(Transform trsfOrg){
-		if (!_m_isDrawRuning) {
+		if (!(_m_isRunning && _m_isDoEvent) || m_isEnd){
+			return;
+		}
+
+		if (_m_isDrawRuning) {
 			return;
 		}
 		_m_isDrawRuning = true;
@@ -295,6 +308,9 @@ public class EDT_Hurt_Area : EDT_Base{
 		m_gobjDraw.AddComponent<MeshFilter> ().mesh = mesh;
 
 		Material mat = new Material (Shader.Find ("Diffuse"));
+		if (mat.HasProperty ("_Color")) {
+			mat.SetColor ("_Color", this.m_cAreaColor);
+		}
 		m_gobjDraw.AddComponent<MeshRenderer> ().material = mat;
 
 		m_gobjDraw.transform.position = pos;
