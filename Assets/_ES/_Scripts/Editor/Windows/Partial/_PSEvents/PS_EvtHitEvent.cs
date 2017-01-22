@@ -20,6 +20,8 @@ public class PS_EvtHitEvent {
 	bool m_isShowCastTime = false;
 	float duration = 0;
 
+	SpriteJoint m_eCsJoin = null;
+
 	public void DoReInit(string json){
 		m_evtHit.DoReInit (json,0);
 		m_sJson = json;
@@ -57,6 +59,9 @@ public class PS_EvtHitEvent {
 		{
 			EditorGUILayout.LabelField(ToJsonString(), EditorStyles.textArea);
 			EG_GUIHelper.FG_Space(5);
+
+			_DrawEffects();
+			EG_GUIHelper.FG_Space(10);
 
 			_DrawAudio ();
 			EG_GUIHelper.FG_Space(10);
@@ -131,5 +136,19 @@ public class PS_EvtHitEvent {
 
 	void _NewShake(){
 		m_evtHit.NewEvent<EDT_Shake> ();
+	}
+
+	// 绘制 特效
+	PS_EvtEffect m_psEffect;
+
+	void _DrawEffects(){
+		if (m_psEffect == null) {
+			m_psEffect = new PS_EvtEffect("特效列表",m_isPlan,_NewEffect,_RmEvent,m_isShowCastTime);
+		}
+		m_psEffect.DoDraw (duration, m_evtHit.GetLEffects(),m_eCsJoin);
+	}
+
+	void _NewEffect(){
+		m_evtHit.NewEvent<EDT_Effect>();
 	}
 }
