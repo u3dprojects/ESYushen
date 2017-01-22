@@ -28,10 +28,12 @@ public class EG_Bullet {
 
 	// 事件
 	EMT_HitArea m_evtAreaFly = new EMT_HitArea();
-	EMT_HitEvent m_evtFly = new EMT_HitEvent();
-
 	EMT_HitArea m_evtAreaBlowUp = new EMT_HitArea();
-	EMT_HitEvent m_evtBlowUp = new EMT_HitEvent();
+
+	// 绘制
+	List<bool> m_lFodeout = new List<bool>(){false,false};
+	PS_EvtHitEvent m_psFly = new PS_EvtHitEvent();
+	PS_EvtHitEvent m_psBlowUp = new PS_EvtHitEvent();
 
 	public void DoInit(string path){
 		m_opt.DoInit (path, 0);
@@ -45,6 +47,14 @@ public class EG_Bullet {
 
 	public void DoClear(){
 		m_opt.DoClear ();
+		m_evtAreaFly.DoClear ();
+		m_evtAreaBlowUp.DoClear ();
+		m_psFly.DoClear ();
+		m_psBlowUp.DoClear ();
+
+		m_lFodeout [0] = false;
+		m_lFodeout [1] = false;
+
 		ms_gobjEffect = null;
 		ms_preGobjEffect = null;
 		ms_gobjBlowup = null;
@@ -120,11 +130,34 @@ public class EG_Bullet {
 		EG_GUIHelper.FG_Space(5);
 
 		// 绘制飞行，和爆炸的相关事件(区域检查，命中处理)
-		_DrawAreaFly();
-		EG_GUIHelper.FG_Space(8);
 
-		_DrawAreaBlowUp ();
+		m_lFodeout[0] = EditorGUILayout.Foldout(m_lFodeout[0], "飞行事件:");
+		EG_GUIHelper.FG_Space(5);
+		if (m_lFodeout [0]) {
+			_DrawAreaFly();
+			EG_GUIHelper.FG_Space(8);
 
+			EditorGUILayout.LabelField ("Event:" ,EditorStyles.textArea);
+			EG_GUIHelper.FG_Space (5);
+			m_psFly.DoDraw ();
+		}
+
+		ms_entity.AreaFlying = m_evtAreaFly.ToJsonString ();
+		ms_entity.EvtFlying = m_psFly.ToJsonString ();
+
+		m_lFodeout[1] = EditorGUILayout.Foldout(m_lFodeout[1], "爆炸事件:");
+		EG_GUIHelper.FG_Space(5);
+		if (m_lFodeout [1]) {
+			_DrawAreaBlowUp ();
+			EG_GUIHelper.FG_Space(8);
+
+			EditorGUILayout.LabelField ("Event:" ,EditorStyles.textArea);
+			EG_GUIHelper.FG_Space (5);
+			m_psBlowUp.DoDraw ();
+		}
+
+		ms_entity.AreaBlowUp = m_evtAreaBlowUp.ToJsonString ();
+		ms_entity.EvtBlowUp = m_psBlowUp.ToJsonString ();
 	}
 
 	GameObject GetFabEffect(string efcName){
@@ -160,8 +193,8 @@ public class EG_Bullet {
 			m_evtAreaBlowUp.DoReInit (ms_entity.AreaBlowUp);
 			m_evtAreaFly.DoReInit (ms_entity.AreaFlying);
 
-			m_evtBlowUp.DoReInit (ms_entity.EvtBlowUp, 0);
-			m_evtFly.DoReInit (ms_entity.EvtFlying, 0);
+			m_psFly.DoReInit (ms_entity.EvtBlowUp);
+			m_psBlowUp.DoReInit (ms_entity.EvtFlying);
 		}
 	}
 
@@ -181,18 +214,9 @@ public class EG_Bullet {
 	PS_EvtHurtArea m_psAreaFly;
 	void _DrawAreaFly(){
 		if (m_psAreaFly == null) {
-			m_psAreaFly = new PS_EvtHurtArea ("飞行碰撞区域:", false, _NewAreaFly, _RmAreaFly, false);
+			m_psAreaFly = new PS_EvtHurtArea ("碰撞区域:", false, _NewAreaFly, _RmAreaFly, false);
 		}
-		ms_entity.AreaFlying = m_evtAreaFly.ToJsonString ();
-		EG_GUIHelper.FEG_BeginVArea ();
-		{
-			EditorGUILayout.LabelField ("字符串值:" + ms_entity.AreaFlying, EditorStyles.textArea);
-			EG_GUIHelper.FG_Space (8);
-
-			m_psAreaFly.DoDraw (0, m_evtAreaFly.GetLAreas ());
-		}
-		EG_GUIHelper.FEG_EndV ();
-
+		m_psAreaFly.DoDraw (0, m_evtAreaFly.GetLAreas ());
 	}
 
 	void _NewAreaFly(){
@@ -206,18 +230,9 @@ public class EG_Bullet {
 	PS_EvtHurtArea m_psAreaBlowUp;
 	void _DrawAreaBlowUp(){
 		if (m_psAreaBlowUp == null) {
-			m_psAreaBlowUp = new PS_EvtHurtArea ("爆炸碰撞区域:", false, _NewAreaBlowUp, _RmAreaBlowUp, false);
+			m_psAreaBlowUp = new PS_EvtHurtArea ("碰撞区域:", false, _NewAreaBlowUp, _RmAreaBlowUp, false);
 		}
-
-		ms_entity.AreaBlowUp = m_evtAreaBlowUp.ToJsonString ();
-		EG_GUIHelper.FEG_BeginVArea ();
-		{
-			EditorGUILayout.LabelField ("字符串值:" + ms_entity.AreaBlowUp, EditorStyles.textArea);
-			EG_GUIHelper.FG_Space (8);
-
-			m_psAreaBlowUp.DoDraw(0,m_evtAreaBlowUp.GetLAreas());
-		}
-		EG_GUIHelper.FEG_EndV ();
+		m_psAreaBlowUp.DoDraw(0,m_evtAreaBlowUp.GetLAreas());
 	}
 
 	void _NewAreaBlowUp(){

@@ -70,9 +70,7 @@ public class PS_EvtHitEvent {
 			_DrawShake ();
 		}
 		EG_GUIHelper.FEG_EndV();
-		EG_GUIHelper.FG_Space(5);
-
-
+		EG_GUIHelper.FG_Space(10);
 	}
 
 	void _RmEvent(EDT_Base one){
