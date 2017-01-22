@@ -15,6 +15,7 @@ public class EG_Buff {
 	EN_Buff ms_entity = new EN_Buff ();
 
 	GameObject ms_gobjEffect,ms_preGobjEffect;
+
 	string[] JoinType = {
 		"原点",
 		"头部",
@@ -34,7 +35,7 @@ public class EG_Buff {
 	};
 	bool ms_isRest;
 
-	EN_OptBuff optBuff{
+	EN_OptBuff m_opt{
 		get{
 			return EN_OptBuff.Instance;
 		}
@@ -48,17 +49,17 @@ public class EG_Buff {
 	List<bool> m_lFodeout = new List<bool>(){false,false,false};
 
 	public void DoInit(string path){
-		optBuff.DoInit (path, 0);
+		m_opt.DoInit (path, 0);
 	}
 
 	public bool isInited{
 		get{
-			return optBuff.isInitSuccessed;
+			return m_opt.isInitSuccessed;
 		}
 	}
 
 	public void DoClear(){
-		optBuff.DoClear ();
+		m_opt.DoClear ();
 		m_psInv.DoClear ();
 		m_psOne.DoClear ();
 		m_psDua.DoClear ();
@@ -66,6 +67,8 @@ public class EG_Buff {
 		m_lFodeout [0] = false;
 		m_lFodeout [1] = false;
 		m_lFodeout [2] = false;
+		ms_gobjEffect = null;
+		ms_preGobjEffect = null;
 	}
 
 	public void DrawShow()
@@ -74,9 +77,9 @@ public class EG_Buff {
 		ms_entity.ID = EditorGUILayout.IntField("ID:",ms_entity.ID);
 		if (GUILayout.Button("查询"))
 		{
-			if (optBuff.isInitSuccessed)
+			if (m_opt.isInitSuccessed)
 			{
-				EN_Buff ms_curEnity = optBuff.GetEntity(ms_entity.ID);
+				EN_Buff ms_curEnity = m_opt.GetEntity(ms_entity.ID);
 				OnInitEntity2Attrs(ms_curEnity);
 			}
 			else{
@@ -185,13 +188,13 @@ public class EG_Buff {
 
 	void OnInitAttrs2Entity()
 	{
-		EN_Buff entity = optBuff.GetOrNew(ms_entity.ID);
+		EN_Buff entity = m_opt.GetOrNew(ms_entity.ID);
 		ms_entity.rowIndex = entity.rowIndex;
 		entity.DoClone (ms_entity);
 	}
 
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
-		optBuff.Save (savePath);
+		m_opt.Save (savePath);
 	}
 }

@@ -12,7 +12,7 @@ using System.IO;
 public class EG_Skill {
 	#region  == Member Attribute ===
 
-	EN_OptSkill optSkill
+	EN_OptSkill m_opt
 	{
 		get { return EN_OptSkill.Instance; }
 	}
@@ -46,12 +46,12 @@ public class EG_Skill {
 	#endregion
 
 	public void DoInit(string path){
-		optSkill.DoInit (path, 0);
+		m_opt.DoInit (path, 0);
 	}
 
 	public bool isInited{
 		get{
-			return optSkill.isInitSuccessed;
+			return m_opt.isInitSuccessed;
 		}
 	}
 
@@ -63,7 +63,7 @@ public class EG_Skill {
 		{
 			if (isInited)
 			{
-				EN_Skill tmp = optSkill.GetEnSkill(ms_enity.ID);
+				EN_Skill tmp = m_opt.GetEnSkill(ms_enity.ID);
 				OnInitEntity2Attrs(tmp);
 			}
 			else{
@@ -202,17 +202,17 @@ public class EG_Skill {
 
 	void OnInitAttrs2Entity()
 	{
-		EN_Skill entity = optSkill.GetOrNew(ms_enity.ID);
+		EN_Skill entity = m_opt.GetOrNew(ms_enity.ID);
 		ms_enity.rowIndex = entity.rowIndex;
 		entity.DoClone (ms_enity);
 	}
 
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
-		optSkill.Save (savePath);
+		m_opt.Save (savePath);
 	}
 
 	public void DoClear(){
-		optSkill.DoClear ();
+		m_opt.DoClear ();
 	}
 }

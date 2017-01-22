@@ -78,6 +78,7 @@ public class EDW_Plan : EditorWindow {
 
 	EG_Buff m_egBuff = new EG_Buff();
 	EG_Skill m_egSkill = new EG_Skill();
+	EG_Bullet m_egBullet = new EG_Bullet();
 
 	// delegate 更新
 	System.Action call4OnUpdate;
@@ -115,7 +116,7 @@ public class EDW_Plan : EditorWindow {
 				string txtDecs = "类名 : excel数据表编辑器窗口\n"
 					+ "作者 : Canyon\n"
 					+ "日期 : 2017 - 01 - 19 14:50\n"
-					+ "描述 : 目前可以操作Buff表。\n";
+					+ "描述 : 目前可以操作Buff表,Skill表,Bullet表。\n";
 				GUILayout.Label(txtDecs, style);
 				style.alignment = TextAnchor.MiddleLeft;
 			}
@@ -182,6 +183,7 @@ public class EDW_Plan : EditorWindow {
 	{
 		m_egBuff.DoClear ();
 		m_egSkill.DoClear ();
+		m_egBullet.DoClear ();
 	}
 
 	void OnSceneGUI(SceneView sceneView) {
@@ -249,6 +251,9 @@ public class EDW_Plan : EditorWindow {
 			return m_egBuff.isInited;
 		case EmExcelTable.Skill:
 			return m_egSkill.isInited;
+		case EmExcelTable.Bullet:
+			return m_egBullet.isInited;
+			break;
 		}
 		return false;
 	}
@@ -261,6 +266,9 @@ public class EDW_Plan : EditorWindow {
 		case EmExcelTable.Skill:
 			m_egSkill.DoInit (pathOpen);
 			break;
+		case EmExcelTable.Bullet:
+			m_egBullet.DoInit (pathOpen);
+			break;
 		}
 	}
 
@@ -272,6 +280,9 @@ public class EDW_Plan : EditorWindow {
 		case EmExcelTable.Skill:
 			m_egSkill.SaveExcel (savePath);
 			break;
+		case EmExcelTable.Bullet:
+			m_egBullet.SaveExcel (savePath);
+			break;
 		}
 	}
 
@@ -282,6 +293,9 @@ public class EDW_Plan : EditorWindow {
 			break;
 		case EmExcelTable.Skill:
 			m_egSkill.DrawShow ();
+			break;
+		case EmExcelTable.Bullet:
+			m_egBullet.DrawShow ();
 			break;
 		}
 	}
