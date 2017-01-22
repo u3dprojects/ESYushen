@@ -38,8 +38,7 @@ public class EDT_Hurt : EDT_Base {
 	public int m_iTargetCount;
 
 	// 伤害区域列表(m_zones)
-	List<EDT_Hurt_Area> m_lHurtAreas = new List<EDT_Hurt_Area>();
-	List<EDT_Hurt_Area> m_lCurHurtAreas = new List<EDT_Hurt_Area>();
+	EMT_HitArea m_eHitArea = new EMT_HitArea ();
 
 	// 受击方收到的伤害状态(伤害值，特效等)
 	EMT_HitEvent m_eHitEvent = new EMT_HitEvent();
@@ -64,22 +63,12 @@ public class EDT_Hurt : EDT_Base {
 
 
 		JsonData tmp = null;
-		JsonData tmp2 = null;
 		IDictionary dicJsonData2 = null;
 		if (dicJsonData.Contains ("m_zoneHelper")) {
 			tmp = jsonData ["m_zoneHelper"];
 			dicJsonData2 = (IDictionary)tmp;
 			if (dicJsonData2.Contains ("m_zones")) {
-				tmp2 = tmp ["m_zones"];
-				if (tmp2.IsArray) {
-					EDT_Hurt_Area hurtArea = null;
-					for (int i = 0; i < tmp2.Count; i++) {
-						hurtArea = EDT_Hurt_Area.NewEntity<EDT_Hurt_Area>(tmp2 [i],castTime);
-						if (hurtArea != null) {
-							m_lHurtAreas.Add (hurtArea);
-						}
-					}
-				}
+				m_eHitArea.DoReInit (tmp ["m_zones"], castTime);
 			}
 		}
 
@@ -94,7 +83,7 @@ public class EDT_Hurt : EDT_Base {
 
 	public override JsonData ToJsonData ()
 	{
-		if (!this.m_isInitedFab || this.m_lHurtAreas.Count <= 0)
+		if (!this.m_isInitedFab)
 			return null;
 
 		JsonData ret = new JsonData ();
@@ -105,21 +94,12 @@ public class EDT_Hurt : EDT_Base {
 			ret ["m_targetFilter"] = this.m_iTargetFilter;
 			ret ["m_targetCount"] = this.m_iTargetCount;
 
-			tmp = new JsonData ();
-			JsonData tmp2 = new JsonData ();
-			JsonData tmp3;
-
-			foreach (var item in this.m_lHurtAreas) {
-				tmp3 = item.ToJsonData ();
-				if (tmp3 == null) {
-					continue;
-				}
-				tmp2.Add (tmp3);
+			JsonData tmpArea = m_eHitArea.ToJsonData();
+			if (tmpArea != null) {
+				tmp = new JsonData ();
+				tmp ["m_zones"] = tmpArea;
+				ret ["m_zoneHelper"] = tmp;
 			}
-			tmp2.SetJsonType (JsonType.Array);
-			tmp ["m_zones"] = tmp2;
-			ret ["m_zoneHelper"] = tmp;
-
 		}
 
 		tmp = this.m_eHitEvent.ToJsonData ();
@@ -133,7 +113,8 @@ public class EDT_Hurt : EDT_Base {
 			m_eHitEvent.DoStart ();
 		}
 
-		OnStartArea ();
+		m_eHitArea.DoStart ();
+
 		Debug.Log ("=hurt=");
 		return true;
 	}
@@ -144,7 +125,7 @@ public class EDT_Hurt : EDT_Base {
 		if (m_eHitEvent.m_isCanShow) {
 			m_eHitEvent.DoUpdate (upDeltaTime);
 		}
-		OnUpdateArea (upDeltaTime);
+		m_eHitArea.DoUpdate (upDeltaTime);
 	}
 
 	public override void OnClear ()
@@ -153,76 +134,14 @@ public class EDT_Hurt : EDT_Base {
 
 		m_emType = HurtType.MoveTarget;
 
-		OnClearArea();
-		m_lHurtAreas.Clear ();
-		m_lCurHurtAreas.Clear ();
-
+		m_eHitArea.DoClear ();
 		m_eHitEvent.DoClear ();
-	}
-
-	public void NewHurtArea(){
-		if (m_lHurtAreas == null) {
-			return;
-		}
-		m_lHurtAreas.Add (new EDT_Hurt_Area());
-	}
-
-	public void RemoveHurtArea(EDT_Hurt_Area hurtArea){
-		m_lHurtAreas.Remove (hurtArea);
-	}
-
-	public List<EDT_Hurt_Area> GetAreaList(){
-		m_lCurHurtAreas.Clear ();
-		if (m_lHurtAreas != null && m_lHurtAreas.Count > 0) {
-			m_lCurHurtAreas.AddRange (m_lHurtAreas);
-		}
-		return m_lCurHurtAreas;
 	}
 
 	public override void OnSceneGUI (Transform trsfOrg)
 	{
 		base.OnSceneGUI (trsfOrg);
-		DrawAreaInSceneView (trsfOrg);
-	}
-
-	void DrawAreaInSceneView(Transform trsfOrg){
-		List<EDT_Hurt_Area> list = GetAreaList ();
-		int lens = list.Count;
-		EDT_Hurt_Area tmp = null;
-		for (int i = 0; i < lens; i++) {
-			tmp = list [i];
-			tmp.DoSceneGUI(trsfOrg);
-		}
-	}
-
-	void OnStartArea(){
-		List<EDT_Hurt_Area> list = GetAreaList ();
-		int lens = list.Count;
-		EDT_Hurt_Area tmp = null;
-		for (int i = 0; i < lens; i++) {
-			tmp = list [i];
-			tmp.DoStart (true);
-		}
-	}
-
-	void OnUpdateArea(float deltatime){
-		List<EDT_Hurt_Area> list = GetAreaList ();
-		int lens = list.Count;
-		EDT_Hurt_Area tmp = null;
-		for (int i = 0; i < lens; i++) {
-			tmp = list [i];
-			tmp.DoUpdate (deltatime);
-		}
-	}
-
-	void OnClearArea(){
-		List<EDT_Hurt_Area> list = GetAreaList ();
-		int lens = list.Count;
-		EDT_Hurt_Area tmp = null;
-		for (int i = 0; i < lens; i++) {
-			tmp = list [i];
-			tmp.DoClear ();
-		}
+		m_eHitArea.OnSceneGUI(trsfOrg);
 	}
 
 	public override void DoEnd ()
@@ -230,6 +149,22 @@ public class EDT_Hurt : EDT_Base {
 		base.DoEnd ();
 		Debug.Log ("Hurt Do End");
 	}
+
+	#region ===  伤害区域 ===
+
+	public void NewHitArea(){
+		m_eHitArea.NewArea();
+	}
+
+	public void RemoveHitArea(EDT_Hurt_Area hurtArea){
+		m_eHitArea.RmArea (hurtArea);
+	}
+
+	public List<EDT_Hurt_Area> GetAreaList(){
+		return m_eHitArea.GetLAreas ();
+	}
+
+	#endregion
 
 	#region === 受击者相关信息绘制 ===
 

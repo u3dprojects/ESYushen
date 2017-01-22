@@ -253,7 +253,6 @@ public class EDW_Plan : EditorWindow {
 			return m_egSkill.isInited;
 		case EmExcelTable.Bullet:
 			return m_egBullet.isInited;
-			break;
 		}
 		return false;
 	}

@@ -183,9 +183,9 @@ public class PS_EvtHurt {
 		}
 		else{	
 			psEvt = new PS_EvtHurtArea ("伤害区域列表:", m_isPlan, delegate {
-				hurt.NewHurtArea ();
+				hurt.NewHitArea ();
 			}, delegate (EDT_Hurt_Area one) {
-				hurt.RemoveHurtArea (one);
+				hurt.RemoveHitArea (one);
 			}, false);
 
 			mapArea [hurt.m_iCurID] = psEvt;
