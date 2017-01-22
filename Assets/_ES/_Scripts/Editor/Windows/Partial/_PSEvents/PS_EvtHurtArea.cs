@@ -13,7 +13,7 @@ public class PS_EvtHurtArea {
 
 	System.Action m_callNew;
 	System.Action<EDT_Hurt_Area> m_callRemove;
-	List<EDT_Hurt_Area> list;
+	List<EDT_Hurt_Area> list =  null;
 	bool m_isPlan;
 	float duration;
 	string m_title;
@@ -59,6 +59,10 @@ public class PS_EvtHurtArea {
 				}
 				GUI.color = Color.white;
 				EG_GUIHelper.FEG_EndH();
+				EG_GUIHelper.FG_Space(5);
+
+				EditorGUILayout.LabelField(EMT_TBases.ToArrayJsonString(this.list), EditorStyles.textArea);
+				EG_GUIHelper.FG_Space(8);
 			}
 
 			{

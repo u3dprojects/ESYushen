@@ -69,6 +69,7 @@ public partial class PS_Events {
 
 	public void DoClear(){
 		m_cEvents.DoClear ();
+		_OnClearHit ();
 	}
 
 	public string ToJsonString(){
@@ -160,17 +161,24 @@ public partial class PS_Events {
 /// </summary>
 public partial class PS_Events {
 	
-	PS_EvtHurt m_psHitArea;
+	PS_EvtHurt m_psHit;
 
 	void _DrawEvents4Hurt(){
-		if (m_psHitArea == null) {
-			m_psHitArea = new PS_EvtHurt("目标事件列表",m_isPlan,_NewHitArea,RemoveEvent,true);
+		if (m_psHit == null) {
+			m_psHit = new PS_EvtHurt("目标事件列表",m_isPlan,_NewHitArea,RemoveEvent,true);
 		}
-		m_psHitArea.DoDraw (beforeRoll,afterRoll, m_cEvents.GetLHurts ());
+		m_psHit.DoDraw (beforeRoll,afterRoll, m_cEvents.GetLHurts ());
 	}
 
 	void _NewHitArea(){
 		m_cEvents.NewEvent<EDT_Hurt> ();
+	}
+
+	void _OnClearHit(){
+		if (m_psHit != null) {
+			m_psHit.DoClear ();
+			m_psHit = null;
+		}
 	}
 }
 

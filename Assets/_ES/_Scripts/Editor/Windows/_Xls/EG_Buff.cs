@@ -42,9 +42,9 @@ public class EG_Buff {
 	}
 
 	// 事件
-	PS_EvtExcelBuff m_psInv = new PS_EvtExcelBuff();
-	PS_EvtExcelBuff m_psOne = new PS_EvtExcelBuff();
-	PS_EvtExcelBuff m_psDua = new PS_EvtExcelBuff();
+	PS_EvtHitEvent m_psInv = new PS_EvtHitEvent();
+	PS_EvtHitEvent m_psOne = new PS_EvtHitEvent();
+	PS_EvtHitEvent m_psDua = new PS_EvtHitEvent();
 
 	List<bool> m_lFodeout = new List<bool>(){false,false,false};
 

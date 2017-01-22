@@ -276,7 +276,15 @@ public class EMT_TBases {
 		return JsonMapper.ToJson (tmpData);
 	}
 
-	public JsonData ToArrayJsonData(List<EDT_Base> listOrg){
+	static public string ToArrayJsonString<T>(List<T> listOrg) where T : EDT_Base{
+		JsonData jsonData = ToArrayJsonData (listOrg);
+		if (jsonData == null) {
+			return "";
+		}
+		return JsonMapper.ToJson (jsonData);
+	}
+
+	static public JsonData ToArrayJsonData<T>(List<T> listOrg) where T : EDT_Base{
 		if (listOrg == null || listOrg.Count <= 0) {
 			return null;
 		}
@@ -284,17 +292,18 @@ public class EMT_TBases {
 		JsonData ret = new JsonData ();
 		ret.SetJsonType (JsonType.Array);
 
-		lens = listOrg.Count;
-		JsonData tmp = null;
+		int lens = listOrg.Count;
+		JsonData tmpJson = null;
+		EDT_Base tmpEDT;
+
 		for (int i = 0; i < lens; i++)
 		{
-			m_tmpEvent = listOrg[i];
-			tmp = m_tmpEvent.ToJsonData();
-			if (tmp != null) {
-				ret.Add (tmp);
+			tmpEDT = listOrg[i];
+			tmpJson = tmpEDT.ToJsonData();
+			if (tmpJson != null) {
+				ret.Add (tmpJson);
 			}
 		}
-		m_tmpEvent = null;
 
 		if (ret.Count > 0)
 			return ret;

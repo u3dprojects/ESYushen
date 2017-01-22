@@ -23,6 +23,15 @@ public class EMT_HitArea {
 		}
 	}
 
+	public void DoReInit(string json){
+		if (string.IsNullOrEmpty (json)) {
+			return;
+		}
+
+		JsonData jsonData = JsonMapper.ToObject (json);
+		DoReInit (jsonData, 0);
+	}
+
 	public void DoReInit(JsonData jsonData,float castTime){
 		if (!jsonData.IsArray) {
 			return;
@@ -38,23 +47,11 @@ public class EMT_HitArea {
 	}
 
 	public JsonData ToJsonData(){
-		List<EDT_Hurt_Area> list = GetLAreas ();
-		lens = list.Count;
-		if (lens <= 0)
-			return null;
+		return EMT_TBases.ToArrayJsonData(m_lHitAreas);
+	}
 
-		JsonData ret = new JsonData ();
-		ret.SetJsonType (JsonType.Array);
-
-		JsonData tmp;
-		for (int i = 0; i < lens; i++) {
-			tmp = (list [i]).ToJsonData();
-			if (tmp != null) {
-				ret.Add (tmp);
-			}
-		}
-
-		return ret;
+	public string ToJsonString(){
+		return EMT_TBases.ToArrayJsonString(m_lHitAreas);
 	}
 
 	public void DoClear(){

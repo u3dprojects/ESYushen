@@ -25,9 +25,7 @@ public class PS_EvtHurt {
 
 	// 管理
 	Dictionary<int,PS_EvtHurtArea> mapArea = new Dictionary<int, PS_EvtHurtArea> ();
-	Dictionary<int,PS_EvtAudio> mapAudio = new Dictionary<int, PS_EvtAudio> ();
-	Dictionary<int,PS_EvtAttrs> mapAttrs = new Dictionary<int, PS_EvtAttrs> ();
-	Dictionary<int,PS_EvtBuff> mapBuff = new Dictionary<int, PS_EvtBuff> ();
+	Dictionary<int,PS_EvtHitEvent> mapHitEvt = new Dictionary<int, PS_EvtHitEvent> ();
 
 	public PS_EvtHurt(string m_title,bool m_isPlan,System.Action m_callNew,System.Action<EDT_Hurt> m_callRemove,bool isDrawTime){
 		this.m_title = m_title;
@@ -42,6 +40,11 @@ public class PS_EvtHurt {
 		this.duration = endtime;
 		this.list = list;
 		_DrawEvents ();
+	}
+
+	public void DoClear(){
+		mapArea.Clear ();
+		mapHitEvt.Clear ();
 	}
 
 	void _DrawEvents(){
@@ -170,9 +173,7 @@ public class PS_EvtHurt {
 		}
 
 		mapArea.Remove (one.m_iCurID);
-		mapAudio.Remove (one.m_iCurID);
-		mapAttrs.Remove (one.m_iCurID);
-		mapBuff.Remove (one.m_iCurID);
+		mapHitEvt.Remove(one.m_iCurID);
 	}
 
 	// ==== 伤害区域 ====
@@ -222,72 +223,23 @@ public class PS_EvtHurt {
 			EG_GUIHelper.FEG_EndH();
 			EG_GUIHelper.FG_Space(5);
 
-			_DrawBeHitAudio (hurt);
-			EG_GUIHelper.FG_Space(5);
-
-			_DrawBeHitStatus (hurt);
-
-			EG_GUIHelper.FG_Space(5);
-			_DrawBeHitBuffs (hurt);
+			_DrawOneHurtEvent (hurt);
 		}
 		EG_GUIHelper.FG_EndV();
 	}
 
-	// 绘制 音效
-	void _DrawBeHitAudio(EDT_Hurt hurt){
-		PS_EvtAudio psEvt;
-		if (mapAudio.ContainsKey (hurt.m_iCurID)) {
-			psEvt = mapAudio [hurt.m_iCurID];
+	void _DrawOneHurtEvent(EDT_Hurt hurt){
+		PS_EvtHitEvent psEvt;
+		if (mapHitEvt.ContainsKey (hurt.m_iCurID)) {
+			psEvt = mapHitEvt [hurt.m_iCurID];
 		}
 		else{	
-			psEvt = new PS_EvtAudio("命中音效:",m_isPlan,delegate {
-				hurt.NewBeHitAudio();
-			},delegate (EDT_Audio one){
-				hurt.RemoveEvent(one);
-			},false);
-			mapAudio [hurt.m_iCurID] = psEvt;
+			psEvt = new PS_EvtHitEvent ();
+			psEvt.SetEvent (hurt.HitEvent);
+			mapHitEvt [hurt.m_iCurID] = psEvt;
 		}
-
-		psEvt.DoDraw (duration, hurt.GetHitAudioList ());
+		psEvt.DoDraw ();
 	}
-
-	// 绘制修改属性
-	void _DrawBeHitStatus(EDT_Hurt hurt){
-		PS_EvtAttrs psEvt;
-		if (mapAttrs.ContainsKey (hurt.m_iCurID)) {
-			psEvt = mapAttrs [hurt.m_iCurID];
-		}
-		else{
-			psEvt = new PS_EvtAttrs("命中属性修改列表:",m_isPlan,delegate {
-				hurt.NewBeHitStatus();
-			},delegate (EDT_Property one){
-				hurt.RemoveEvent(one);
-			},false);
-			mapAttrs [hurt.m_iCurID] = psEvt;
-		}
-
-		psEvt.DoDraw (duration, hurt.GetHitStatusList ());
-	}
-
-	// 绘制 buff
-	void _DrawBeHitBuffs(EDT_Hurt hurt){
-		PS_EvtBuff psEvt;
-		if (mapBuff.ContainsKey (hurt.m_iCurID)) {
-			psEvt = mapBuff [hurt.m_iCurID];
-		}
-		else{
-			psEvt = new PS_EvtBuff("命中Buff列表:",m_isPlan,delegate {
-				hurt.NewHitBuff();
-			},delegate (EDT_Buff one){
-				hurt.RemoveEvent(one);
-			},false);
-
-			mapBuff [hurt.m_iCurID] = psEvt;
-		}
-
-		psEvt.DoDraw (duration, hurt.GetHitBuffList());
-	}
-
 	#endregion
 
 }

@@ -43,6 +43,12 @@ public class EDT_Hurt : EDT_Base {
 	// 受击方收到的伤害状态(伤害值，特效等)
 	EMT_HitEvent m_eHitEvent = new EMT_HitEvent();
 
+	public EMT_HitEvent HitEvent{
+		get{
+			return m_eHitEvent;
+		}
+	}
+
 	public EDT_Hurt():base(){
 		m_emType = HurtType.MoveTarget;
 	}
