@@ -137,11 +137,4 @@ public class EN_Skill : EN_BaseXls{
 		this.CanMove = tmp.CanMove;
 		this.NextSkillID = tmp.NextSkillID;
 	}
-
-    static public EN_Skill NewSkill(int rowIndex, NH_Sheet sheet)
-    {
-        EN_Skill one = new EN_Skill();
-		one.DoInit (rowIndex, sheet);
-        return one;
-    }
 }

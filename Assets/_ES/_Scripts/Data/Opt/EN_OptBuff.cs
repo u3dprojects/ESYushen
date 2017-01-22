@@ -8,24 +8,24 @@ using System.Collections.Generic;
 /// 日期 : 2016-12-29 17:10:00
 /// 功能 : 
 /// </summary>
-public class EN_BuffOpt {
+public class EN_OptBuff {
 
-	static EN_BuffOpt _instance;
-	static public EN_BuffOpt Instance
+	static EN_OptBuff _instance;
+	static public EN_OptBuff Instance
 	{
 		get
 		{
 			if (_instance == null)
 			{
-				_instance = new EN_BuffOpt();
+				_instance = new EN_OptBuff();
 			}
 			return _instance;
 		}
 	}
 
-	private EN_BuffOpt() { }
+	private EN_OptBuff() { }
 
-	EN_BaseXlsOpt<EN_Buff> m_eOptXls = new EN_BaseXlsOpt<EN_Buff>();
+	EN_OptBaseXls<EN_Buff> m_eOptXls = new EN_OptBaseXls<EN_Buff>();
 
 	public bool isInitSuccessed = false;
 

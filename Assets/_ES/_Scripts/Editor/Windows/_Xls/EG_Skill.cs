@@ -12,9 +12,9 @@ using System.IO;
 public class EG_Skill {
 	#region  == Member Attribute ===
 
-	EN_SkillOpt optSkill
+	EN_OptSkill optSkill
 	{
-		get { return EN_SkillOpt.Instance; }
+		get { return EN_OptSkill.Instance; }
 	}
 
 	// 事件
@@ -39,7 +39,7 @@ public class EG_Skill {
 
 	string[] ElementType = {"物理","冰","火"};
 	string[] BelongType = {"玩家","雇佣兵","怪物"};
-	string[] LockType = { "无锁定", "锁定", "锁定怪物(预留暂无用)" };
+	string[] LockType = { "无锁定", "锁定目标", "锁定位置" };
 	// 是否可以移动
 	bool ms_isCanMove = false;
 

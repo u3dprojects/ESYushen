@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// 日期 : 2017-01-19 14:10
 /// 功能 : 
 /// </summary>
-public class EN_BaseXlsOpt<T> where T : EN_BaseXls,new()
+public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 {
 	int NumberOfRow = 0;
 	NH_Sheet m_sheet = null;

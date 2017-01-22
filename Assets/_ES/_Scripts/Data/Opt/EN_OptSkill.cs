@@ -8,24 +8,24 @@ using System.Collections.Generic;
 /// 日期 : 2016-12-29 17:10:00
 /// 功能 : 
 /// </summary>
-public class EN_SkillOpt
+public class EN_OptSkill
 {
-    static EN_SkillOpt _instance;
-    static public EN_SkillOpt Instance
+    static EN_OptSkill _instance;
+    static public EN_OptSkill Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new EN_SkillOpt();
+                _instance = new EN_OptSkill();
             }
             return _instance;
         }
     }
 
-    private EN_SkillOpt() { }
+    private EN_OptSkill() { }
 
-	EN_BaseXlsOpt<EN_Skill> m_eOptXls = new EN_BaseXlsOpt<EN_Skill>();
+	EN_OptBaseXls<EN_Skill> m_eOptXls = new EN_OptBaseXls<EN_Skill>();
 
     public bool isInitSuccessed = false;
 

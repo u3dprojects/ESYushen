@@ -114,11 +114,4 @@ public class EN_Buff : EN_BaseXls{
 		this.Interval = tmp.Interval;
 		this.strEvtDuration = tmp.strEvtDuration;
 	}
-
-	static public EN_Buff NewBuff(int rowIndex, NH_Sheet sheet)
-	{
-		EN_Buff one = new EN_Buff();
-		one.DoInit (rowIndex, sheet);
-		return one;
-	}
 }

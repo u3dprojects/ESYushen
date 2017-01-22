@@ -34,9 +34,9 @@ public class EG_Buff {
 	};
 	bool ms_isRest;
 
-	EN_BuffOpt optBuff{
+	EN_OptBuff optBuff{
 		get{
-			return EN_BuffOpt.Instance;
+			return EN_OptBuff.Instance;
 		}
 	}
 
@@ -193,9 +193,5 @@ public class EG_Buff {
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
 		optBuff.Save (savePath);
-	}
-
-	void _DrawEvents4Inv(){
-		
 	}
 }
