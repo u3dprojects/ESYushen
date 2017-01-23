@@ -109,6 +109,7 @@ public class EDT_Base {
     public EDT_Base()
     {
         this.m_iCurID = ++EVENT_CORE_CURSOR;
+		this.m_isInitedFab = true;
     }
 
 	~ EDT_Base(){

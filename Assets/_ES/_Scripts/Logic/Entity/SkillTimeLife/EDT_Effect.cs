@@ -38,6 +38,7 @@ public class EDT_Effect : EDT_Base {
     {
 		this.m_emType = EventType.Effect;
 		this.m_fScale = 1;
+		this.m_isInitedFab = false;
     }
 
     protected override bool OnCallEvent()

@@ -23,6 +23,7 @@ public class EDT_Audio : EDT_Base {
 	{
 		this.m_emType = EventType.Audio;
 		this.m_fVolume = 1;
+		this.m_isInitedFab = false;
 	}
 
 	public override void OnReInit (float castTime, LitJson.JsonData jsonData)
