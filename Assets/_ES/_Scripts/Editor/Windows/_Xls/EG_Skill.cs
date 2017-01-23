@@ -57,6 +57,8 @@ public class EG_Skill {
 
 	public void DrawShow()
 	{
+		EG_GUIHelper.FEG_HeadTitMid ("Skill Excel 表",Color.cyan);
+
 		EG_GUIHelper.FEG_BeginH();
 		ms_enity.ID = EditorGUILayout.IntField("ID:",ms_enity.ID);
 		if (GUILayout.Button("SeachSkill"))

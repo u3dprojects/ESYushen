@@ -73,6 +73,8 @@ public class EG_Buff {
 
 	public void DrawShow()
 	{
+		EG_GUIHelper.FEG_HeadTitMid ("Buff Excel 表",Color.cyan);
+
 		EG_GUIHelper.FEG_BeginH();
 		ms_entity.ID = EditorGUILayout.IntField("ID:",ms_entity.ID);
 		if (GUILayout.Button("查询"))

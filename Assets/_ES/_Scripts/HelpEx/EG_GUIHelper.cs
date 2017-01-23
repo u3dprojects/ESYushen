@@ -199,26 +199,45 @@ public static class EG_GUIHelper {
 
     #endregion
 
+	#region == Head Func ==
+
+	static public void FEG_HeadTitMid(string title,bool isAdd = false,System.Action callFunc = null){
+		Color bgColor = Color.black;
+		FEG_HeadTitMid (title, bgColor,isAdd, callFunc);
+	}
+
+	static public void FEG_HeadTitMid(string title,Color bgColor,bool isAdd = false,System.Action callFunc = null){
+		GUIStyle titStyle = EditorStyles.textArea;
+		titStyle.alignment = TextAnchor.MiddleCenter;
+		FEG_Head (title, bgColor,titStyle, isAdd, callFunc);
+	}
+
 	static public void FEG_Head(string title,bool isAdd = false,System.Action callFunc = null){
 		Color bgColor = Color.black;
-		Color titColor = Color.white;
-		FEG_Head (title, bgColor, titColor, isAdd, callFunc);
+		FEG_Head (title, bgColor,isAdd, callFunc);
 	}
 
 	static public void FEG_Head(string title,Color bgColor,bool isAdd = false,System.Action callFunc = null){
+		GUIStyle titStyle = EditorStyles.textArea;
+		FEG_Head (title, bgColor,titStyle, isAdd, callFunc);
+	}
+
+	static public void FEG_Head(string title,Color bgColor,GUIStyle titStyle,bool isAdd = false,System.Action callFunc = null){
 		Color titColor = Color.white;
-		FEG_Head (title, bgColor, titColor, isAdd, callFunc);
+		FEG_Head (title, bgColor, titColor,titStyle, isAdd, callFunc);
 	}
 		
-	static public void FEG_Head(string title,Color bgColor,Color titColor,bool isAdd = false,System.Action callFunc = null){
+	static public void FEG_Head(string title,Color bgColor,Color titColor,GUIStyle titStyle,bool isAdd = false,System.Action callFunc = null){
 		Color def = GUI.backgroundColor;
 		Color defGui = GUI.color;
 
-		FEG_BeginH();
+		FEG_BeginH ();
 		GUI.backgroundColor = bgColor;
 		GUI.color = titColor;
 
-		EditorGUILayout.LabelField(title, EditorStyles.textArea);
+		EditorGUILayout.LabelField(title, titStyle,ToOptions(0,20));
+
+		titStyle.alignment = TextAnchor.MiddleLeft;
 
 		GUI.backgroundColor = def;
 
@@ -235,4 +254,7 @@ public static class EG_GUIHelper {
 
 		GUI.color = defGui;
 	}
+
+	#endregion
+
 }

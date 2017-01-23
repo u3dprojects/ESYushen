@@ -63,6 +63,8 @@ public class EG_Bullet {
 
 	public void DrawShow()
 	{
+		EG_GUIHelper.FEG_HeadTitMid ("Bullet Excel 表",Color.cyan);
+
 		EG_GUIHelper.FEG_BeginH();
 		ms_entity.ID = EditorGUILayout.IntField("ID:",ms_entity.ID);
 		if (GUILayout.Button("查询"))
