@@ -4,16 +4,13 @@ using System.Collections.Generic;
 using LitJson;
 
 /// <summary>
-/// 类名 : 命中事件
+/// 类名 : 事件
 /// 作者 : Canyon
 /// 日期 : 2017-01-18 09:20
-/// 功能 : 受击者(被技能伤害的人),受到的状态(伤害，音效等事件)
+/// 功能 : 主动Cast事件,被动Hit事件
 /// </summary>
 public class EMT_HitEvent : EMT_TBases {
-
-	// 是否可以显示
-	public bool m_isCanShow = false;
-
+	
 	// 修改属性事件
 	List<EDT_Property> m_lAttrs = new List<EDT_Property>();
 

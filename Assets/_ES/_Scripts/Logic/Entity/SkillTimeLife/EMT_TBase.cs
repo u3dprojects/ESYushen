@@ -215,11 +215,15 @@ public class EMT_TBases {
 
 	#region === 转换 Func === 
 
+	public virtual string ToJsonString(){
+		return "";
+	}
+
 	/// <summary>
 	/// 默认转为主动触发事件，有时间轴
 	/// </summary>
 	/// <returns>The string json data.</returns>
-	public virtual string ToJsonString(){
+	protected string ToJsonStrCast(){
 		lens = m_lEvents.Count;
 		if (lens <= 0) {
 			return "";

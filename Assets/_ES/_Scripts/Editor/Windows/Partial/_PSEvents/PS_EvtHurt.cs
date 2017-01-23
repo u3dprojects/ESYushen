@@ -125,6 +125,13 @@ public class PS_EvtHurt {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
+		EG_GUIHelper.FEG_BeginH();
+		{
+			one.m_isCanShow = EditorGUILayout.Toggle ("Play时播放事件??", one.m_isCanShow);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
 		if (one.m_emType == EDT_Hurt.HurtType.MoveTarget) {
 			EG_GUIHelper.FEG_BeginH ();
 			{
@@ -160,52 +167,45 @@ public class PS_EvtHurt {
 	}
 
 	// ==== 伤害区域 ====
-	void _DrawOneHurt_HurtAreas(EDT_Hurt hurt){
+	void _DrawOneHurt_HurtAreas(EDT_Hurt one){
 		PS_EvtHurtArea psEvt = null;
-		if (mapArea.ContainsKey (hurt.m_iCurID)) {
-			psEvt = mapArea [hurt.m_iCurID];
+		if (mapArea.ContainsKey (one.m_iCurID)) {
+			psEvt = mapArea [one.m_iCurID];
 		}
 		else{	
 			psEvt = new PS_EvtHurtArea ("伤害区域列表:", m_isPlan, delegate {
-				hurt.NewHitArea ();
-			}, delegate (EDT_Hurt_Area one) {
-				hurt.RemoveHitArea (one);
+				one.NewHitArea ();
+			}, delegate (EDT_Hurt_Area rm) {
+				one.RemoveHitArea (rm);
 			}, false);
 
-			mapArea [hurt.m_iCurID] = psEvt;
+			mapArea [one.m_iCurID] = psEvt;
 		}
 
-		psEvt.DoDraw (duration, hurt.GetAreaList());
+		psEvt.DoDraw (duration, one.GetAreaList());
 	}
 
 	#region ==== 受击者 - 命中事件 ====
 
-	void _DrawOneHurt_BeHitter(EDT_Hurt hurt){
+	void _DrawOneHurt_BeHitter(EDT_Hurt one){
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
 			EG_GUIHelper.FEG_Head("命中事件",new Color(0.1f,0.5f,0.3f,0.6f));
 
-			EG_GUIHelper.FEG_BeginH();
-			{
-				hurt.m_isShowBeHitterWhenPlay = EditorGUILayout.Toggle ("播放命中的事件??", hurt.m_isShowBeHitterWhenPlay);
-			}
-			EG_GUIHelper.FEG_EndH();
-			EG_GUIHelper.FG_Space(5);
-
-			_DrawOneHurtEvent (hurt);
+			_DrawOneHurtEvent (one);
 		}
 		EG_GUIHelper.FG_EndV();
 	}
 
-	void _DrawOneHurtEvent(EDT_Hurt hurt){
+	void _DrawOneHurtEvent(EDT_Hurt one){
 		PS_EvtHitEvent psEvt;
-		if (mapHitEvt.ContainsKey (hurt.m_iCurID)) {
-			psEvt = mapHitEvt [hurt.m_iCurID];
+		if (mapHitEvt.ContainsKey (one.m_iCurID)) {
+			psEvt = mapHitEvt [one.m_iCurID];
 		}
 		else{	
 			psEvt = new PS_EvtHitEvent ();
-			psEvt.SetEvent (hurt.HitEvent);
-			mapHitEvt [hurt.m_iCurID] = psEvt;
+			psEvt.SetEvent (one.HitEvent);
+			mapHitEvt [one.m_iCurID] = psEvt;
 		}
 		psEvt.DoDraw ();
 	}

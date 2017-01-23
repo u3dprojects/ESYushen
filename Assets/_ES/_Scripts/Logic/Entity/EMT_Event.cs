@@ -9,7 +9,7 @@ using LitJson;
 /// 日期 : 2016-12-27 10:10
 /// 功能 : 
 /// </summary>
-public class EMT_Event : EMT_TBases{
+public class EMT_Event : EMT_HitEvent{
 	
     bool isPause = false;
 
@@ -95,5 +95,10 @@ public class EMT_Event : EMT_TBases{
         isPause = false;
         curSpeed = 1.0f;
     }
+
+	public override string ToJsonString ()
+	{
+		return ToJsonStrCast ();
+	}
 	#endregion
 }

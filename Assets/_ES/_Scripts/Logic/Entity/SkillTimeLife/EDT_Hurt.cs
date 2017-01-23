@@ -37,6 +37,9 @@ public class EDT_Hurt : EDT_Base {
 	// 攻击数量
 	public int m_iTargetCount;
 
+	// 是否可以显示
+	public bool m_isCanShow = false;
+
 	// 伤害区域列表(m_zones)
 	EMT_HitArea m_eHitArea = new EMT_HitArea ();
 
@@ -115,11 +118,10 @@ public class EDT_Hurt : EDT_Base {
 
 	protected override bool OnCallEvent ()
 	{
-		if (m_eHitEvent.m_isCanShow) {
+		if (m_isCanShow) {
 			m_eHitEvent.DoStart ();
+			m_eHitArea.DoStart ();
 		}
-
-		m_eHitArea.DoStart ();
 
 		Debug.Log ("=hurt=");
 		return true;
@@ -128,10 +130,10 @@ public class EDT_Hurt : EDT_Base {
 	protected override void OnCallUpdate (float upDeltaTime)
 	{
 		base.OnCallUpdate (upDeltaTime);
-		if (m_eHitEvent.m_isCanShow) {
+		if (m_isCanShow) {
 			m_eHitEvent.DoUpdate (upDeltaTime);
+			m_eHitArea.DoUpdate (upDeltaTime);
 		}
-		m_eHitArea.DoUpdate (upDeltaTime);
 	}
 
 	public override void OnClear ()
@@ -173,13 +175,6 @@ public class EDT_Hurt : EDT_Base {
 	#endregion
 
 	#region === 受击者相关信息绘制 ===
-
-	public bool m_isShowBeHitterWhenPlay{
-		get{ return m_eHitEvent.m_isCanShow; }
-		set{
-			m_eHitEvent.m_isCanShow = value;
-		}
-	}
 
 	public void RemoveEvent(EDT_Base evt){
 		m_eHitEvent.RmEvent (evt);
