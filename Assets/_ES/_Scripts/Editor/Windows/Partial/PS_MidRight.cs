@@ -23,7 +23,7 @@ public partial class PS_MidRight{
 
     Vector2 scrollPos;
 	float topDescH = 20;
-	float botBtnH = 45;
+	float botBtnH = 80;
 
     float minScrollH = 260;
     float curScrollH = 260;
@@ -35,6 +35,12 @@ public partial class PS_MidRight{
 
     // 技能属性
 	EG_Skill m_egSkill = new EG_Skill ();
+
+	// 速度控制
+	float cur_speed = 1.0f;
+	bool isCanSetMinMaxSpeed = false;
+	float min_speed = 0.0f;
+	float max_speed = 3.0f;
 
 	// 暂停按钮控制
 	bool isPauseing = false;
@@ -103,6 +109,8 @@ public partial class PS_MidRight{
                 }
 
                 EG_GUIHelper.FEG_EndScroll();
+
+				_DrawAniCurSpeed();
 
 				_DrawOptBtns();
 
@@ -181,6 +189,21 @@ public partial class PS_MidRight{
         EG_GUIHelper.FEG_EndH();
     }
 
+	void _DrawAniCurSpeed()
+	{
+		EG_GUIHelper.FG_Space (8);
+		EG_GUIHelper.FEG_BeginH();
+		{
+			GUIStyle style = EditorStyles.label;
+			style.alignment = TextAnchor.MiddleLeft;
+			EditorGUILayout.LabelField("当前速度:", style);
+
+			cur_speed = EditorGUILayout.Slider(cur_speed, min_speed, max_speed);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space (8);
+	}
+
 	void _DrawOptBtns()
 	{
 		EG_GUIHelper.FEG_BeginH();
@@ -219,8 +242,8 @@ public partial class PS_MidRight{
 			return;
 
 		this.m_curTime.DoUpdateTime();
-		this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,1);
-		m_egSkill.m_ePSEvents.OnUpdate (m_curTime.DeltaTime, 1);
+		this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,cur_speed);
+		m_egSkill.m_ePSEvents.OnUpdate (m_curTime.DeltaTime,cur_speed);
 
 		// 设置位移
 	}
