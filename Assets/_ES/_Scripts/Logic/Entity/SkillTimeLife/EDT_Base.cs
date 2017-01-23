@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using System.ComponentModel;
 using LitJson;
 
 /// <summary>
@@ -10,6 +11,45 @@ using LitJson;
 /// 功能 : 编辑器模式处理一个创建物体事件外，还要需要一个驱动动作特效函数，
 /// </summary>
 public class EDT_Base {
+
+	public enum EventType
+	{
+		[Description("无")]
+		None = 0,
+
+		[Description("特效")]
+		Effect = 1,
+
+		[Description("音效")]
+		Audio = 2,
+
+		[Description("震屏")]
+		Shake = 3,
+
+		[Description("停顿")]
+		Stay = 4,
+
+		[Description("直接命中目标")]
+		HitTarget = 5,
+
+		[Description("区域内伤害")]
+		HitArea = 6,
+
+		[Description("修改属性-永久")]
+		Property = 7,
+
+		[Description("修改属性-短时")]
+		Attribute = 8,
+
+		[Description("Buff")]
+		Buff = 9,
+
+		[Description("子弹")]
+		Bullet = 10,
+
+		[Description("召唤/分身")]
+		Summon = 11,
+	}
 
     // 对象的唯一标识 计数器
     static int EVENT_CORE_CURSOR = 0;
@@ -21,6 +61,11 @@ public class EDT_Base {
 		double temp = org * pow;
 		return Mathf.RoundToInt((float)temp) / pow;
 	}
+
+
+	// 当前事件类型
+	// public int m_iCurType = -1;
+	public EventType m_emType = EventType.None;
 
     // 自身唯一标识
     public int m_iCurID;
@@ -55,9 +100,6 @@ public class EDT_Base {
 
     // 播放是否结束
 	public bool m_isEnd = false;
-
-    // 当前事件类型
-    public int m_iCurType = -1;
 
 	public bool m_isJsonDataToSelfSuccessed = false;
 	public JsonData m_jsonData = null;
@@ -159,6 +201,8 @@ public class EDT_Base {
 
     public void DoClear()
     {
+		m_emType = EventType.None;
+
         m_sObjPath = "";
         m_sName = "";
         m_sNameNoSuffix = "";
@@ -169,7 +213,6 @@ public class EDT_Base {
         _m_isRunning = false;
 
 		m_isEnd = false;
-		m_iCurType = -1;
 		m_jsonData = null;
 		m_isJsonDataToSelfSuccessed = false;
 

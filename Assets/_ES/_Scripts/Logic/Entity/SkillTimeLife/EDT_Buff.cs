@@ -23,7 +23,7 @@ public class EDT_Buff : EDT_Base {
 	public int m_iRate;
 
 	public EDT_Buff() : base(){
-		this.m_iCurType = 9;
+		this.m_emType = EventType.Buff;
 	}
 
 	public override void OnReInit (float castTime, JsonData jsonData)
@@ -45,7 +45,7 @@ public class EDT_Buff : EDT_Base {
 			return null;
 
 		JsonData ret = new JsonData ();
-		ret ["m_typeInt"] = this.m_iCurType;
+		ret ["m_typeInt"] = (int)this.m_emType;
 		ret ["m_id"] = this.m_iBuffId;
 		ret ["m_duration"] = Round2D(this.m_fDuration,2);
 		ret ["m_level"] = this.m_iLevel;
@@ -56,7 +56,7 @@ public class EDT_Buff : EDT_Base {
 	public override void OnClear ()
 	{
 		base.OnClear ();
-		this.m_iCurType = 9;
+		this.m_emType = EventType.Buff;
 		this.m_iBuffId = 0;
 	}
 }

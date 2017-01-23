@@ -21,13 +21,16 @@ public class EDT_Hurt : EDT_Base {
 		MoveTarget = 1
 	}
 
-	HurtType _m_emType = HurtType.MoveTarget;
+	HurtType _m_emTag = HurtType.MoveTarget;
 
-	public HurtType  m_emType{
-		get{ return _m_emType; }
+	public HurtType  m_emTag{
+		get{ return _m_emTag; }
 		set{
-			_m_emType = value;
-			this.m_iCurType = _m_emType == HurtType.OneTarget ? 5 : 6;
+			_m_emTag = value;
+			this.m_emType = EventType.HitArea;
+			if (_m_emTag == HurtType.OneTarget) {
+				this.m_emType = EventType.HitTarget;
+			}
 		}
 	}
 
@@ -53,7 +56,7 @@ public class EDT_Hurt : EDT_Base {
 	}
 
 	public EDT_Hurt():base(){
-		m_emType = HurtType.MoveTarget;
+		m_emTag = HurtType.MoveTarget;
 	}
 
 	public override void OnReInit (float castTime, JsonData jsonData)
@@ -96,10 +99,10 @@ public class EDT_Hurt : EDT_Base {
 			return null;
 
 		JsonData ret = new JsonData ();
-		ret["m_typeInt"] = this.m_iCurType;
+		ret["m_typeInt"] = (int)this.m_emType;
 		JsonData tmp;
 
-		if (m_emType == HurtType.MoveTarget) {
+		if (m_emTag == HurtType.MoveTarget) {
 			ret ["m_targetFilter"] = this.m_iTargetFilter;
 			ret ["m_targetCount"] = this.m_iTargetCount;
 
@@ -140,7 +143,7 @@ public class EDT_Hurt : EDT_Base {
 	{
 		base.OnClear ();
 
-		m_emType = HurtType.MoveTarget;
+		m_emTag = HurtType.MoveTarget;
 
 		m_eHitArea.DoClear ();
 		m_eHitEvent.DoClear ();

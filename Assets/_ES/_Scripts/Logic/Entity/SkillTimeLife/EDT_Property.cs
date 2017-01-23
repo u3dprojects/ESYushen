@@ -28,10 +28,10 @@ public class EDT_Property : EDT_Base {
 			_m_emTag = value;
 			switch (_m_emTag) {
 			case PropretyTag.ShortTime:
-				this.m_iCurType = 8;
+				this.m_emType = EventType.Attribute;
 				break;
 			default:
-				this.m_iCurType = 7;
+				this.m_emType = EventType.Property;
 				break;
 			}
 		}
@@ -63,7 +63,7 @@ public class EDT_Property : EDT_Base {
 			return null;
 
 		JsonData ret = new JsonData ();
-		ret ["m_typeInt"] = this.m_iCurType;
+		ret ["m_typeInt"] = (int)this.m_emType;
 		ret ["m_id"] = this.m_iGID;
 		ret ["m_parmStr"] = this.m_sPars;
 		return ret;

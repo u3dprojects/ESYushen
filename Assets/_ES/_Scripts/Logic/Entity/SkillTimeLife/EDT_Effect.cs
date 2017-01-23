@@ -36,7 +36,7 @@ public class EDT_Effect : EDT_Base {
 
     public EDT_Effect() : base()
     {
-		this.m_iCurType = 1;
+		this.m_emType = EventType.Effect;
 		this.m_fScale = 1;
     }
 
@@ -77,7 +77,7 @@ public class EDT_Effect : EDT_Base {
         base.OnClear();
 
 		this.m_fDuration = 0;
-		this.m_iCurType = 1;
+		this.m_emType = EventType.Effect;
 		this.m_fScale = 1;
 
         OnClearEffect();
@@ -162,7 +162,7 @@ public class EDT_Effect : EDT_Base {
 			return null;
 		
 		JsonData ret = new JsonData ();
-		ret["m_typeInt"] = this.m_iCurType;
+		ret["m_typeInt"] = (int)this.m_emType;
 		ret["m_resName"] = this.m_sNameNoSuffix;
 		ret["m_joint"] = this.m_iJoint;
 		ret["m_scale"] = Round2D(this.m_fScale,2);

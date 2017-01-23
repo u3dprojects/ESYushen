@@ -21,7 +21,7 @@ public class EDT_Audio : EDT_Base {
 
 	public EDT_Audio() : base()
 	{
-		this.m_iCurType = 2;
+		this.m_emType = EventType.Audio;
 		this.m_fVolume = 1;
 	}
 
@@ -44,7 +44,7 @@ public class EDT_Audio : EDT_Base {
 			return null;
 
 		JsonData ret = new JsonData ();
-		ret["m_typeInt"] = this.m_iCurType;
+		ret["m_typeInt"] = (int)this.m_emType;
 		ret["m_audioName"] = this.m_sNameNoSuffix;
 		return ret;
 	}
@@ -80,7 +80,7 @@ public class EDT_Audio : EDT_Base {
 	public override void OnClear ()
 	{
 		base.OnClear ();
-		this.m_iCurType = 2;
+		this.m_emType = EventType.Audio;
 		this.m_fVolume = 1;
 
 		OnClearAudio ();

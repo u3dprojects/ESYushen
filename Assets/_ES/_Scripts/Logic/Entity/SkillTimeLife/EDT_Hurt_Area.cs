@@ -30,7 +30,7 @@ public class EDT_Hurt_Area : EDT_Base{
 	}
 
 	// 类型
-	public HurtAreaType m_emType = HurtAreaType.None;
+	public HurtAreaType m_emTag = HurtAreaType.None;
 
 	// 相对偏移(相对于人物的位置偏移的位置) 就是产生点的位置
 	public Vector3 m_v3Offset = Vector3.zero;
@@ -58,7 +58,7 @@ public class EDT_Hurt_Area : EDT_Base{
 	GameObject m_gobjDraw;
 
 	public EDT_Hurt_Area() : base(){
-		m_emType = HurtAreaType.None;
+		m_emTag = HurtAreaType.None;
 	}
 
 	public override void OnReInit (float castTime, JsonData jsonData)
@@ -66,7 +66,7 @@ public class EDT_Hurt_Area : EDT_Base{
 		base.OnReInit (castTime, jsonData);
 
 		int tpId = (int)jsonData ["m_id"];
-		this.m_emType = (HurtAreaType)tpId;
+		this.m_emTag = (HurtAreaType)tpId;
 
 		float x = float.Parse(jsonData ["m_offsetX"].ToString());
 		float z = float.Parse(jsonData ["m_offsetZ"].ToString());
@@ -99,26 +99,26 @@ public class EDT_Hurt_Area : EDT_Base{
 	}
 
 	public override JsonData ToJsonData (){
-		if (this.m_fRange <= 0 || m_emType == HurtAreaType.None) {
+		if (this.m_fRange <= 0 || m_emTag == HurtAreaType.None) {
 			return null;
 		}
 
-		if (m_emType == HurtAreaType.Rectangle) {
+		if (m_emTag == HurtAreaType.Rectangle) {
 			if (this.m_fWidth <= 0) {
 				return null;
 			}
-		} else if (m_emType == HurtAreaType.Arc) {
+		} else if (m_emTag == HurtAreaType.Arc) {
 			if (this.m_fAngle <= 0 || this.m_fAngle > 360) {
 				return null;
 			}
 		}
 
 		JsonData ret = new JsonData ();
-		ret ["m_id"] = (int)this.m_emType;
+		ret ["m_id"] = (int)this.m_emTag;
 		ret ["m_offsetX"] = Round2D(m_v3Offset.x,2);
 		ret ["m_offsetZ"] = Round2D(m_v3Offset.z,2);
 
-		switch (m_emType) {
+		switch (m_emTag) {
 		case HurtAreaType.Arc:
 			ret ["m_r"] = Round2D(m_fRange,2);
 			ret ["m_rad"] = Round2D(m_fAngle,2);
@@ -180,15 +180,15 @@ public class EDT_Hurt_Area : EDT_Base{
 			return;
 		}
 
-		if (this.m_fRange <= 0 || m_emType == HurtAreaType.None) {
+		if (this.m_fRange <= 0 || m_emTag == HurtAreaType.None) {
 			return;
 		}
 
-		if (m_emType == HurtAreaType.Rectangle) {
+		if (m_emTag == HurtAreaType.Rectangle) {
 			if (this.m_fWidth <= 0) {
 				return;
 			}
-		} else if (m_emType == HurtAreaType.Arc) {
+		} else if (m_emTag == HurtAreaType.Arc) {
 			if (this.m_fAngle <= 0 || this.m_fAngle > 360) {
 				return;
 			}
@@ -206,7 +206,7 @@ public class EDT_Hurt_Area : EDT_Base{
 		Quaternion quaternion = Quaternion.AngleAxis(m_fRotation,Vector3.up);
 		Vector3 dir = (quaternion * dirOrg).normalized;
 
-		switch (m_emType) {
+		switch (m_emTag) {
 		case HurtAreaType.Arc:
 			dir = (Quaternion.AngleAxis(-(m_fAngle / 2),Vector3.up) * dir).normalized;
 			Handles.DrawSolidArc(pos,Vector3.up,dir,this.m_fAngle,this.m_fRange);
@@ -264,15 +264,15 @@ public class EDT_Hurt_Area : EDT_Base{
 			return;
 		}
 
-		if (this.m_fRange <= 0 || m_emType == HurtAreaType.None) {
+		if (this.m_fRange <= 0 || m_emTag == HurtAreaType.None) {
 			return;
 		}
 
-		if (m_emType == HurtAreaType.Rectangle) {
+		if (m_emTag == HurtAreaType.Rectangle) {
 			if (this.m_fWidth <= 0) {
 				return;
 			}
-		} else if (m_emType == HurtAreaType.Arc) {
+		} else if (m_emTag == HurtAreaType.Arc) {
 			if (this.m_fAngle <= 0 || this.m_fAngle > 360) {
 				return;
 			}
@@ -289,7 +289,7 @@ public class EDT_Hurt_Area : EDT_Base{
 		Vector3 dir = (quaternion * dirOrg).normalized;
 
 		Mesh mesh = null;
-		switch (m_emType) {
+		switch (m_emTag) {
 		case HurtAreaType.Arc:
 			dir = (Quaternion.AngleAxis (-(m_fAngle / 2), Vector3.up) * dir).normalized;
 			mesh = MeshCreate.CreateArc (m_fRange, 36, -(m_fAngle / 2), m_fAngle);
@@ -303,7 +303,7 @@ public class EDT_Hurt_Area : EDT_Base{
 			break;
 		}
 
-		m_gobjDraw = new GameObject (this.m_emType.ToString());
+		m_gobjDraw = new GameObject (this.m_emTag.ToString());
 
 		m_gobjDraw.AddComponent<MeshFilter> ().mesh = mesh;
 

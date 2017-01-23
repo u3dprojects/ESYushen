@@ -20,7 +20,7 @@ public class EDT_Bullet : EDT_Base {
 	public float m_fRotation;
 
 	public EDT_Bullet() : base(){
-		this.m_iCurType = 10;
+		this.m_emType = EventType.Bullet;
 	}
 
 	public override void OnReInit (float castTime, JsonData jsonData)
@@ -45,7 +45,7 @@ public class EDT_Bullet : EDT_Base {
 			return null;
 
 		JsonData ret = new JsonData ();
-		ret ["m_typeInt"] = this.m_iCurType;
+		ret ["m_typeInt"] = (int)this.m_emType;
 		ret ["m_id"] = this.m_iID;
 		ret ["m_rotDeg"] = Round2D(this.m_fRotation,2);
 		ret ["m_posX"] = Round2D(this.m_v3OffsetPos.x,2);
@@ -57,7 +57,7 @@ public class EDT_Bullet : EDT_Base {
 	public override void OnClear ()
 	{
 		base.OnClear ();
-		this.m_iCurType = 10;
+		this.m_emType = EventType.Bullet;
 		this.m_iID = 0;
 	}
 }

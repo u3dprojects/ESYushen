@@ -327,7 +327,7 @@ public class EMT_TBases {
 	protected void ToHurt(float time,JsonData data,int typeInt){
 		EDT_Hurt en = NewEvent<EDT_Hurt> (time,data);
 		if (typeInt == 5) {
-			en.m_emType = EDT_Hurt.HurtType.OneTarget;
+			en.m_emTag = EDT_Hurt.HurtType.OneTarget;
 		}
 	}
 

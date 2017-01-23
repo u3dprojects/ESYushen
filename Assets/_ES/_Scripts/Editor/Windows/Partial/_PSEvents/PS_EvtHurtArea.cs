@@ -72,7 +72,7 @@ public class PS_EvtHurtArea {
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "伤害区域 - " + EnumExtension.GetDescription(one.m_emType));
+				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "伤害区域 - " + EnumExtension.GetDescription(one.m_emTag));
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -114,7 +114,7 @@ public class PS_EvtHurtArea {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("类型:", GUILayout.Width(80));
-			one.m_emType = (EDT_Hurt_Area.HurtAreaType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emType);
+			one.m_emTag = (EDT_Hurt_Area.HurtAreaType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emTag);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
@@ -141,7 +141,7 @@ public class PS_EvtHurtArea {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
-		string strDesc = one.m_emType == EDT_Hurt_Area.HurtAreaType.Rectangle ? "长度:" : "半径:";
+		string strDesc = one.m_emTag == EDT_Hurt_Area.HurtAreaType.Rectangle ? "长度:" : "半径:";
 
 		EG_GUIHelper.FEG_BeginH();
 		{
@@ -151,7 +151,7 @@ public class PS_EvtHurtArea {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
-		if (one.m_emType != EDT_Hurt_Area.HurtAreaType.Arc && one.m_emType != EDT_Hurt_Area.HurtAreaType.Rectangle) {
+		if (one.m_emTag != EDT_Hurt_Area.HurtAreaType.Arc && one.m_emTag != EDT_Hurt_Area.HurtAreaType.Rectangle) {
 			return;
 		}
 
@@ -163,7 +163,7 @@ public class PS_EvtHurtArea {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
-		switch (one.m_emType) {
+		switch (one.m_emTag) {
 		case EDT_Hurt_Area.HurtAreaType.Rectangle:
 			EG_GUIHelper.FEG_BeginH();
 			{

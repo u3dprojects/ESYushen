@@ -17,7 +17,7 @@ public class EDT_Shake : EDT_Base {
 	public float m_fStrength;
 
 	public EDT_Shake():base(){
-		this.m_iCurType = 3;
+		this.m_emType = EventType.Shake;
 	}
 
 	public override void OnReInit (float castTime, LitJson.JsonData jsonData)
@@ -37,7 +37,7 @@ public class EDT_Shake : EDT_Base {
 			return null;
 		
 		JsonData ret = new JsonData ();
-		ret["m_typeInt"] = this.m_iCurType;
+		ret["m_typeInt"] = (int)this.m_emType;
 		ret["m_duration"] = Round2D(this.m_fDuration,2);
 		ret["m_radio"] = Round2D(this.m_fStrength,2);
 		return ret;
@@ -46,6 +46,6 @@ public class EDT_Shake : EDT_Base {
 	public override void OnClear ()
 	{
 		base.OnClear ();
-		this.m_iCurType = 3;
+		this.m_emType = EventType.Shake;
 	}
 }

@@ -80,7 +80,7 @@ public class PS_EvtHurt {
 		{
 			EG_GUIHelper.FEG_BeginH();
 			{
-				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "列表 - " + EnumExtension.GetDescription(one.m_emType));
+				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "列表 - " + EnumExtension.GetDescription(one.m_emTag));
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
@@ -120,7 +120,7 @@ public class PS_EvtHurt {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("类型:", GUILayout.Width(80));
-			one.m_emType = (EDT_Hurt.HurtType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emType);
+			one.m_emTag = (EDT_Hurt.HurtType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emTag);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
@@ -132,7 +132,7 @@ public class PS_EvtHurt {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
-		if (one.m_emType == EDT_Hurt.HurtType.MoveTarget) {
+		if (one.m_emTag == EDT_Hurt.HurtType.MoveTarget) {
 			EG_GUIHelper.FEG_BeginH ();
 			{
 				GUILayout.Label ("优先目标:", GUILayout.Width (80));
