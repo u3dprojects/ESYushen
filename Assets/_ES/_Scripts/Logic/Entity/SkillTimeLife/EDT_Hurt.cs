@@ -177,35 +177,5 @@ public class EDT_Hurt : EDT_Base {
 
 	#endregion
 
-	#region === 受击者相关信息绘制 ===
 
-	public void RemoveEvent(EDT_Base evt){
-		m_eHitEvent.RmEvent (evt);
-	}
-
-	public void NewBeHitStatus(){
-		m_eHitEvent.NewEvent<EDT_Property>();
-	}
-
-	public List<EDT_Property> GetHitStatusList(){
-		return m_eHitEvent.GetLAttrs ();
-	}
-
-	public void NewBeHitAudio(){
-		m_eHitEvent.NewEvent<EDT_Audio>();
-	}
-
-	public List<EDT_Audio> GetHitAudioList(){
-		return m_eHitEvent.GetLAudios ();
-	}
-
-	public void NewHitBuff(){
-		m_eHitEvent.NewEvent<EDT_Buff>();
-	}
-
-	public List<EDT_Buff> GetHitBuffList(){
-		return m_eHitEvent.GetLBuffs ();
-	}
-
-	#endregion
 }
