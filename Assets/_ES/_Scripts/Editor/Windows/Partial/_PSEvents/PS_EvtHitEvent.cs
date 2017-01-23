@@ -80,6 +80,9 @@ public class PS_EvtHitEvent {
 			_DrawShake ();
 			EG_GUIHelper.FG_Space(10);
 
+			_DrawStay ();
+			EG_GUIHelper.FG_Space(10);
+
 			_DrawBuffs ();
 			EG_GUIHelper.FG_Space(10);
 
@@ -175,5 +178,19 @@ public class PS_EvtHitEvent {
 
 	void _NewBullet(){
 		m_evtHit.NewEvent<EDT_Bullet>();
+	}
+
+	// 顿帧
+	PS_EvtStay m_psStay;
+
+	void _DrawStay(){
+		if (m_psStay == null) {
+			m_psStay = new PS_EvtStay("顿帧列表", m_isPlan, _NewStay, _RmEvent,m_isShowCastTime);
+		}
+		m_psStay.DoDraw (m_fDuration, m_evtHit.GetLStays());
+	}
+
+	void _NewStay(){
+		m_evtHit.NewEvent<EDT_Stay> ();
 	}
 }

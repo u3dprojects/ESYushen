@@ -35,6 +35,9 @@ public class EMT_TBases {
 	// bullet 子弹 事件
 	List<EDT_Bullet> m_lBullets = new List<EDT_Bullet>();
 
+	// 顿帧事件
+	List<EDT_Stay> m_lStays = new List<EDT_Stay>();
+
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
 		T ret = EDT_Base.NewEntity<T>();
@@ -130,6 +133,9 @@ public class EMT_TBases {
 			break;
 		case 3:
 			ToShake(castTime, one);
+			break;
+		case 4:
+			ToStay(castTime, one);
 			break;
 		case 5:
 		case 6:
@@ -351,6 +357,11 @@ public class EMT_TBases {
 		NewEvent<EDT_Bullet>(time,data);
 	}
 
+	// 转为 顿帧 事件
+	protected void ToStay(float time,JsonData data){
+		NewEvent<EDT_Stay>(time,data);
+	}
+
 	public List<EDT_Effect> GetLEffects(){
 		GetList<EDT_Effect> (ref m_lEffects);
 		return m_lEffects;
@@ -374,6 +385,11 @@ public class EMT_TBases {
 	public List<EDT_Bullet> GetLBullets(){
 		GetList<EDT_Bullet> (ref m_lBullets);
 		return m_lBullets;
+	}
+
+	public List<EDT_Stay> GetLStays(){
+		GetList<EDT_Stay> (ref m_lStays);
+		return m_lStays;
 	}
 
 	#endregion
