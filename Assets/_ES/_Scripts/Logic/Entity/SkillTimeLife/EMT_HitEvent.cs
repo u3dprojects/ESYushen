@@ -51,8 +51,9 @@ public class EMT_HitEvent : EMT_TBases {
 	void ToChangeAttrs(JsonData jsonData,float castTime,int tpInt){
 		EDT_Property status = NewEvent<EDT_Property>(castTime,jsonData);
 		if (status != null) {
-			status.m_emTag = (EDT_Property.PropretyTag)(tpInt - 7);
-			m_lEvents.Add (status);
+			if (tpInt == 8) {
+				status.m_emTag = EDT_Property.PropretyTag.ShortTime;
+			}
 		}
 	}
 
