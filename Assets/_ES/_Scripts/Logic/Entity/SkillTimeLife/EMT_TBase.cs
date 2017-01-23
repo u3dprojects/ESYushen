@@ -32,8 +32,8 @@ public class EMT_TBases {
 	// 震屏事件
 	List<EDT_Shake> m_lShakes = new List<EDT_Shake>();
 
-	// buff 事件
-	// List<EDT_Buff> m_lBuffs = new List<EDT_Buff>();
+	// bullet 子弹 事件
+	List<EDT_Bullet> m_lBullets = new List<EDT_Bullet>();
 
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
@@ -134,6 +134,9 @@ public class EMT_TBases {
 		case 5:
 		case 6:
 			ToHurt(castTime, one,typeInt);
+			break;
+		case 10:
+			ToBullet(castTime, one);
 			break;
 		}
 		return typeInt;
@@ -343,6 +346,11 @@ public class EMT_TBases {
 		NewEvent<EDT_Buff>(time,data);
 	}
 
+	// 转为 Bullet 事件
+	protected void ToBullet(float time,JsonData data){
+		NewEvent<EDT_Bullet>(time,data);
+	}
+
 	public List<EDT_Effect> GetLEffects(){
 		GetList<EDT_Effect> (ref m_lEffects);
 		return m_lEffects;
@@ -363,10 +371,10 @@ public class EMT_TBases {
 		return m_lShakes;
 	}
 
-//	public List<EDT_Buff> GetLBuffs(){
-//		GetList<EDT_Buff> (ref m_lBuffs);
-//		return m_lBuffs;
-//	}
+	public List<EDT_Bullet> GetLBullets(){
+		GetList<EDT_Bullet> (ref m_lBullets);
+		return m_lBullets;
+	}
 
 	#endregion
 }

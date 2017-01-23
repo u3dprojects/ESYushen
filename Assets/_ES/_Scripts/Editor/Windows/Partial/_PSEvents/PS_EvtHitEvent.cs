@@ -77,10 +77,13 @@ public class PS_EvtHitEvent {
 			_DrawAttrs ();
 			EG_GUIHelper.FG_Space(10);
 
-			_DrawBuffs ();
-			 EG_GUIHelper.FG_Space(10);
-
 			_DrawShake ();
+			EG_GUIHelper.FG_Space(10);
+
+			_DrawBuffs ();
+			EG_GUIHelper.FG_Space(10);
+
+			_DrawBullets ();
 		}
 		EG_GUIHelper.FEG_EndV();
 		EG_GUIHelper.FG_Space(10);
@@ -158,5 +161,19 @@ public class PS_EvtHitEvent {
 
 	void _NewEffect(){
 		m_evtHit.NewEvent<EDT_Effect>();
+	}
+
+	// 绘制 子弹
+	PS_EvtBullet m_psBullet;
+
+	void _DrawBullets(){
+		if (m_psBullet == null) {
+			m_psBullet = new PS_EvtBullet("子弹Bullet列表",m_isPlan,_NewBullet,_RmEvent,m_isShowCastTime);
+		}
+		m_psBullet.DoDraw(m_fDuration, m_evtHit.GetLBullets());
+	}
+
+	void _NewBullet(){
+		m_evtHit.NewEvent<EDT_Bullet>();
 	}
 }
