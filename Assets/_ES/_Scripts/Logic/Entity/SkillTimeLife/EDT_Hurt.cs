@@ -125,8 +125,6 @@ public class EDT_Hurt : EDT_Base {
 			m_eHitEvent.DoStart ();
 			m_eHitArea.DoStart ();
 		}
-
-		Debug.Log ("=hurt=");
 		return true;
 	}
 
@@ -153,12 +151,6 @@ public class EDT_Hurt : EDT_Base {
 	{
 		base.OnSceneGUI (trsfOrg);
 		m_eHitArea.OnSceneGUI(trsfOrg);
-	}
-
-	public override void DoEnd ()
-	{
-		base.DoEnd ();
-		Debug.Log ("Hurt Do End");
 	}
 
 	#region ===  伤害区域 ===
