@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections.Generic;
 
 /// <summary>
-/// 类名 : 绘制时间事件 之 特效事件
+/// 类名 : 绘制 技能的 时间事件
 /// 作者 : Canyon
 /// 日期 : 2017-01-10 10:10
 /// 功能 : 
@@ -18,6 +18,9 @@ public partial class PS_Events {
 	bool m_isPlan = false;
 
 	EMT_Event m_cEvents = new EMT_Event ();
+
+	SpriteJoint m_eCsJoin = null;
+	PS_EvtHitEvent m_psCastEvt;
 
 	// 总时长
 	float duration = 0;
@@ -69,7 +72,11 @@ public partial class PS_Events {
 
 	public void DoClear(){
 		m_cEvents.DoClear ();
+		m_eCsJoin = null;
+
 		_OnClearHit ();
+
+		_OnClearCastEvt();
 	}
 
 	public string ToJsonString(){
@@ -89,6 +96,22 @@ public partial class PS_Events {
 		this.duration = duration;
 		this.beforeRoll = bef;
 		this.afterRoll = aft;
+
+		if (m_psCastEvt == null) {
+			m_psCastEvt = new PS_EvtHitEvent (this.m_isPlan,true);
+			m_psCastEvt.SetEvent (m_cEvents);
+		}
+
+
+		if (m_wSkill != null && m_wSkill.m_eCsJoin != null) {
+			m_eCsJoin = m_wSkill.m_eCsJoin;
+		} else {
+			m_eCsJoin = null;
+		}
+
+		m_psCastEvt.m_fDuration = this.duration;
+		m_psCastEvt.m_eCsJoin = m_eCsJoin;
+
 		DrawEvents ();
 	}
 
@@ -96,73 +119,21 @@ public partial class PS_Events {
 		GUIStyle style = EditorStyles.label;
 		style.alignment = TextAnchor.MiddleLeft;
 
-		_DrawEvents4Audio ();
-
-		EG_GUIHelper.FG_Space(10);
-
-		_DrawEvents4Effect ();
-
-		EG_GUIHelper.FG_Space(10);
-
-		_DrawEvents4Shake ();
-
-		EG_GUIHelper.FG_Space(10);
+		m_psCastEvt.DoDraw ();
 
 		_DrawEvents4Hurt ();
-
 	}
 
-	// 绘制 特效
-	PS_EvtEffect m_psEffect;
-
-	void _DrawEvents4Effect(){
-		if (m_psEffect == null) {
-			m_psEffect = new PS_EvtEffect("特效列表",m_isPlan,_NewEffect,RemoveEvent,true);
+	void _OnClearCastEvt(){
+		if (m_psCastEvt != null) {
+			m_psCastEvt.DoClear ();
+			m_psCastEvt = null;
 		}
-
-		SpriteJoint m_eCsJoin = null;
-		if (m_wSkill != null && m_wSkill.m_eCsJoin != null) {
-			m_eCsJoin = m_wSkill.m_eCsJoin;
-		}
-		m_psEffect.DoDraw (duration, m_cEvents.GetLEffects(),m_eCsJoin);
 	}
 
-	void _NewEffect(){
-		m_cEvents.NewEvent<EDT_Effect>();
-	}
-}
+	// 类名 : 绘制时间事件 之 打击事件
 
-/// <summary>
-/// 类名 : 绘制时间事件 之 技能音效
-/// 作者 : Canyon
-/// 日期 : 2017-01-17 17:30
-/// 功能 : 
-/// </summary>
-public partial class PS_Events {
-	// 绘制 音效
-	PS_EvtAudio m_psAudio;
-	void _DrawEvents4Audio(){
-		if (m_psAudio == null) {
-			m_psAudio = new PS_EvtAudio("音效列表",m_isPlan,_NewAudio,RemoveEvent,true);
-		}
-		m_psAudio.DoDraw (duration, m_cEvents.GetLAudios ());
-	}
-
-	void _NewAudio(){
-		m_cEvents.NewEvent<EDT_Audio> ();
-	}
-}
-
-/// <summary>
-/// 类名 : 绘制时间事件 之 打击事件
-/// 作者 : Canyon
-/// 日期 : 2017-01-16 11:30
-/// 功能 : 
-/// </summary>
-public partial class PS_Events {
-	
 	PS_EvtHurt m_psHit;
-
 	void _DrawEvents4Hurt(){
 		if (m_psHit == null) {
 			m_psHit = new PS_EvtHurt("目标事件列表",m_isPlan,_NewHitArea,RemoveEvent,true);
@@ -182,25 +153,3 @@ public partial class PS_Events {
 	}
 }
 
-
-/// <summary>
-/// 类名 : 绘制时间事件 之 技能震屏
-/// 作者 : Canyon
-/// 日期 : 2017-01-18 18:10
-/// 功能 : 
-/// </summary>
-public partial class PS_Events {
-
-	PS_EvtShake m_psShake;
-
-	void _DrawEvents4Shake(){
-		if (m_psShake == null) {
-			m_psShake = new PS_EvtShake("震屏列表", m_isPlan, _NewShake, RemoveEvent,true);
-		}
-		m_psShake.DoDraw (duration, m_cEvents.GetLShakes());
-	}
-
-	void _NewShake(){
-		m_cEvents.NewEvent<EDT_Shake> ();
-	}
-}

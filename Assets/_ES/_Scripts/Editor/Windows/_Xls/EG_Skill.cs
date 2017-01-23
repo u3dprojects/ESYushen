@@ -178,10 +178,11 @@ public class EG_Skill {
 		// 绘制技能事件
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
-			EG_GUIHelper.FEG_BeginH();
-			EditorGUILayout.LabelField("技能事件:",ms_enity.CastEvent_Str, EditorStyles.textArea);
-			EG_GUIHelper.FEG_EndH();
-			EG_GUIHelper.FG_Space(5);
+			// EG_GUIHelper.FEG_BeginH();
+			// EditorGUILayout.LabelField("技能事件:",ms_enity.CastEvent_Str, EditorStyles.textArea);
+			// EG_GUIHelper.FEG_EndH();
+			// EG_GUIHelper.FG_Space(5);
+			EG_GUIHelper.FEG_HeadTitMid ("技能事件",Color.magenta);
 
 			_DrawEvents ();
 		}

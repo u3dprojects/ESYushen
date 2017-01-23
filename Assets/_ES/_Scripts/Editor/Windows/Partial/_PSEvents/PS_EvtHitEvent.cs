@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor;
 
 /// <summary>
-/// 类名 : 绘制 命中事件集合
+/// 类名 : 绘制 事件集合
 /// 作者 : Canyon
 /// 日期 : 2017-01-21 15:10
 /// 功能 : 
@@ -18,9 +18,17 @@ public class PS_EvtHitEvent {
 
 	bool m_isPlan = false;
 	bool m_isShowCastTime = false;
-	float duration = 0;
 
-	SpriteJoint m_eCsJoin = null;
+	public float m_fDuration = 0;
+
+	public SpriteJoint m_eCsJoin = null;
+
+	public PS_EvtHitEvent(){}
+
+	public PS_EvtHitEvent(bool isPlan,bool isShowCastTime){
+		this.m_isPlan = isPlan;
+		this.m_isShowCastTime = isShowCastTime;
+	}
 
 	public void DoReInit(string json){
 		m_evtHit.DoReInit (json,0);
@@ -89,7 +97,7 @@ public class PS_EvtHitEvent {
 			psEvtAttrs = new PS_EvtAttrs ("属性修改列表:", m_isPlan,_NewAttrs,_RmEvent, m_isShowCastTime);
 		}
 
-		psEvtAttrs.DoDraw (duration, m_evtHit.GetLAttrs());
+		psEvtAttrs.DoDraw (m_fDuration, m_evtHit.GetLAttrs());
 	}
 
 	void _NewAttrs(){
@@ -103,7 +111,7 @@ public class PS_EvtHitEvent {
 			psEvtBuff = new PS_EvtBuff ("Buff列表:", m_isPlan,_NewBuff,_RmEvent, m_isShowCastTime);
 		}
 
-		psEvtBuff.DoDraw (duration, m_evtHit.GetLBuffs());
+		psEvtBuff.DoDraw (m_fDuration, m_evtHit.GetLBuffs());
 	}
 
 	void _NewBuff(){
@@ -117,7 +125,7 @@ public class PS_EvtHitEvent {
 			psEvtAudio = new PS_EvtAudio("音效列表:",m_isPlan,_NewAudio,_RmEvent,m_isShowCastTime);
 		}
 
-		psEvtAudio.DoDraw (duration, m_evtHit.GetLAudios());
+		psEvtAudio.DoDraw (m_fDuration, m_evtHit.GetLAudios());
 	}
 
 	void _NewAudio(){
@@ -131,7 +139,7 @@ public class PS_EvtHitEvent {
 		if (m_psShake == null) {
 			m_psShake = new PS_EvtShake("震屏列表", m_isPlan, _NewShake, _RmEvent,m_isShowCastTime);
 		}
-		m_psShake.DoDraw (duration, m_evtHit.GetLShakes());
+		m_psShake.DoDraw (m_fDuration, m_evtHit.GetLShakes());
 	}
 
 	void _NewShake(){
@@ -145,7 +153,7 @@ public class PS_EvtHitEvent {
 		if (m_psEffect == null) {
 			m_psEffect = new PS_EvtEffect("特效列表",m_isPlan,_NewEffect,_RmEvent,m_isShowCastTime);
 		}
-		m_psEffect.DoDraw (duration, m_evtHit.GetLEffects(),m_eCsJoin);
+		m_psEffect.DoDraw (m_fDuration, m_evtHit.GetLEffects(),m_eCsJoin);
 	}
 
 	void _NewEffect(){
