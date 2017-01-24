@@ -255,10 +255,6 @@ public class EDT_Hurt_Area : EDT_Base{
 			return;
 		}
 		_m_isDrawRuning = true;
-		if (m_gobjDraw != null) {
-			m_isEnd = true;
-			return;
-		}
 
 		if(trsfOrg == null){
 			return;
@@ -291,8 +287,8 @@ public class EDT_Hurt_Area : EDT_Base{
 		Mesh mesh = null;
 		switch (m_emTag) {
 		case HurtAreaType.Arc:
-			dir = (Quaternion.AngleAxis (-(m_fAngle / 2), Vector3.up) * dir).normalized;
-			mesh = MeshCreate.CreateArc (m_fRange, 36, 0, m_fAngle);
+			float begAngle = -this.m_fAngle * 0.5f + 90;
+			mesh = MeshCreate.CreateArc (m_fRange, 36, begAngle, m_fAngle);
 			break;
 		case HurtAreaType.Circle:
 			mesh = MeshCreate.CreateCircle(m_fRange, 36);
@@ -303,15 +299,24 @@ public class EDT_Hurt_Area : EDT_Base{
 			break;
 		}
 
-		m_gobjDraw = new GameObject (this.m_emTag.ToString());
+		MeshFilter meshFilter = null;
+		MeshRenderer meshRender = null;
+		if (m_gobjDraw == null) {
+			m_gobjDraw = new GameObject (this.m_emTag.ToString ());
+			meshFilter = m_gobjDraw.AddComponent<MeshFilter> ();
+			meshRender = m_gobjDraw.AddComponent<MeshRenderer> ();
+		} else {
+			meshFilter = m_gobjDraw.GetComponent<MeshFilter>();
+			meshRender = m_gobjDraw.GetComponent<MeshRenderer>();
+		}
 
-		m_gobjDraw.AddComponent<MeshFilter> ().mesh = mesh;
+		meshFilter.mesh = mesh;
 
 		Material mat = new Material (Shader.Find ("Diffuse"));
 		if (mat.HasProperty ("_Color")) {
 			mat.SetColor ("_Color", this.m_cAreaColor);
 		}
-		m_gobjDraw.AddComponent<MeshRenderer> ().material = mat;
+		meshRender.material = mat;
 
 		m_gobjDraw.transform.position = pos;
 		m_gobjDraw.transform.forward = dir;
@@ -345,6 +350,7 @@ public static class MeshCreate{
 		//理解以后才发现, 之前显示出错的原因是原来的代码uv很随意的拿了顶点的计算结果
 		Vector2[] uvs = new Vector2[lens_vertices];
 		uvs [0] = new Vector2 (0.5f, 0.5f);//纹理的重心在中心
+		// uvs [0] = Vector2.zero;//纹理的重心在中心
 
 		// 弧度
 		float angleRadian = Mathf.Deg2Rad * angleDegree;
