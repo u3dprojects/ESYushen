@@ -129,7 +129,7 @@ public class PS_EvtHitEvent {
 	// 绘制 音效
 	PS_EvtAudio psEvtAudio;
 	void _DrawAudio(){
-		if (psEvtBuff == null) {
+		if (psEvtAudio == null) {
 			psEvtAudio = new PS_EvtAudio("音效列表:",m_isPlan,_NewAudio,_RmEvent,m_isShowCastTime);
 		}
 
