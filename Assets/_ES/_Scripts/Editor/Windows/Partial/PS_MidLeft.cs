@@ -41,6 +41,8 @@ public class PS_MidLeft{
     float minWidth = 440;
     float curWidth = 0;
 
+	float botBtnH = 45;
+
     // popup 列表选择值
     int ind_popup = 0;
     int pre_ind_popup = -1;
@@ -117,7 +119,7 @@ public class PS_MidLeft{
         if (this.m_wSkill != null)
         {
             // 100 - 是主界面顶部高度 20 - 是误差偏移
-            curScrollH = (m_wSkill.position.height - 100) - 20;
+			curScrollH = (m_wSkill.position.height - 100) - botBtnH;
             curScrollH = Mathf.Max(curScrollH, minScrollH);
 
             curWidth = (m_wSkill.position.width - 10) / 2;
@@ -156,11 +158,11 @@ public class PS_MidLeft{
                     _DrawMovPos();
 
                     _DrawEvents();
-                    
-                    _DrawOptBtns();
                 }
 
                 EG_GUIHelper.FEG_EndScroll();
+
+				_DrawOptBtns();
             }
         }
         EG_GUIHelper.FEG_EndV();
