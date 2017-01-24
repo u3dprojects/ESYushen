@@ -17,6 +17,9 @@ public class EMT_HitEvent : EMT_TBases {
 	// buff 事件
 	List<EDT_Buff> m_lBuffs = new List<EDT_Buff>();
 
+	// 受击表现状态事件
+	List<EDT_HitStatus> m_lHitStatuses = new List<EDT_HitStatus>();
+
 	public override void DoClear ()
 	{
 		base.DoClear ();
@@ -38,6 +41,11 @@ public class EMT_HitEvent : EMT_TBases {
 			break;
 		case 9:
 			ToBuff (one,castTime);
+			break;
+		case 14:
+		case 15:
+		case 16:
+			ToHitStatus(one,castTime);
 			break;
 		}
 		return typeInt;
@@ -61,6 +69,10 @@ public class EMT_HitEvent : EMT_TBases {
 		NewEvent<EDT_Buff>(castTime,jsonData);
 	}
 
+	void ToHitStatus(JsonData jsonData,float castTime){
+		NewEvent<EDT_HitStatus>(castTime,jsonData);
+	}
+
 	public List<EDT_Property> GetLAttrs(){
 		GetList<EDT_Property> (ref m_lAttrs);
 		return m_lAttrs;
@@ -69,5 +81,10 @@ public class EMT_HitEvent : EMT_TBases {
 	public List<EDT_Buff> GetLBuffs(){
 		GetList<EDT_Buff> (ref m_lBuffs);
 		return m_lBuffs;
+	}
+
+	public List<EDT_HitStatus> GetLHitStatuses(){
+		GetList<EDT_HitStatus> (ref m_lHitStatuses);
+		return m_lHitStatuses;
 	}
 }

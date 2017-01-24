@@ -49,6 +49,15 @@ public class EDT_Base {
 
 		[Description("召唤/分身")]
 		Summon = 11,
+
+		[Description("受击状态-默认")]
+		BeHitDefault = 14,
+
+		[Description("被击退")]
+		BeHitBack = 15,
+
+		[Description("被击飞")]
+		BeHitFly = 16,
 	}
 
     // 对象的唯一标识 计数器

@@ -74,14 +74,17 @@ public class PS_EvtHitEvent {
 			_DrawAudio ();
 			EG_GUIHelper.FG_Space(10);
 
+			_DrawStay ();
+			EG_GUIHelper.FG_Space (10);
+
 			if (!this.m_isShowCastTime) {
+				_DrawHitStatus ();
+				EG_GUIHelper.FG_Space (10);
+
 				_DrawAttrs ();
 				EG_GUIHelper.FG_Space (10);
 
 				_DrawShake ();
-				EG_GUIHelper.FG_Space (10);
-
-				_DrawStay ();
 				EG_GUIHelper.FG_Space (10);
 
 				_DrawBuffs ();
@@ -195,4 +198,19 @@ public class PS_EvtHitEvent {
 	void _NewStay(){
 		m_evtHit.NewEvent<EDT_Stay> ();
 	}
+
+	// 受击者受击时表现状态
+	PS_EvtHitStatus m_psBeHitStatus;
+
+	void _DrawHitStatus(){
+		if (m_psBeHitStatus == null) {
+			m_psBeHitStatus = new PS_EvtHitStatus("受击表现状态列表", m_isPlan, _NewHitStatus, _RmEvent,m_isShowCastTime);
+		}
+		m_psBeHitStatus.DoDraw (m_fDuration, m_evtHit.GetLHitStatuses());
+	}
+
+	void _NewHitStatus(){
+		m_evtHit.NewEvent<EDT_HitStatus> ();
+	}
+
 }

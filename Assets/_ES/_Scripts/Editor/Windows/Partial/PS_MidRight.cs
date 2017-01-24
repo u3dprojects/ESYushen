@@ -38,7 +38,7 @@ public partial class PS_MidRight{
 
 	// 速度控制
 	float cur_speed = 1.0f;
-	bool isCanSetMinMaxSpeed = false;
+	// bool isCanSetMinMaxSpeed = false;
 	float min_speed = 0.0f;
 	float max_speed = 3.0f;
 
