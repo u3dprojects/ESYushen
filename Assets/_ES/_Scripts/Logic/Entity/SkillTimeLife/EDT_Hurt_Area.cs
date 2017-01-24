@@ -139,7 +139,7 @@ public class EDT_Hurt_Area : EDT_Base{
 	public override void DoStart (bool isReStart = false)
 	{
 		base.DoStart (isReStart);
-		_m_isDrawRuning = false;
+		_m_isDrawRuning = true;
 	}
 
 	public override void OnClear ()
@@ -215,9 +215,9 @@ public class EDT_Hurt_Area : EDT_Base{
 			 Handles.DrawSolidDisc(pos,Vector3.up,this.m_fRange);
 			break;
 		case HurtAreaType.Rectangle:
-			float hfw = this.m_fWidth / 2;
-			float hfl = this.m_fRange / 2;
-			float hfr = Mathf.Sqrt(Mathf.Pow(this.m_fWidth,2)+Mathf.Pow(this.m_fRange,2));
+			float hfw = this.m_fWidth * 0.5f;
+			float hfl = this.m_fRange * 0.5f;
+			float hfr = Mathf.Sqrt(Mathf.Pow(this.m_fWidth,2)+Mathf.Pow(this.m_fRange,2)) * 0.5f;
 			pos = posOrg;
 
 			Vector3 pos01 = new Vector3(pos.x - hfw,0,pos.z - hfl);
@@ -344,7 +344,7 @@ public static class MeshCreate{
 		//uv是网格上的点对应到纹理上的某个位置的像素, 纹理是一张图片, 所以是二维
 		//理解以后才发现, 之前显示出错的原因是原来的代码uv很随意的拿了顶点的计算结果
 		Vector2[] uvs = new Vector2[lens_vertices];
-		uvs [0] = new Vector2 (0.5f, 0.5f);//纹理的圆心在中心
+		uvs [0] = new Vector2 (0.5f, 0.5f);//纹理的重心在中心
 
 		// 弧度
 		float angleRadian = Mathf.Deg2Rad * angleDegree;
@@ -454,20 +454,23 @@ public static class MeshCreate{
         Vector3[] normals = new Vector3[4];
         Vector2[] uv = new Vector2[4];
 
-        vertices [0] = new Vector3 (0, 0, 0);
+		float hfL = m_length * 0.5f;
+		float hfW = m_width * 0.5f;
+
+		vertices [0] = new Vector3 (-hfW, 0, -hfL);
         uv [0] = new Vector2 (0, 0);
         normals [0] = Vector3.up;
 
-        vertices [1] = new Vector3 (0, 0, m_length);
+		vertices [1] = new Vector3 (-hfW, 0, hfL);
         uv [1] = new Vector2 (0, 1);
         normals [1] = Vector3.up;
 
 
-        vertices [2] = new Vector3 (m_width, 0, m_length);
+		vertices [2] = new Vector3 (hfW, 0, hfL);
         uv [2] = new Vector2 (1, 1);
         normals [2] = Vector3.up;
 
-        vertices [3] = new Vector3 (m_width, 0, 0);
+		vertices [3] = new Vector3 (hfW, 0, -hfL);
         uv [3] = new Vector2 (1, 0);
         normals [3] = Vector3.up;
 
@@ -478,6 +481,7 @@ public static class MeshCreate{
         indices [1] = 1;
         indices [2] = 2;
 
+		// 0,2,3和2,3,0没什么变化样
         indices [3] = 0;
         indices [4] = 2;
         indices [5] = 3;
