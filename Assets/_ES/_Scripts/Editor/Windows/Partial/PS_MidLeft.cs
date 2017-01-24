@@ -430,6 +430,8 @@ public class PS_MidLeft{
             return;
 
         this.m_curTime.DoUpdateTime();
+
+		this.m_curAni.m_LoopTimes = this.isRound ? this.round_times : 0;
         this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,cur_speed);
 
 		m_ePSEvents.OnUpdate (m_curTime.DeltaTime, cur_speed);
