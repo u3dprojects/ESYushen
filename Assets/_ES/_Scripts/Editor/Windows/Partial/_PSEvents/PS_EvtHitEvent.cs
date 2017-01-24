@@ -77,14 +77,14 @@ public class PS_EvtHitEvent {
 			_DrawStay ();
 			EG_GUIHelper.FG_Space (10);
 
+			_DrawShake ();
+			EG_GUIHelper.FG_Space (10);
+
 			if (!this.m_isShowCastTime) {
 				_DrawHitStatus ();
 				EG_GUIHelper.FG_Space (10);
 
 				_DrawAttrs ();
-				EG_GUIHelper.FG_Space (10);
-
-				_DrawShake ();
 				EG_GUIHelper.FG_Space (10);
 
 				_DrawBuffs ();
