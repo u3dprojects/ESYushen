@@ -29,7 +29,7 @@ public class EDT_Effect : EDT_Base {
 	public float m_fDuration;
 
 	// 是否跟随
-	public bool m_isFollow = false;
+	public bool m_isFollow = true;
     
     // 创建出来的实体对象
     EN_Effect _m_eEffect;
@@ -55,6 +55,10 @@ public class EDT_Effect : EDT_Base {
             trsfGobj.localPosition = m_v3OffsetPos;
             trsfGobj.localEulerAngles = m_v3EulerAngle;
             trsfGobj.localScale = Vector3.one;
+
+			if (!this.m_isFollow) {
+				trsfGobj.parent = null;
+			}
 
 			_m_eEffect = new EN_Effect(gobj,m_fDuration);
             _m_eEffect.DoStart();
