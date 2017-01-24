@@ -139,7 +139,7 @@ public class EDT_Hurt_Area : EDT_Base{
 	public override void DoStart (bool isReStart = false)
 	{
 		base.DoStart (isReStart);
-		_m_isDrawRuning = true;
+		_m_isDrawRuning = false;
 	}
 
 	public override void OnClear ()
@@ -292,7 +292,7 @@ public class EDT_Hurt_Area : EDT_Base{
 		switch (m_emTag) {
 		case HurtAreaType.Arc:
 			dir = (Quaternion.AngleAxis (-(m_fAngle / 2), Vector3.up) * dir).normalized;
-			mesh = MeshCreate.CreateArc (m_fRange, 36, -(m_fAngle / 2), m_fAngle);
+			mesh = MeshCreate.CreateArc (m_fRange, 36, 0, m_fAngle);
 			break;
 		case HurtAreaType.Circle:
 			mesh = MeshCreate.CreateCircle(m_fRange, 36);
@@ -337,32 +337,43 @@ public static class MeshCreate{
 		}
 
 		Mesh mesh = new Mesh ();
-		Vector3[] vertices = new Vector3[3 + segments - 1];
+		int lens_vertices = 3 + segments - 1;
+		Vector3[] vertices = new Vector3[lens_vertices];
 		vertices [0] = new Vector3 (0, 0, 0);//第一个点是圆心点
 
 		//uv是网格上的点对应到纹理上的某个位置的像素, 纹理是一张图片, 所以是二维
 		//理解以后才发现, 之前显示出错的原因是原来的代码uv很随意的拿了顶点的计算结果
-		Vector2[] uvs = new Vector2[vertices.Length];
+		Vector2[] uvs = new Vector2[lens_vertices];
 		uvs [0] = new Vector2 (0.5f, 0.5f);//纹理的圆心在中心
 
-		float angle = Mathf.Deg2Rad * angleDegree;
+		// 弧度
+		float angleRadian = Mathf.Deg2Rad * angleDegree;
 		float startAngle = Mathf.Deg2Rad * startAngleDegree;
-		float currAngle = angle + startAngle; //第一个三角形的起始角度
-		float deltaAngle = angle / segments; //根据分段数算出每个三角形在圆心的角的角度
-		for (int i = 1; i < vertices.Length; i++) {   
+
+		float currAngle = startAngle + angleRadian;
+
+		// 根据分段数算出每个三角形在圆心的角的角度
+		float deltaAngle = angleRadian / segments;
+
+		// 绘制 x,z平面上的
+		for (int i = 1; i < lens_vertices; i++) {   
 			//圆上一点的公式: x = r*cos(angle), y = r*sin(angle)
 			//根据半径和角度算出弧度上的点的位置
 			float x = Mathf.Cos (currAngle);
 			float y = Mathf.Sin (currAngle);
+
 			//这里为了我的需求改到了把点算到了(x,y,0), 如果需要其他平面, 可以改成(x,0,y)或者(0,x,y)
-			vertices [i] = new Vector3 (x * radius, y * radius, 0);
+			vertices [i] = new Vector3 (x * radius,0, y * radius);
+
 			//纹理的半径就是0.5, 圆心在0.5f, 0.5f的位置
 			uvs [i] = new Vector2 (x * 0.5f + 0.5f, y * 0.5f + 0.5f);
+
 			currAngle -= deltaAngle;
 		}
 
 		int[] triangles = new int[segments * 3];
-		for (int i = 0, vi = 1; i < triangles.Length; i += 3, vi++) {//每个三角形都是由圆心点+两个相邻弧度上的点构成的
+		for (int i = 0, vi = 1; i < triangles.Length; i += 3, vi++) {
+			//每个三角形都是由圆心点+两个相邻弧度上的点构成的
 			triangles [i] = 0;
 			triangles [i + 1] = vi;
 			triangles [i + 2] = vi + 1;
@@ -382,18 +393,27 @@ public static class MeshCreate{
     {
         //vertices:
 		int vertices_count = segments + 1;
-        Vector3[] vertices = new Vector3[vertices_count];
+		Vector3[] vertices = new Vector3[vertices_count];
+
+		//uv:
+		Vector2[] uvs = new Vector2[vertices_count];
+
+		// 绘制vertices 和 uv 
         vertices[0] = Vector3.zero;
+
         float angledegree = 360.0f;
         float angleRad = Mathf.Deg2Rad * angledegree;
         float angleCur = angleRad;
 		float angledelta = angleRad / segments;
+
         for(int i=1;i< vertices_count; i++)
         {
             float cosA = Mathf.Cos(angleCur);
             float sinA = Mathf.Sin(angleCur);
 
 			vertices[i] = new Vector3(radius * cosA, 0, radius * sinA);
+			uvs[i] = new Vector2(cosA * 0.5f + 0.5f, sinA * 0.5f + 0.5f);
+
             angleCur -= angledelta;
         }
 
@@ -413,13 +433,6 @@ public static class MeshCreate{
         triangles[triangle_count - 3] = 0;
         triangles[triangle_count - 2] = vertices_count - 1;
         triangles[triangle_count - 1] = 1;                  
-
-        //uv:
-        Vector2[] uvs = new Vector2[vertices_count];
-        for (int i = 0; i < vertices_count; i++)
-        {
-            uvs[i] = new Vector2(vertices[i].x / radius / 2 + 0.5f, vertices[i].z / radius / 2 + 0.5f);
-        }
 
         //负载属性与mesh
         Mesh mesh = new Mesh();
