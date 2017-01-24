@@ -74,17 +74,19 @@ public class PS_EvtHitEvent {
 			_DrawAudio ();
 			EG_GUIHelper.FG_Space(10);
 
-			_DrawAttrs ();
-			EG_GUIHelper.FG_Space(10);
+			if (!this.m_isShowCastTime) {
+				_DrawAttrs ();
+				EG_GUIHelper.FG_Space (10);
 
-			_DrawShake ();
-			EG_GUIHelper.FG_Space(10);
+				_DrawShake ();
+				EG_GUIHelper.FG_Space (10);
 
-			_DrawStay ();
-			EG_GUIHelper.FG_Space(10);
+				_DrawStay ();
+				EG_GUIHelper.FG_Space (10);
 
-			_DrawBuffs ();
-			EG_GUIHelper.FG_Space(10);
+				_DrawBuffs ();
+				EG_GUIHelper.FG_Space (10);
+			}
 
 			_DrawBullets ();
 		}
