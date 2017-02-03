@@ -59,7 +59,8 @@ public class EDW_Plan : EditorWindow {
 	public enum EmExcelTable{
 		Buffer,
 		Bullet,
-		Skill
+		Skill,
+		Map
 	}
 	#region  == Member Attribute ===
 
@@ -79,6 +80,7 @@ public class EDW_Plan : EditorWindow {
 	EG_Buff m_egBuff = new EG_Buff();
 	EG_Skill m_egSkill = new EG_Skill();
 	EG_Bullet m_egBullet = new EG_Bullet();
+	EG_Map m_egMap = new EG_Map();
 
 	// delegate 更新
 	System.Action call4OnUpdate;
@@ -101,8 +103,7 @@ public class EDW_Plan : EditorWindow {
 
 	void OnDisable()
 	{
-		EditorApplication.update -= OnUpdate;
-		SceneView.onSceneGUIDelegate -= OnSceneGUI;
+		OnClearEditorDelegate ();
 	}
 
 	void OnGUI()
@@ -116,7 +117,7 @@ public class EDW_Plan : EditorWindow {
 				string txtDecs = "类名 : excel数据表编辑器窗口\n"
 					+ "作者 : Canyon\n"
 					+ "日期 : 2017 - 01 - 19 14:50\n"
-					+ "描述 : 目前可以操作Buff表,Skill表,Bullet表。\n";
+					+ "描述 : 目前可以操作Buff表,Skill表,Bullet表,MapList表。\n";
 				GUILayout.Label(txtDecs, style);
 				style.alignment = TextAnchor.MiddleLeft;
 			}
@@ -156,15 +157,18 @@ public class EDW_Plan : EditorWindow {
 	void OnDestroy()
 	{
 		OnClearSWindow();
-		EditorApplication.update -= OnUpdate;
-		SceneView.onSceneGUIDelegate -= OnSceneGUI;
-
+		OnClearEditorDelegate ();
 		DoClear();
 	}
 
 	#endregion
 
 	#region  == Self Func ===
+
+	void OnClearEditorDelegate(){
+		EditorApplication.update -= OnUpdate;
+		SceneView.onSceneGUIDelegate -= OnSceneGUI;
+	}
 
 	void DoInit()
 	{
@@ -253,6 +257,8 @@ public class EDW_Plan : EditorWindow {
 			return m_egSkill.isInited;
 		case EmExcelTable.Bullet:
 			return m_egBullet.isInited;
+		case EmExcelTable.Map:
+			return m_egMap.isInited;
 		}
 		return false;
 	}
@@ -268,6 +274,9 @@ public class EDW_Plan : EditorWindow {
 		case EmExcelTable.Bullet:
 			m_egBullet.DoInit (pathOpen);
 			break;
+		case EmExcelTable.Map:
+			m_egMap.DoInit (pathOpen);
+			break;
 		}
 	}
 
@@ -282,6 +291,9 @@ public class EDW_Plan : EditorWindow {
 		case EmExcelTable.Bullet:
 			m_egBullet.SaveExcel (savePath);
 			break;
+		case EmExcelTable.Map:
+			m_egMap.SaveExcel (savePath);
+			break;
 		}
 	}
 
@@ -295,6 +307,9 @@ public class EDW_Plan : EditorWindow {
 			break;
 		case EmExcelTable.Bullet:
 			m_egBullet.DrawShow ();
+			break;
+		case EmExcelTable.Map:
+			m_egMap.DrawShow ();
 			break;
 		}
 	}
