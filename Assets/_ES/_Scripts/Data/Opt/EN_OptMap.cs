@@ -1,0 +1,58 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+/// <summary>
+/// 类名 : Map 地图 实体操作
+/// 作者 : Canyon
+/// 日期 : 2017-02-03 10:30
+/// 功能 : 
+/// </summary>
+public class EN_OptMap {
+
+	static EN_OptMap _instance;
+	static public EN_OptMap Instance
+	{
+		get
+		{
+			if (_instance == null)
+			{
+				_instance = new EN_OptMap();
+			}
+			return _instance;
+		}
+	}
+
+	private EN_OptMap() { }
+
+	EN_OptBaseXls<EN_Map> m_eOptXls = new EN_OptBaseXls<EN_Map>();
+
+	public bool isInitSuccessed = false;
+
+	public void DoInit(string path, int sheetIndex)
+	{
+		m_eOptXls.DoInit (path, sheetIndex);
+		isInitSuccessed = m_eOptXls.isInitSuccessed;
+	}
+
+	public EN_Map GetEntity(int ID)
+	{
+		return m_eOptXls.GetEntity (ID);
+	}
+
+	public EN_Map GetOrNew(int ID)
+	{
+		return m_eOptXls.GetOrNew(ID);
+	}
+
+	public void Save(string savePath)
+	{
+		m_eOptXls.Save (savePath);
+	}
+
+	public void DoClear(){
+		m_eOptXls.DoClear ();
+		isInitSuccessed = false;
+	}
+
+}
