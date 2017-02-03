@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 类名 : Buff实体操作
 /// 作者 : Canyon
-/// 日期 : 2016-12-29 17:10:00
+/// 日期 : 2016-12-29 17:10
 /// 功能 : 
 /// </summary>
 public class EN_OptBuff {
