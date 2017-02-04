@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 
 using UnityEngine.SceneManagement;
+using LitJson;
 
 /// <summary>
 /// 类名 : Map 在 windows的视图
@@ -42,6 +43,10 @@ public class EG_Map {
 
 	public void DoClear(){
 		m_opt.DoClear ();
+
+		OnClearBornMonster ();
+
+		EM_Monster.DoClearStatic ();
 	}
 
 	public void DrawShow()
@@ -131,6 +136,7 @@ public class EG_Map {
 		EG_GUIHelper.FG_Space(5);
 
 		// 刷怪点
+		_DrawBornMonster();
 		// 触发器点
 	}
 
@@ -176,6 +182,8 @@ public class EG_Map {
 
 			OpenScene (ms_entity.SceneName);
 		}
+
+		ToList (ms_entity.strMonsters);
 	}
 
 	void OnInitAttrs2Entity()
@@ -189,4 +197,106 @@ public class EG_Map {
 		OnInitAttrs2Entity ();
 		m_opt.Save (savePath);
 	}
+
+	#region === 刷怪点 ===
+
+	List<EM_Base> m_lMapCells = new List<EM_Base> ();
+	List<EM_Monster> m_lMapMonsters = new List<EM_Monster> ();
+
+	JsonData jsonData = new JsonData ();
+	JsonData tmpJD;
+	EM_Base tmpCell;
+
+	void ToList(string json){
+		m_lMapCells.Clear ();
+
+		if (string.IsNullOrEmpty (json) || "null".Equals (json,System.StringComparison.OrdinalIgnoreCase)) {
+			return;
+		}
+
+		JsonData jsonData = JsonMapper.ToObject (json);
+		if(!jsonData.IsArray){
+			return;
+		}
+
+		int lens = jsonData.Count;
+		EM_Monster tmpMonster;
+		for (int i = 0; i < lens; i++) {
+			tmpJD = jsonData [i];
+			tmpMonster = EM_Monster.NewEntity<EM_Monster> (tmpJD);
+			if (tmpMonster == null) {
+				continue;
+			}
+			m_lMapCells.Add (tmpMonster);
+		}
+	}
+
+	string ToJsonString(){
+		int lens = m_lMapCells.Count;
+		if (lens <= 0) {
+			return "null";
+		}
+		jsonData.Clear ();
+		jsonData.SetJsonType (JsonType.Array);
+		for (int i = 0; i < lens; i++) {
+			tmpCell = m_lMapCells [i];
+			tmpJD = tmpCell.ToJsonData ();
+			if (tmpJD == null)
+				continue;
+			jsonData.Add(tmpJD);
+		}
+
+		return JsonMapper.ToJson (jsonData);
+	}
+
+	public List<EM_Monster> GetLMonsters(){
+		EM_Base.GetList<EM_Monster> (m_lMapCells, ref m_lMapMonsters);
+		return m_lMapMonsters;
+	}
+
+	void RmMapCell(EM_Base cell){
+		if (cell == null)
+			return;
+		cell.DoClear ();
+		m_lMapCells.Remove (cell);
+	}
+
+	void OnClearBornMonster(){
+		jsonData.Clear ();
+		OnClearList();
+	}
+
+	void OnClearList(){
+		int lens = m_lMapCells.Count;
+		if (lens <= 0) {
+			return;
+		}
+		for (int i = 0; i < lens; i++) {
+			tmpCell = m_lMapCells [i];
+			tmpCell.DoClear ();
+		}
+		m_lMapCells.Clear();
+	}
+
+	PSM_Monster m_psMonster;
+
+	void _DrawBornMonster(){
+		if (m_psMonster == null) {
+			m_psMonster = new PSM_Monster ("刷怪点", _NewMonster, RmMapCell);
+		}
+
+		ms_entity.strMonsters = ToJsonString ();
+		EditorGUILayout.LabelField("刷怪点",ms_entity.strMonsters, EditorStyles.textArea);
+		EG_GUIHelper.FG_Space(5);
+
+		m_psMonster.DoDraw (GetLMonsters ());
+	}
+
+	void _NewMonster(){
+		EM_Monster one = EM_Monster.NewEntity<EM_Monster> ();
+		one.DoMakeNew ();
+		m_lMapCells.Add (one);
+	}
+	#endregion
+
 }

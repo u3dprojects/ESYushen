@@ -99,6 +99,11 @@ public class EDW_Plan : EditorWindow {
 	{
 		EditorApplication.update += OnUpdate;
 		SceneView.onSceneGUIDelegate += OnSceneGUI;
+
+		// scene场景改变时候回调函数
+		// EditorApplication.hierarchyWindowChanged += OnHierarchyWindowChanged;
+
+		// EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemOnGUI;
 	}
 
 	void OnDisable()
@@ -168,6 +173,8 @@ public class EDW_Plan : EditorWindow {
 	void OnClearEditorDelegate(){
 		EditorApplication.update -= OnUpdate;
 		SceneView.onSceneGUIDelegate -= OnSceneGUI;
+		EditorApplication.hierarchyWindowChanged -= OnHierarchyWindowChanged;
+		EditorApplication.hierarchyWindowItemOnGUI -= OnHierarchyWindowItemOnGUI;
 	}
 
 	void DoInit()
@@ -188,6 +195,7 @@ public class EDW_Plan : EditorWindow {
 		m_egBuff.DoClear ();
 		m_egSkill.DoClear ();
 		m_egBullet.DoClear ();
+		m_egMap.DoClear ();
 	}
 
 	void OnSceneGUI(SceneView sceneView) {
@@ -237,6 +245,14 @@ public class EDW_Plan : EditorWindow {
 		{
 			this.call4OnSceneViewGUI -= callFunc;
 		}
+	}
+
+	void OnHierarchyWindowChanged(){
+		Debug.Log ("OnHierarchyWindowChanged");
+	}
+
+	void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect){
+		Debug.Log ("OnHierarchyWindowItemOnGUI , instanceID = "+instanceID);
 	}
 
 	void RecokenWH()
