@@ -42,9 +42,9 @@ public class EG_Buff {
 	}
 
 	// 事件
-	PS_EvtHitEvent m_psInv = new PS_EvtHitEvent();
-	PS_EvtHitEvent m_psOne = new PS_EvtHitEvent();
-	PS_EvtHitEvent m_psDua = new PS_EvtHitEvent();
+	PS_EvtHitEvent m_psInv = new PS_EvtHitEvent(new EMT_Event());
+	PS_EvtHitEvent m_psOne = new PS_EvtHitEvent(new EMT_Event());
+	PS_EvtHitEvent m_psDua = new PS_EvtHitEvent(new EMT_Event());
 
 	List<bool> m_lFodeout = new List<bool>(){false,false,false};
 
@@ -169,9 +169,9 @@ public class EG_Buff {
 		{
 			ms_entity.DoClone (entity);
 
-			m_psInv.DoReInit (ms_entity.strEvtDuration);
-			m_psOne.DoReInit (ms_entity.strEvtInterval);
-			m_psDua.DoReInit (ms_entity.strEvtOnce);
+			m_psInv.DoReInit (ms_entity.strEvtInterval);
+			m_psOne.DoReInit (ms_entity.strEvtOnce);
+			m_psDua.DoReInit (ms_entity.strEvtDuration);
 
 			this.ms_isRest = ms_entity.IsResetWhenGet == 1 ? true : false;
 			if(!string.IsNullOrEmpty(ms_entity.EffectResName)){
