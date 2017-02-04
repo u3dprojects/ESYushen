@@ -11,7 +11,7 @@ using UnityEditor;
 public class PS_EvtHitEvent {
 	
 	// 事件
-	EMT_HitEvent m_evtHit = new EMT_HitEvent();
+	EMT_HitEvent m_evtHit = null;
 
 	string m_sJson = "";
 	string m_sJsonTemp = "";
@@ -23,15 +23,42 @@ public class PS_EvtHitEvent {
 
 	public SpriteJoint m_eCsJoin = null;
 
-	public PS_EvtHitEvent(){}
+	public PS_EvtHitEvent(){
+		OnInitEvt ();
+	}
+
+	public PS_EvtHitEvent(EMT_HitEvent evt){
+		this.m_evtHit = evt;
+		OnInitEvt ();
+	}
 
 	public PS_EvtHitEvent(bool isPlan,bool isShowCastTime){
 		this.m_isPlan = isPlan;
 		this.m_isShowCastTime = isShowCastTime;
+
+		OnInitEvt ();
+	}
+
+	public PS_EvtHitEvent(bool isPlan,bool isShowCastTime,EMT_HitEvent evt){
+		this.m_isPlan = isPlan;
+		this.m_isShowCastTime = isShowCastTime;
+		this.m_evtHit = evt;
+
+		OnInitEvt ();
+	}
+
+	void OnInitEvt(){
+		if (this.m_evtHit == null) {
+			this.m_evtHit = new EMT_HitEvent();
+		}
 	}
 
 	public void DoReInit(string json){
-		m_evtHit.DoReInit (json,0);
+		if (m_evtHit is EMT_Event) {
+			((EMT_Event)m_evtHit).DoReInit (json);
+		} else {
+			m_evtHit.DoReInit (json,0);
+		}
 		m_sJson = json;
 	}
 
