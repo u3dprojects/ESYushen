@@ -47,6 +47,8 @@ public class EG_Map {
 		OnClearBornMonster ();
 
 		EM_Monster.DoClearStatic ();
+
+		OnClearDelegate ();
 	}
 
 	public void DrawShow()
@@ -278,9 +280,27 @@ public class EG_Map {
 		m_lMapCells.Clear();
 	}
 
+	void OnChangeTransform(Transform trsf,int type = 0){
+		int lens = m_lMapCells.Count;
+		if (lens <= 0) {
+			return;
+		}
+		for (int i = 0; i < lens; i++) {
+			tmpCell = m_lMapCells [i];
+			if (type == 0) {
+				tmpCell.OnChangePosition (trsf);
+			} else {
+				tmpCell.OnChangeRotation(trsf);
+			}
+		}
+	}
+
 	PSM_Monster m_psMonster;
 
 	void _DrawBornMonster(){
+
+		OnReInitDelegate ();
+
 		if (m_psMonster == null) {
 			m_psMonster = new PSM_Monster ("刷怪点", _NewMonster, RmMapCell);
 		}
@@ -296,6 +316,29 @@ public class EG_Map {
 		EM_Monster one = EM_Monster.NewEntity<EM_Monster> ();
 		one.DoMakeNew ();
 		m_lMapCells.Add (one);
+	}
+
+	void OnChangePosition(Transform trsf){
+		OnChangeTransform (trsf);
+	}
+
+	void OnChangeRotation(Transform trsf){
+		OnChangeTransform (trsf,1);
+	}
+
+	void OnReInitDelegate(){
+		OnClearDelegate ();
+		OnInitDelegate ();
+	}
+
+	void OnInitDelegate(){
+		TransformEditor.onChangePosition += OnChangePosition;
+		TransformEditor.onChangeRotation += OnChangeRotation;
+	}
+
+	void OnClearDelegate(){
+		TransformEditor.onChangePosition -= OnChangePosition;
+		TransformEditor.onChangeRotation -= OnChangeRotation;
 	}
 	#endregion
 
