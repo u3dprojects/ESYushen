@@ -100,7 +100,7 @@ public class EMT_TBases {
 	#region === 周期函数 init - start - update - end 等 ===
 
 	public void DoReInit(string jsonArry,float castTime){
-		if (string.IsNullOrEmpty (jsonArry) || "null".Equals(jsonArry)) {
+		if (string.IsNullOrEmpty (jsonArry) || "null".Equals(jsonArry.Trim(),System.StringComparison.OrdinalIgnoreCase)) {
 			return;
 		}
 

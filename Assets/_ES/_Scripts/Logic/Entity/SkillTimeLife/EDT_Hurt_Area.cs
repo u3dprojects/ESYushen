@@ -41,7 +41,7 @@ public class EDT_Hurt_Area : EDT_Base{
 	// 矩形宽
 	public float m_fWidth;
 
-	// 逆时针旋转角度偏移量,就是y轴值
+	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;
 
 	// 角度[0~360] 360表示圆,0就不绘制
