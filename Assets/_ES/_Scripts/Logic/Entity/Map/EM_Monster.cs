@@ -64,6 +64,22 @@ public class EM_Monster : EM_Cube {
 		return ret;
 	}
 
+	public override void OnChangePosition (Transform trsf)
+	{
+		base.OnChangePosition (trsf);
+		if (trsf == m_trsf) {
+			ToData ();
+		}
+	}
+
+	public override void OnChangeRotation (Transform trsf)
+	{
+		base.OnChangeRotation (trsf);
+		if (trsf == m_trsf) {
+			ToData ();
+		}
+	}
+
 	public void DoMakeNew(){
 		DoNew ();
 		ToData ();

@@ -59,6 +59,12 @@ public class EM_Base : EJ_Base{
 		m_gobj = null;
 	}
 
+	public virtual void OnChangePosition(Transform trsf){
+	}
+
+	public virtual void OnChangeRotation(Transform trsf){
+	}
+
 	public static void DoClearStatic ()
 	{
 		CORE_CURSOR = 0;
