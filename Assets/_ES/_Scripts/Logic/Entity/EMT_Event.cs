@@ -30,6 +30,9 @@ public class EMT_Event : EMT_HitEvent{
 
 	// 数据解析
 	public void DoInit(string json){
+		if (string.IsNullOrEmpty (json) || "null".Equals(json.Trim(),System.StringComparison.OrdinalIgnoreCase)) {
+			return;
+		}
 		JsonData m_jsonData = JsonMapper.ToObject (json);
 		if(!m_jsonData.IsArray){
 			return;
