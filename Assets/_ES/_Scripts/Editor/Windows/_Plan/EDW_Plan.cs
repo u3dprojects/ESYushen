@@ -159,6 +159,26 @@ public class EDW_Plan : EditorWindow {
 		Repaint();
 	}
 
+	void OnHierarchyChange()
+	{
+		Debug.Log("当Hierarchy视图中的任何对象发生改变时调用一次");
+	}
+
+	void OnProjectChange()
+	{
+		Debug.Log("当Project视图中的资源发生改变时调用一次");
+	}
+
+	void OnSelectionChange()
+	{
+		//当窗口出去开启状态，并且在Hierarchy视图中选择某游戏对象时调用
+		foreach(Transform t in Selection.transforms)
+		{
+			//有可能是多选，这里开启一个循环打印选中游戏对象的名称
+			Debug.Log("OnSelectionChange" + t.name);
+		}
+	}
+
 	void OnDestroy()
 	{
 		OnClearSWindow();
