@@ -86,6 +86,9 @@ public class EDW_Plan : EditorWindow {
 	System.Action call4OnUpdate;
 	System.Action<SceneView> call4OnSceneViewGUI;
 
+	// Hierarchy监听
+	// EH_Listen m_hListen = new EH_Listen();
+
 	#endregion
 
 	#region  == EditorWindow Func ===
@@ -99,11 +102,7 @@ public class EDW_Plan : EditorWindow {
 	{
 		EditorApplication.update += OnUpdate;
 		SceneView.onSceneGUIDelegate += OnSceneGUI;
-
-		// scene场景改变时候回调函数
-		// EditorApplication.hierarchyWindowChanged += OnHierarchyWindowChanged;
-
-		// EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemOnGUI;
+		EH_Listen.DoInit ();
 	}
 
 	void OnDisable()
@@ -159,28 +158,29 @@ public class EDW_Plan : EditorWindow {
 		Repaint();
 	}
 
-	void OnHierarchyChange()
-	{
-		Debug.Log("当Hierarchy视图中的任何对象发生改变时调用一次");
-	}
-
-	void OnProjectChange()
-	{
-		Debug.Log("当Project视图中的资源发生改变时调用一次");
-	}
-
-	void OnSelectionChange()
-	{
-		//当窗口出去开启状态，并且在Hierarchy视图中选择某游戏对象时调用
-		foreach(Transform t in Selection.transforms)
-		{
-			//有可能是多选，这里开启一个循环打印选中游戏对象的名称
-			Debug.Log("OnSelectionChange" + t.name);
-		}
-	}
+//	void OnHierarchyChange()
+//	{
+//		Debug.Log("当Hierarchy视图中的任何对象发生改变时调用一次");
+//	}
+//
+//	void OnProjectChange()
+//	{
+//		Debug.Log("当Project视图中的资源发生改变时调用一次");
+//	}
+//
+//	void OnSelectionChange()
+//	{
+//		//当窗口出去开启状态，并且在Hierarchy视图中选择某游戏对象时调用
+//		foreach(Transform t in Selection.transforms)
+//		{
+//			//有可能是多选，这里开启一个循环打印选中游戏对象的名称
+//			Debug.Log("OnSelectionChange" + t.name);
+//		}
+//	}
 
 	void OnDestroy()
 	{
+		EH_Listen.DoClear ();
 		OnClearSWindow();
 		OnClearEditorDelegate ();
 		DoClear();
@@ -193,8 +193,6 @@ public class EDW_Plan : EditorWindow {
 	void OnClearEditorDelegate(){
 		EditorApplication.update -= OnUpdate;
 		SceneView.onSceneGUIDelegate -= OnSceneGUI;
-		EditorApplication.hierarchyWindowChanged -= OnHierarchyWindowChanged;
-		EditorApplication.hierarchyWindowItemOnGUI -= OnHierarchyWindowItemOnGUI;
 	}
 
 	void DoInit()
@@ -265,14 +263,6 @@ public class EDW_Plan : EditorWindow {
 		{
 			this.call4OnSceneViewGUI -= callFunc;
 		}
-	}
-
-	void OnHierarchyWindowChanged(){
-		Debug.Log ("OnHierarchyWindowChanged");
-	}
-
-	void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect){
-		Debug.Log ("OnHierarchyWindowItemOnGUI , instanceID = "+instanceID);
 	}
 
 	void RecokenWH()
