@@ -40,6 +40,7 @@ public class PSM_Base<T>  where T : EM_Base{
 				int lens = m_list.Count;
 				if (lens > 0) {
 					T temp = null;
+					m_lFodeout.Clear ();
 					for (int i = 0; i < lens; i++) {
 						temp = m_list [i];
 						if (m_lFodeout.Count <= i) {

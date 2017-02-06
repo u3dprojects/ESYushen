@@ -29,18 +29,60 @@ public class EM_Base : EJ_Base{
 		m_iCursorBase = (CORE_CURSOR++);
 	}
 
+	public void NewOrReset(GameObject org = null){
+		if (org == null) {
+			DoNew ();
+		} else {
+			Reset (org);
+		}
+	}
+
+	public void Reset(GameObject org){
+		if (org == null)
+			return;
+		
+		DoClear ();
+
+		m_gobj = org;
+		m_trsf = m_gobj.transform;
+
+		OnResetGobjInfo ();
+
+		m_isOpenFoldout = true;
+		DoActiveInHierarchy ();
+	}
+
 	public void DoNew(){
 		OnNew ();
-		OnResetGobjName ();
 
-		if (this.m_gobj) {
-			this.m_iGobjInstanceID = this.m_gobj.GetInstanceID ();
-		}
+		OnResetGobjInfo ();
+
+		m_isOpenFoldout = true;
+		DoActiveInHierarchy ();
 	}
 
 	protected virtual void OnNew(){
 		m_gobj = new GameObject ();
 		m_trsf = m_gobj.transform;
+	}
+
+	void OnResetGobjInfo(){
+		OnResetGobjName ();
+		ResetGobjInstanceID ();
+
+		if (m_gobj) {
+			// 添加一个脚本作为类型判断
+			EM_Cell m_csMapCell = m_gobj.GetComponent<EM_Cell> ();
+			if (m_csMapCell == null) {
+				m_csMapCell = m_gobj.AddComponent<EM_Cell> ();
+			}
+		}
+	}
+
+	void ResetGobjInstanceID(){
+		if (this.m_gobj) {
+			this.m_iGobjInstanceID = this.m_gobj.GetInstanceID ();
+		}
 	}
 
 	protected virtual void OnResetGobjName(){
@@ -71,6 +113,16 @@ public class EM_Base : EJ_Base{
 	}
 
 	public virtual void OnChangeRotation(Transform trsf){
+	}
+
+	public void DoActiveInHierarchy(){
+		if (m_gobj) {
+			#if UNITY_EDITOR
+			UnityEditor.Selection.activeGameObject = m_gobj;
+			// UnityEditor.Selection.activeTransform = m_trsf;
+			UnityEditor.SceneView.FrameLastActiveSceneView();
+			#endif
+		}
 	}
 
 	public static void DoClearStatic ()

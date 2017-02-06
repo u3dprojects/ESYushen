@@ -37,7 +37,7 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		EG_GUIHelper.FG_BeginH ();
 		{
 			if (GUILayout.Button ("Choose Cell(选中物体)")) {
-				Selection.activeTransform = one.m_trsf;
+				one.DoActiveInHierarchy();
 			}
 		}
 		EG_GUIHelper.FG_EndH ();

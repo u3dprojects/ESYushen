@@ -31,6 +31,13 @@ public class EG_Map {
 	// 场景
 	// UnityEngine.Object m_objScene,m_objPreScene;
 
+	bool m_isInView = false;
+
+	public EG_Map(){
+		EH_Listen.call4GUI += OnChangeGobj;
+		EH_Listen.call4SelectionChange += OnSelectionChange;
+	}
+
 	public void DoInit(string path){
 		m_opt.DoInit (path, 0);
 	}
@@ -49,10 +56,14 @@ public class EG_Map {
 		EM_Monster.DoClearStatic ();
 
 		OnClearDelegate ();
+
+		m_isInView = false;
 	}
 
 	public void DrawShow()
 	{
+		m_isInView = true;
+
 		EG_GUIHelper.FEG_HeadTitMid ("MapList Excel 表",Color.cyan);
 
 		EG_GUIHelper.FEG_BeginH();
@@ -229,6 +240,7 @@ public class EG_Map {
 			if (tmpMonster == null) {
 				continue;
 			}
+
 			m_lMapCells.Add (tmpMonster);
 		}
 	}
@@ -249,6 +261,47 @@ public class EG_Map {
 		}
 
 		return JsonMapper.ToJson (jsonData);
+	}
+
+	EM_Base GetEntity(int instanceID){
+		int lens = m_lMapCells.Count;
+		if (lens <= 0) {
+			return null;
+		}
+
+		for (int i = 0; i < lens; i++) {
+			tmpCell = m_lMapCells [i];
+			if (tmpCell.m_iGobjInstanceID == instanceID)
+				return tmpCell;
+		}
+		return null;
+	}
+
+	void RefreshFoldOut(params Transform[] trsfs){
+		int lens = m_lMapCells.Count;
+		if (lens <= 0) {
+			return;
+		}
+
+		for (int i = 0; i < lens; i++) {
+			tmpCell = m_lMapCells [i];
+			tmpCell.m_isOpenFoldout = _IsHas(tmpCell.m_trsf,trsfs);
+		}
+	}
+
+	bool _IsHas (Transform trsfCur, params Transform[] org){
+		if (org == null || org.Length <= 0)
+			return false;
+		int lens = org.Length;
+		Transform trsfTemp = null;
+		bool isHas = false;
+		for (int i = 0; i < lens; i++) {
+			trsfTemp = org [i];
+			isHas = (trsfTemp == trsfCur);
+			if (isHas)
+				break;
+		}
+		return isHas;
 	}
 
 	public List<EM_Monster> GetLMonsters(){
@@ -314,7 +367,24 @@ public class EG_Map {
 	void _NewMonster(){
 		EM_Monster one = EM_Monster.NewEntity<EM_Monster> ();
 		one.DoMakeNew ();
-		one.m_isOpenFoldout = true;
+		m_lMapCells.Add (one);
+	}
+
+	void _NewMonster(int instanceID, GameObject gobj){
+		if (gobj == null)
+			return;
+		
+		EM_Base one = GetEntity (instanceID);
+		if (one != null) {
+			return;
+		}
+
+		if (gobj.GetComponent<EM_Cell>() == null) {
+			return;
+		}
+
+		one = EM_Base.NewEntity<EM_Monster> ();
+		one.Reset (gobj);
 		m_lMapCells.Add (one);
 	}
 
@@ -339,6 +409,35 @@ public class EG_Map {
 	void OnClearDelegate(){
 		TransformEditor.onChangePosition -= OnChangePosition;
 		TransformEditor.onChangeRotation -= OnChangeRotation;
+	}
+
+	void OnChangeGobj (int instanceID, int types)
+	{
+		if (!m_isInView)
+			return;
+		
+		switch (types) {
+		case 1:
+			Object obj = EditorUtility.InstanceIDToObject (instanceID);
+			if (obj != null) {
+				_NewMonster (instanceID,obj as GameObject);
+			}
+			break;
+		case 2:
+			tmpCell = GetEntity (instanceID);
+			if (tmpCell != null) {
+				tmpCell.m_gobj = null;
+				RmMapCell (tmpCell);
+			}
+			break;
+		}
+	}
+
+	void OnSelectionChange(params Transform[] trsf){
+		if (!m_isInView)
+			return;
+		
+		RefreshFoldOut (trsf);
 	}
 	#endregion
 
