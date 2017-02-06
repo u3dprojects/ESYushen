@@ -2,6 +2,12 @@
 using System.Collections;
 using LitJson;
 
+/// <summary>
+/// 类名 : 地图基础类之怪兽
+/// 作者 : Canyon
+/// 日期 : 2017-02-04 09:36
+/// 功能 : 主要是处理怪兽信息等
+/// </summary>
 public class EM_Monster : EM_Cube {
 
 	// 对象的唯一标识 计数器
