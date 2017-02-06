@@ -19,6 +19,10 @@ public class EM_Base : EJ_Base{
 	public Transform m_trsf;
 	public GameObject m_gobj;
 
+	public int m_iGobjInstanceID;
+	// 绘制的时候是否打开了视图Foldout
+	public bool m_isOpenFoldout;
+
 	int m_iCursorBase = 0;
 
 	public EM_Base() : base(){
@@ -28,6 +32,10 @@ public class EM_Base : EJ_Base{
 	public void DoNew(){
 		OnNew ();
 		OnResetGobjName ();
+
+		if (this.m_gobj) {
+			this.m_iGobjInstanceID = this.m_gobj.GetInstanceID ();
+		}
 	}
 
 	protected virtual void OnNew(){

@@ -298,11 +298,10 @@ public class EG_Map {
 	PSM_Monster m_psMonster;
 
 	void _DrawBornMonster(){
-
-		OnReInitDelegate ();
-
 		if (m_psMonster == null) {
 			m_psMonster = new PSM_Monster ("刷怪点", _NewMonster, RmMapCell);
+
+			OnReInitDelegate ();
 		}
 
 		ms_entity.strMonsters = ToJsonString ();
@@ -315,6 +314,7 @@ public class EG_Map {
 	void _NewMonster(){
 		EM_Monster one = EM_Monster.NewEntity<EM_Monster> ();
 		one.DoMakeNew ();
+		one.m_isOpenFoldout = true;
 		m_lMapCells.Add (one);
 	}
 

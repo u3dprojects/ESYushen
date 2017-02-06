@@ -39,11 +39,13 @@ public class PSM_Base<T>  where T : EM_Base{
 				// 中
 				int lens = m_list.Count;
 				if (lens > 0) {
+					T temp = null;
 					for (int i = 0; i < lens; i++) {
+						temp = m_list [i];
 						if (m_lFodeout.Count <= i) {
-							m_lFodeout.Add (false);
+							m_lFodeout.Add (temp.m_isOpenFoldout);
 						}
-						_DrawOneCell (i, m_list [i]);
+						_DrawOneCell (i, temp);
 					}
 				} else {
 					m_lFodeout.Clear();
@@ -61,6 +63,9 @@ public class PSM_Base<T>  where T : EM_Base{
 			EG_GUIHelper.FEG_BeginH();
 			{
 				m_lFodeout[index] = EditorGUILayout.Foldout(m_lFodeout[index], "元素 - " + one.m_sGName);
+
+				one.m_isOpenFoldout = m_lFodeout [index];
+
 				GUI.color = Color.red;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(50)))
 				{
