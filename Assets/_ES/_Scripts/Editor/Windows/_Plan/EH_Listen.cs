@@ -94,6 +94,7 @@ public static class EH_Listen {
 		if (obj != null) {
 			if (!map.ContainsKey (instanceID)) {
 				map [instanceID] = ListenType.Add;
+				isChanged = true;
 			}
 		}
 
