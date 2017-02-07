@@ -18,7 +18,7 @@ public class EM_Monster : EM_Cube {
 	public int m_iID;
 
 	// 出生点
-	public Vector3 m_v3Pos = Vector3.zero;
+	public Vector3 m_v3Pos = new Vector3(0,3,0);
 
 	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;

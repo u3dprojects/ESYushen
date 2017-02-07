@@ -30,14 +30,16 @@ public class PSM_Base<T>  where T : EM_Base{
 	void _DrawUnitCells(){
 		EG_GUIHelper.FG_BeginVAsArea();
 		{
+
+			int lens = m_list.Count;
+
 			{
 				// 上
-				EG_GUIHelper.FEG_Head(m_title,true,this.m_callNew);
+				EG_GUIHelper.FEG_Head(m_title + " - 总数 = [" + lens + "]",true,this.m_callNew);
 			}
 
 			{
 				// 中
-				int lens = m_list.Count;
 				if (lens > 0) {
 					T temp = null;
 					m_lFodeout.Clear ();
