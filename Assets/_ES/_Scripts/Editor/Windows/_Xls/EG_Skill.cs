@@ -175,6 +175,11 @@ public class EG_Skill {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
+		EG_GUIHelper.FEG_BeginH();
+		ms_enity.MoveSpeed = EditorGUILayout.FloatField ("移动速度百分比(1正常,0不移动):",ms_enity.MoveSpeed);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
 		// 绘制技能事件
 		EG_GUIHelper.FG_BeginVAsArea();
 		{

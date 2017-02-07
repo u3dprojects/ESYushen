@@ -36,6 +36,8 @@ public class EN_Skill : EN_BaseXls{
 	public int CanMove;
 	public int NextSkillID;
 
+	public float MoveSpeed;
+
 	public EN_Skill():base(){
 	}
 
@@ -66,7 +68,9 @@ public class EN_Skill : EN_BaseXls{
                 this.PostCastTiming,
 
 				this.CanMove,
-				this.NextSkillID
+				this.NextSkillID,
+
+				this.MoveSpeed
             };
             return ret;
         }
@@ -101,6 +105,8 @@ public class EN_Skill : EN_BaseXls{
 
 		this.CanMove = sheet.GetInt(rowIndex, colIndex++);
 		this.NextSkillID = sheet.GetInt(rowIndex, colIndex++);
+
+		this.MoveSpeed = sheet.GetFloat(rowIndex, colIndex++);
 	}
 
 	public override void DoClone (EN_BaseXls org)
@@ -136,5 +142,7 @@ public class EN_Skill : EN_BaseXls{
 
 		this.CanMove = tmp.CanMove;
 		this.NextSkillID = tmp.NextSkillID;
+
+		this.MoveSpeed = tmp.MoveSpeed;
 	}
 }
