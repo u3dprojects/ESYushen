@@ -54,6 +54,7 @@ public class PS_MidLeft{
     float max_speed = 3.0f;
 
     // 动作进度
+	bool isCanCanCtrlProgress = false;
     bool isCtrlProgress = false;
     float cur_progress = 0.0f;
     float min_progress = 0.0f;
@@ -278,16 +279,17 @@ public class PS_MidLeft{
         EG_GUIHelper.FEG_BeginH();
         {
             EG_GUIHelper.FEG_BeginToggleGroup("控制动作进度??", ref isCtrlProgress);
-            
+			isCanCanCtrlProgress = isCtrlProgress;
             float cur_progress01 = cur_progress / max_progress;
-            if (isCtrlProgress)
-            {
-                ReckonProgress(cur_progress01);
-                m_curAni.DoPlayCurr(cur_progress01);
-            }
-            else {
-                ReckonProgress(m_curAni.normalizedTime);
-            }
+			if (isCanCanCtrlProgress) {
+				if (isCtrlProgress) {
+					ReckonProgress (cur_progress01);
+					m_curAni.isCompletedRound = false;
+					m_curAni.DoPlayCurr (cur_progress01);
+				} else {
+					ReckonProgress (m_curAni.normalizedTime);
+				}
+			}
 
             GUIStyle style = EditorStyles.label;
             style.alignment = TextAnchor.MiddleRight;
@@ -471,6 +473,8 @@ public class PS_MidLeft{
 
         isRunnging = true;
         isPauseing = false;
+		isCtrlProgress = false;
+		isCanCanCtrlProgress = true;
 
 		m_ePSEvents.DoStart();
     }
@@ -488,7 +492,10 @@ public class PS_MidLeft{
 
     void DoStop() {
         isRunnging = false;
-        trsfEntity.position = Vector3.zero;
+		isCtrlProgress = false;
+		isCanCanCtrlProgress = false;
+		if(trsfEntity != null)
+			trsfEntity.position = Vector3.zero;
 		m_ePSEvents.DoEnd();
     }
 }

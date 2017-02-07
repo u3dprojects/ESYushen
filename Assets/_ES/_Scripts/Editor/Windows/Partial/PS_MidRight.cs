@@ -23,9 +23,9 @@ public partial class PS_MidRight{
 
     Vector2 scrollPos;
 	float topDescH = 20;
-	float botBtnH = 80;
+	float botBtnH = 130;
 
-    float minScrollH = 260;
+    float minScrollH = 200;
     float curScrollH = 260;
     float minWidth = 440;
     float curWidth = 0;
@@ -35,6 +35,13 @@ public partial class PS_MidRight{
 
     // 技能属性
 	EG_Skill m_egSkill = new EG_Skill ();
+
+	// 动作进度
+	bool isCanCanCtrlProgress = false;
+	bool isCtrlProgress = false;
+	float cur_progress = 0.0f;
+	float min_progress = 0.0f;
+	float max_progress = 1.0f;
 
 	// 速度控制
 	float cur_speed = 1.0f;
@@ -119,6 +126,8 @@ public partial class PS_MidRight{
                 EG_GUIHelper.FEG_EndScroll();
 
 				_DrawAniCurSpeed();
+
+				_DrawCtrlAniStateProgress ();
 
 				_DrawOptBtns();
 
@@ -212,6 +221,54 @@ public partial class PS_MidRight{
 		EG_GUIHelper.FG_Space (8);
 	}
 
+	void OnResetProgress()
+	{
+		max_progress = m_curAni.CurLens;
+		max_progress = max_progress > 0 ? max_progress : 1.0f;
+	}
+
+	void ReckonProgress(float normalizedTime)
+	{
+		cur_progress = (normalizedTime % 1);
+		cur_progress = cur_progress * max_progress;
+		// cur_progress = EDW_Skill.Round(cur_progress, 6);
+	}
+
+	void _DrawCtrlAniStateProgress()
+	{
+		EG_GUIHelper.FEG_BeginH();
+		{
+			EG_GUIHelper.FEG_BeginToggleGroup("控制动作进度??", ref isCtrlProgress);
+			isCanCanCtrlProgress = isCtrlProgress;
+			float cur_progress01 = cur_progress / max_progress;
+			if (isCanCanCtrlProgress) {
+				if (isCtrlProgress) {
+					ReckonProgress (cur_progress01);
+					m_curAni.isCompletedRound = false;
+					m_curAni.DoPlayCurr (cur_progress01);
+				} else {
+					ReckonProgress (m_curAni.normalizedTime);
+				}
+			}
+
+			GUIStyle style = EditorStyles.label;
+			style.alignment = TextAnchor.MiddleRight;
+			EditorGUILayout.LabelField("当前动作进度: " + cur_progress01, style);
+
+			EG_GUIHelper.FG_Space(3);
+
+			cur_progress = EditorGUILayout.Slider(cur_progress, min_progress, max_progress);
+			EG_GUIHelper.FEG_EndToggleGroup();
+
+			//GUIStyle style = new GUIStyle();
+			//style.alignment = TextAnchor.MiddleRight;
+			//style.normal.textColor = Color.yellow;
+			//EditorGUILayout.LabelField("(勾选时，才可控制 [当前进度]！！！)", style);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space (8);
+	}
+
 	void _DrawOptBtns()
 	{
 		EG_GUIHelper.FEG_BeginH();
@@ -243,7 +300,7 @@ public partial class PS_MidRight{
 	}
 
 	void OnUpdate(){
-		if (!isRunnging || isPauseing)
+		if (!isRunnging || isPauseing || isCtrlProgress)
 			return;
 
 		if (this.m_curAni == null)
@@ -261,10 +318,13 @@ public partial class PS_MidRight{
 
 		m_curTime.DoStart ();
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
+		OnResetProgress ();
 		this.m_curAni.DoStart();
 
 		isRunnging = true;
 		isPauseing = false;
+		isCtrlProgress = false;
+		isCanCanCtrlProgress = true;
 
 		m_egSkill.m_ePSEvents.DoStart();
 	}
@@ -284,6 +344,8 @@ public partial class PS_MidRight{
 
 	void DoStop() {
 		isRunnging = false;
+		isCtrlProgress = false;
+		isCanCanCtrlProgress = false;
 		m_egSkill.m_ePSEvents.DoEnd();
 	}
 }

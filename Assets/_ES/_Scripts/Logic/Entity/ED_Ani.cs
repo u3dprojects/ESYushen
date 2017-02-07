@@ -70,7 +70,7 @@ public class ED_Ani : ED_AniBase {
     bool isFinishedOneWheel = false;
 
     // 完成了播放(包括循环播放次数)
-    bool isCompletedRound = false;
+    public bool isCompletedRound = false;
 
     // 可循环次数
 	public int m_LoopTimes;
