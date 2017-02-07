@@ -7,6 +7,7 @@ using System.Collections;
 /// 日期 : 2017-02-03 17:06
 /// 功能 : 主要是添加怪兽刷出信息等
 /// </summary>
+[System.Serializable]
 public class EM_Cube : EM_Base{
 
 	// 对象的唯一标识 计数器
@@ -14,7 +15,8 @@ public class EM_Cube : EM_Base{
 
 	int m_iCoreCursorCube = 0;
 
-	protected Material m_matCub;
+	MeshRenderer m_meshRender;
+	Material m_matCub;
 
 	// 区域颜色
 	// m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.5f);
@@ -30,12 +32,17 @@ public class EM_Cube : EM_Base{
 		m_gobj =  GameObject.CreatePrimitive (PrimitiveType.Cube);
 		m_trsf = m_gobj.transform;
 
-		MeshRenderer mRender = m_gobj.GetComponent<MeshRenderer> ();
+		m_meshRender = m_gobj.GetComponent<MeshRenderer> ();
 		m_matCub = new Material (Shader.Find ("Diffuse"));
-		if (m_matCub.HasProperty ("_Color")) {
+		m_meshRender.material = m_matCub;
+
+		OnResetColor ();
+	}
+
+	public void OnResetColor(){
+		if (m_matCub != null && m_matCub.HasProperty ("_Color")) {
 			m_matCub.SetColor ("_Color", this.m_cAreaColor);
 		}
-		mRender.material = m_matCub;
 	}
 
 	protected override void OnResetGobjName ()
@@ -46,7 +53,40 @@ public class EM_Cube : EM_Base{
 		ResetGobjName();
 	}
 
-	public static void DoClearStatic ()
+	protected override void OnClone (EM_Base org)
+	{
+		if (org == null)
+			return;
+		
+		base.OnClone (org);
+
+		if (org is EM_Cube) {
+			EM_Cube tmp = (EM_Cube)org;
+			m_cAreaColor = tmp.m_cAreaColor;
+
+			m_meshRender = m_gobj.GetComponent<MeshRenderer> ();
+			m_matCub = new Material (Shader.Find ("Diffuse"));
+			m_meshRender.material = m_matCub;
+
+			OnResetColor ();
+		}
+	}
+
+	protected override void OnClear ()
+	{
+		base.OnClear ();
+		if (m_meshRender != null) {
+			m_meshRender.material = null;
+			m_meshRender = null;
+		}
+
+		if (m_matCub != null) {
+			Material.DestroyImmediate (m_matCub);
+			m_matCub = null;
+		}
+	}
+
+	new public static void DoClearStatic ()
 	{
 		EM_Base.DoClearStatic ();
 

@@ -17,10 +17,12 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 	{
 		base._DrawOneAttrs (one);
 
+		one.OnResetColor ();
+
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("怪物ID:", GUILayout.Width(80));
-			one.m_iID = EditorGUILayout.IntField (one.m_iID);
+			one.m_iUnqID = EditorGUILayout.IntField (one.m_iUnqID);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);

@@ -135,9 +135,9 @@ public static class EH_Listen {
 				map.Remove (instanceID);
 			} else {
 				types = (ListenType)map [instanceID];
+				map [instanceID] = ListenType.Default;
 				if (types == ListenType.Add) {
 					ExcuteCallGUI (instanceID, 1);
-					map [instanceID] = ListenType.Default;
 				}
 			}
 		}

@@ -9,7 +9,8 @@ using System.Collections.Generic;
 /// 日期 : 2017-02-04 09:36
 /// 功能 : 主要是处理Json <---> string 之间的转换
 /// </summary>
-public class EJ_Base {
+[System.Serializable]
+public class EJ_Base : System.Object{
 
 	public EJ_Base(){}
 

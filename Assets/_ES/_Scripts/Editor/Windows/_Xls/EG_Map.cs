@@ -188,6 +188,8 @@ public class EG_Map {
 	{
 		if(entity != null)
 		{
+			EM_Monster.DoClearStatic ();
+
 			ms_entity.DoClone (entity);
 
 			if(!string.IsNullOrEmpty(ms_entity.BgMusic)){
@@ -381,19 +383,22 @@ public class EG_Map {
 	void _NewMonster(int instanceID, GameObject gobj){
 		if (gobj == null)
 			return;
-		
-		EM_Base one = GetEntity (instanceID);
-		if (one != null) {
-			return;
-		}
 
 		if (gobj.GetComponent<EM_Cell>() == null) {
 			return;
 		}
 
-		one = EM_Base.NewEntity<EM_Monster> ();
+		EM_Base one = GetEntity (instanceID);
+		if (one != null && gobj == one.m_gobj) {
+			return;
+		}
+
+		if (one == null) {
+			one = EM_Base.NewEntity<EM_Monster> ();
+			m_lMapCells.Add (one);
+		}
+
 		one.Reset (gobj);
-		m_lMapCells.Add (one);
 	}
 
 	void OnChangePosition(Transform trsf){

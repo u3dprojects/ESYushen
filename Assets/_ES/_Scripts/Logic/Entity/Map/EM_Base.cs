@@ -8,22 +8,36 @@ using LitJson;
 /// 日期 : 2017-02-03 17:06
 /// 功能 : 主要是添加怪兽刷出信息等
 /// </summary>
+[System.Serializable]
 public class EM_Base : EJ_Base{
 
 	// 对象的唯一标识 计数器
 	static int CORE_CURSOR = 0;
 
 	// 前缀
+	[System.NonSerialized]
 	public string m_sPrefixName = "";
+
+	[System.NonSerialized]
 	public string m_sGName;
+
+	[System.NonSerialized]
 	public Transform m_trsf;
+
+	[System.NonSerialized]
 	public GameObject m_gobj;
 
+	[System.NonSerialized]
 	public int m_iGobjInstanceID;
+
 	// 绘制的时候是否打开了视图Foldout
 	public bool m_isOpenFoldout;
 
 	int m_iCursorBase = 0;
+
+	// 类型脚本
+	[System.NonSerialized]
+	public EM_Cell m_csCell;
 
 	public EM_Base() : base(){
 		m_iCursorBase = (CORE_CURSOR++);
@@ -40,16 +54,23 @@ public class EM_Base : EJ_Base{
 	public void Reset(GameObject org){
 		if (org == null)
 			return;
-		
-		DoClear ();
+
+		if (m_gobj != null && org != m_gobj) {
+			DoClear ();
+		}
 
 		m_gobj = org;
-		m_trsf = m_gobj.transform;
+		m_trsf = org.transform;
+		EM_Cell csCell = org.GetComponent<EM_Cell> ();
+		OnClone (csCell.m_entity);
 
 		OnResetGobjInfo ();
 
 		m_isOpenFoldout = true;
 		DoActiveInHierarchy ();
+	}
+
+	protected virtual void OnClone(EM_Base org){
 	}
 
 	public void DoNew(){
@@ -69,12 +90,15 @@ public class EM_Base : EJ_Base{
 	void OnResetGobjInfo(){
 		OnResetGobjName ();
 		ResetGobjInstanceID ();
+		ResetCShape ();
+	}
 
-		if (m_gobj) {
+	protected virtual void ResetCShape(){
+		if (m_gobj != null && m_csCell == null) {
 			// 添加一个脚本作为类型判断
-			EM_Cell m_csMapCell = m_gobj.GetComponent<EM_Cell> ();
-			if (m_csMapCell == null) {
-				m_csMapCell = m_gobj.AddComponent<EM_Cell> ();
+			m_csCell = m_gobj.GetComponent<EM_Cell> ();
+			if (m_csCell == null) {
+				m_csCell = m_gobj.AddComponent<EM_Cell> ();
 			}
 		}
 	}

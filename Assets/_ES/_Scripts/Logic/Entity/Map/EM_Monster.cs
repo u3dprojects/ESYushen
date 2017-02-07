@@ -8,6 +8,7 @@ using LitJson;
 /// 日期 : 2017-02-04 09:36
 /// 功能 : 主要是处理怪兽信息等
 /// </summary>
+[System.Serializable]
 public class EM_Monster : EM_Cube {
 
 	// 对象的唯一标识 计数器
@@ -15,7 +16,7 @@ public class EM_Monster : EM_Cube {
 	int m_iCoreCursorMonster = 0;
 
 	// monsterID 数据表结构里面的唯一标识ID
-	public int m_iID;
+	public int m_iUnqID;
 
 	// 出生点
 	public Vector3 m_v3Pos = new Vector3(0,3,0);
@@ -34,7 +35,7 @@ public class EM_Monster : EM_Cube {
 	protected override bool OnInit ()
 	{
 		if (m_jdOrg != null) {
-			this.m_iID = (int)m_jdOrg ["monsterID"];
+			this.m_iUnqID = (int)m_jdOrg ["monsterID"];
 			this.m_fRotation = float.Parse (m_jdOrg ["rotateDegree"].ToString ());
 			this.m_fReliveInv = float.Parse (m_jdOrg ["reliveInterval"].ToString ());
 			m_v3Pos.x = float.Parse (m_jdOrg ["positionX"].ToString ());
@@ -57,11 +58,11 @@ public class EM_Monster : EM_Cube {
 
 	public override JsonData ToJsonData ()
 	{
-		if (this.m_iID <= 0)
+		if (this.m_iUnqID <= 0)
 			return null;
 
 		JsonData ret = new JsonData ();
-		ret ["monsterID"] = this.m_iID;
+		ret ["monsterID"] = this.m_iUnqID;
 		ret ["rotateDegree"] = Round2D(this.m_fRotation,2);
 		ret ["reliveInterval"] = Round2D(this.m_fReliveInv,2);
 		ret ["positionX"] = Round2D(this.m_v3Pos.x,2);
@@ -86,6 +87,30 @@ public class EM_Monster : EM_Cube {
 		}
 	}
 
+	protected override void ResetCShape ()
+	{
+		base.ResetCShape ();
+		if (m_csCell != null) {
+			m_csCell.m_entity = this;
+		}
+	}
+
+	protected override void OnClone (EM_Base org)
+	{
+		if(org == null)
+		{
+			return;
+		}
+		base.OnClone (org);
+		if(org is EM_Monster){
+			EM_Monster tmp = (EM_Monster)org;
+			this.m_fReliveInv = tmp.m_fReliveInv;
+			this.m_fRotation = tmp.m_fRotation;
+			this.m_iUnqID = tmp.m_iUnqID;
+			this.m_v3Pos = tmp.m_v3Pos;
+		}
+	}
+
 	public void DoMakeNew(){
 		DoNew ();
 		ToData ();
@@ -103,7 +128,7 @@ public class EM_Monster : EM_Cube {
 		m_trsf.eulerAngles = v3Rotation;
 	}
 
-	public static void DoClearStatic ()
+	new public static void DoClearStatic ()
 	{
 		EM_Cube.DoClearStatic ();
 
