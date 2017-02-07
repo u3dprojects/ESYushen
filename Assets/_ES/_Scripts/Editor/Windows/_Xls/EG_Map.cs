@@ -156,6 +156,7 @@ public class EG_Map {
 	void OpenScene(string sceneName){
 		string path = "";
 		string path2 = "";
+		string path3 = "";
 		if (!string.IsNullOrEmpty (sceneName)) {
 			// 在Assets下面没有任何文件夹包含的时候可以调用,(添加的到BuildSetting里面的时候，调用无效，正确的调用方式不明？？)
 			Scene scene = SceneManager.GetSceneByName (sceneName);
@@ -165,12 +166,19 @@ public class EG_Map {
 
 				path2 = "Assets\\PackResources\\Arts\\Test\\Map\\"+sceneName + ".unity";
 				bool isExists = File.Exists(path2);
-				if (!isExists) {
-					Debug.LogWarning ("场景路径path = ["+path2+"],即为场景名字 = [" + sceneName + "]的场景不存在！！！");
-					return;
+				if (isExists) {
+					path = path2;
+				} else {
+					Debug.LogWarning ("场景路径path = [" + path2 + "],不存在！！！");
+					path3 = "Assets\\PackResources\\Arts\\Map\\"+sceneName + ".unity";
+					isExists = File.Exists(path3);
+					if (isExists) {
+						path = path3;	
+					} else {
+						Debug.LogWarning ("场景路径path = [" + path3 + "],不存在！！即为场景名字 = [" + sceneName + "]的场景不存在！！！");
+						return;
+					}
 				}
-
-				path = path2;
 			}
 			UnityEditor.SceneManagement.EditorSceneManager.OpenScene (path);
 		}
