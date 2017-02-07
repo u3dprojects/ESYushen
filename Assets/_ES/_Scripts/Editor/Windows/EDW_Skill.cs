@@ -14,6 +14,9 @@ public class EDW_Skill : EditorWindow
 
     static protected EDW_Skill vwWindow = null;
 
+	static public string MSG_Stop_Left = "Stop_Left";
+	static public string MSG_Stop_Right = "Stop_Right";
+
     // 窗体宽高
     static public float width = 1010;
     static public float height = 450;

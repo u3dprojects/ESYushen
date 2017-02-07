@@ -50,6 +50,14 @@ public partial class PS_MidRight{
 
     #endregion
 
+	public PS_MidRight(){
+		Messenger.AddListener ( EDW_Skill.MSG_Stop_Right, DoStop);
+	}
+
+	~ PS_MidRight(){
+		Messenger.AddListener ( EDW_Skill.MSG_Stop_Right, DoStop);
+	}
+
     public void DoInit(EDW_Skill org)
     {
         this.m_wSkill = org;
@@ -249,6 +257,8 @@ public partial class PS_MidRight{
 	}
 
 	void DoPlay() {
+		Messenger.Invoke (EDW_Skill.MSG_Stop_Left);
+
 		m_curTime.DoStart ();
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
 		this.m_curAni.DoStart();
