@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 /// <summary>
 /// 类名 : excel表 <--> Class实例 转换类
@@ -15,6 +16,12 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 	List<T> list = null;
 
 	public bool isInitSuccessed = false;
+
+	string m_sPath = "";
+
+	public string folder = "";
+	public string fileName = "";
+	public string suffix = "";
 
 	public void DoInit(string path, int sheetIndex)
 	{
@@ -41,6 +48,13 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 			}
 
 			isInitSuccessed = true;
+
+			m_sPath = path;
+
+			folder = Path.GetDirectoryName(m_sPath);
+			fileName = Path.GetFileNameWithoutExtension(m_sPath);
+			suffix = Path.GetExtension(m_sPath);
+			suffix = suffix.Replace(".", "");
 		}
 		catch (System.Exception ex)
 		{

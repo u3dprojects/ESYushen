@@ -25,33 +25,40 @@ public class EN_OptSkill
 
     private EN_OptSkill() { }
 
-	EN_OptBaseXls<EN_Skill> m_eOptXls = new EN_OptBaseXls<EN_Skill>();
+	EN_OptBaseXls<EN_Skill> _m_eOptXls = new EN_OptBaseXls<EN_Skill>();
+	EN_OptBaseXls<EN_Skill> m_eOptXls{
+		get{
+			return _m_eOptXls;
+		}
+	}
 
-    public bool isInitSuccessed = false;
+	public bool isInitSuccessed{
+		get{
+			return _m_eOptXls.isInitSuccessed;
+		}
+	}
 
     public void DoInit(string path, int sheetIndex)
     {
-		m_eOptXls.DoInit (path, sheetIndex);
-		isInitSuccessed = m_eOptXls.isInitSuccessed;
+		_m_eOptXls.DoInit (path, sheetIndex);
     }
 
     public EN_Skill GetEnSkill(int ID)
     {
-		return m_eOptXls.GetEntity (ID);
+		return _m_eOptXls.GetEntity (ID);
     }
 
     public EN_Skill GetOrNew(int ID)
     {
-		return m_eOptXls.GetOrNew(ID);
+		return _m_eOptXls.GetOrNew(ID);
     }
 
     public void Save(string savePath)
     {
-		m_eOptXls.Save (savePath);
+		_m_eOptXls.Save (savePath);
     }
 
 	public void DoClear(){
-		m_eOptXls.DoClear ();
-		isInitSuccessed = false;
+		_m_eOptXls.DoClear ();
 	}
 }

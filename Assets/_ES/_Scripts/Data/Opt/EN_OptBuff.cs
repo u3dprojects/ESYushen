@@ -25,34 +25,41 @@ public class EN_OptBuff {
 
 	private EN_OptBuff() { }
 
-	EN_OptBaseXls<EN_Buff> m_eOptXls = new EN_OptBaseXls<EN_Buff>();
+	EN_OptBaseXls<EN_Buff> _m_eOptXls = new EN_OptBaseXls<EN_Buff>();
+	public EN_OptBaseXls<EN_Buff> m_eOptXls{
+		get{
+			return _m_eOptXls;
+		}
+	}
 
-	public bool isInitSuccessed = false;
+	public bool isInitSuccessed{
+		get{
+			return _m_eOptXls.isInitSuccessed;
+		}
+	}
 
 	public void DoInit(string path, int sheetIndex)
 	{
-		m_eOptXls.DoInit (path, sheetIndex);
-		isInitSuccessed = m_eOptXls.isInitSuccessed;
+		_m_eOptXls.DoInit (path, sheetIndex);
 	}
 
 	public EN_Buff GetEntity(int ID)
 	{
-		return m_eOptXls.GetEntity (ID);
+		return _m_eOptXls.GetEntity (ID);
 	}
 
 	public EN_Buff GetOrNew(int ID)
 	{
-		return m_eOptXls.GetOrNew(ID);
+		return _m_eOptXls.GetOrNew(ID);
 	}
 
 	public void Save(string savePath)
 	{
-		m_eOptXls.Save (savePath);
+		_m_eOptXls.Save (savePath);
 	}
 
 	public void DoClear(){
-		m_eOptXls.DoClear ();
-		isInitSuccessed = false;
+		_m_eOptXls.DoClear ();
 	}
 
 }
