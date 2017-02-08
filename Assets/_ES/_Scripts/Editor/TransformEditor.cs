@@ -2,78 +2,125 @@
 using System.Collections;
 using UnityEditor;
 using System.Reflection;
+using System.Collections.Generic;
 
-[CustomEditor(typeof(Transform))]
-public class TransformEditor :Editor {
+/// <summary>
+/// 类名 : Transform 消息监听
+/// 作者 : yusong
+/// 出处 : http://www.xuanyusong.com/archives/4018
+/// 修改 : Canyon
+/// 日期 : 2017-02-06 10:10
+/// 功能 : 处理多个选中对象的处理
+/// </summary>
+[CanEditMultipleObjects]
+[CustomEditor (typeof(Transform), true)]
+public class TransformEditor :Editor
+{
 
-	static public System.Action<Transform> onChangePosition;
-	static public System.Action<Transform> onChangeRotation;
-	static public System.Action<Transform> onChangeScale;
+	static public System.Action<Transform> onChangeTransform;
 
 	[InitializeOnLoadMethod]
-	static void IInitializeOnLoadMethod()
+	static void IInitializeOnLoadMethod ()
 	{
-		TransformEditor.onChangePosition = delegate(Transform transform){
+		TransformEditor.onChangeTransform = delegate(Transform transform) {
 			// Debug.Log(string.Format("transform = {0}  positon = {1}",transform.name,transform.localPosition));
-		};
-
-		TransformEditor.onChangeRotation = delegate(Transform transform) {
-			// Debug.Log(string.Format("transform = {0}   rotation = {1}",transform.name,transform.localRotation.eulerAngles));
-		};
-
-		TransformEditor.onChangeScale = delegate(Transform transform) {
-			// Debug.Log(string.Format("transform = {0}   scale = {1}",transform.name,transform.localScale));
 		};
 	}
 
-	private Editor editor;
-	private Transform m_trsf;
-	private Vector3 startPostion =Vector3.zero;
-	private Vector3 startRotation =Vector3.zero;
-	private Vector3 startScale =Vector3.zero;
+	static Hashtable mapIDS = new Hashtable ();
 
-	void OnEnable()
+	Editor editor;
+	ArrayList list = new ArrayList ();
+	ArrayList rmList = new ArrayList ();
+
+	void OnEnable ()
 	{
-		editor = Editor.CreateEditor(target, Assembly.GetAssembly(typeof(Editor)).GetType("UnityEditor.TransformInspector",true));
+		editor = Editor.CreateEditor (target, Assembly.GetAssembly (typeof(Editor)).GetType ("UnityEditor.TransformInspector", true));
 
-		m_trsf = target as Transform;
-		startPostion = m_trsf.localPosition;
-		startRotation = m_trsf.localRotation.eulerAngles;
-		startScale = m_trsf.localScale;
+		Transform m_trsf = target as Transform;
+		int id = m_trsf.GetInstanceID ();
+		mapIDS [id] = m_trsf;
+	}
+
+	void OnDisable(){
+		list.Clear ();
+		rmList.Clear ();
+
+		list.AddRange(mapIDS.Keys);
+		int lens = list.Count;
+		bool isHas = false;
+		object key = null;
+
+		for (int i = 0; i < lens; i++) {
+			key = list [i];
+			isHas = IsInTargets ((Transform)mapIDS [key]);
+			if (!isHas) {
+				rmList.Add (list [i]);
+			}
+		}
+
+		lens = rmList.Count;
+		for (int i = 0; i < lens; i++) {
+			key = rmList [i];
+			mapIDS.Remove (key);
+		}
 	}
 
 	public override void OnInspectorGUI ()
 	{
-		editor.OnInspectorGUI();
-		if(GUI.changed || m_trsf.hasChanged)
-		{
-
-			if(startPostion != m_trsf.localPosition)
-			{
-				if(onChangePosition != null)
-					onChangePosition(m_trsf);
-			}
-
-			if(startRotation !=  m_trsf.localRotation.eulerAngles)
-			{
-				if(onChangeRotation != null)
-					onChangeRotation(m_trsf);
-			}
-
-			if(startScale !=  m_trsf.localScale)
-			{
-				if(onChangeScale != null)
-					onChangeScale(m_trsf);
-			}
-
-			startPostion = m_trsf.localPosition;
-			startRotation = m_trsf.localRotation.eulerAngles;
-			startScale = m_trsf.localScale;
-
-			m_trsf.hasChanged = false;
-		}
-
+		editor.OnInspectorGUI ();
+		SyncAll (target);
+		// Repaint ();
 	}
 
+	bool IsInTargets(Object org){
+		Object[] objs = targets;
+		if (objs == null || objs.Length <= 0) {
+			return false;
+		}
 
+		int lens = objs.Length;
+		Object obj = null;
+		for (int i = 0; i < lens; i++) {
+			obj = objs [i];
+			if (org == obj) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void SyncOne(Object objTarget,Object orgActive){
+		Transform m_trsfTemp = objTarget as Transform;
+		Transform org = orgActive as Transform;
+		if (m_trsfTemp != org) {
+			m_trsfTemp.localPosition = org.localPosition;
+			m_trsfTemp.localScale = org.localScale;
+			m_trsfTemp.localEulerAngles = org.localEulerAngles;
+
+			m_trsfTemp.hasChanged = true;
+		}
+
+		if (GUI.changed || m_trsfTemp.hasChanged) {
+			
+			if (onChangeTransform != null)
+				onChangeTransform (m_trsfTemp);
+			
+			m_trsfTemp.hasChanged = false;
+		}
+	}
+
+	void SyncAll(Object active){
+		Object[] objs = targets;
+		if (objs == null || objs.Length <= 0) {
+			return;
+		}
+
+		int lens = objs.Length;
+		Object obj = null;
+		for (int i = 0; i < lens; i++) {
+			obj = objs [i];
+			SyncOne (obj,active);
+		}
+	}
 }
