@@ -131,11 +131,11 @@ public class TransformEditor :Editor
 		Transform m_trsfTemp = objTarget as Transform;
 
 		if (m_isChanged) {
-			if (m_trsfTemp != m_trsf) {
-				m_trsfTemp.localPosition = m_trsf.localPosition;
-				m_trsfTemp.localScale = m_trsf.localScale;
-				m_trsfTemp.localEulerAngles = m_trsf.localEulerAngles;
-			}
+//			if (m_trsfTemp != m_trsf) {
+//				m_trsfTemp.localPosition = m_trsf.localPosition;
+//				m_trsfTemp.localScale = m_trsf.localScale;
+//				m_trsfTemp.localEulerAngles = m_trsf.localEulerAngles;
+//			}
 
 			if (onChangeTransform != null)
 				onChangeTransform (m_trsfTemp);
