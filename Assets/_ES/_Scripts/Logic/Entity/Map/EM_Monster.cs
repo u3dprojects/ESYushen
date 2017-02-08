@@ -148,6 +148,23 @@ public class EM_Monster : EM_Cube {
 		}
 	}
 
+	public void DoDestroyChild(){
+		if (m_trsf) {
+			while (true) {
+				if (m_trsf.childCount <= 0)
+					break;
+				GameObject.DestroyImmediate(m_trsf.GetChild(0));
+			}
+			m_trsf.DetachChildren ();
+		}
+	}
+
+	public void AddChild(GameObject child){
+		if (child != null && m_trsf != null) {
+			child.transform.parent = m_trsf;
+		}
+	}
+
 	new public static void DoClearStatic ()
 	{
 		EM_Cube.DoClearStatic ();

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System.IO;
 
 /// <summary>
 /// 类名 : 绘制 地图元素 - 刷怪点 
@@ -9,6 +10,11 @@ using UnityEditor;
 /// 功能 : 
 /// </summary>
 public class PSM_Monster : PSM_Base<EM_Monster> {
+
+	int m_iMID = 0;
+	bool m_isShowModel = false;
+
+	GameObject m_gobjModel;
 
 	public PSM_Monster(string title,System.Action callNew,System.Action<EM_Monster> callRemove) : base(title,callNew,callRemove){
 	}
@@ -23,6 +29,13 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		{
 			GUILayout.Label("怪物ID:", GUILayout.Width(80));
 			one.m_iUnqID = EditorGUILayout.IntField (one.m_iUnqID);
+			if (m_iMID != one.m_iUnqID) {
+				m_isShowModel = false;
+				m_iMID = one.m_iUnqID;
+
+				one.DoDestroyChild ();
+				m_gobjModel = null;
+			}
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
@@ -45,17 +58,66 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		EG_GUIHelper.FG_EndH ();
 		EG_GUIHelper.FG_Space(5);
 
+		EG_GUIHelper.FEG_BeginToggleGroup ("是否显示怪物模型", ref m_isShowModel);
+		{
+			if (!EN_OptMonster.Instance.isInitSuccessed) {
+				EditorGUILayout.LabelField ("未选择怪物Excel,不能显示模型");
+			}
+		}
+		EG_GUIHelper.FEG_EndToggleGroup ();
+		_ShowMonster (one);
+
 		EG_GUIHelper.FG_BeginH ();
 		{
-			if (GUILayout.Button ("SyncToData")) {
-				one.ToData ();
-			}
-
+//			if (GUILayout.Button ("SyncToData")) {
+//				one.ToData ();
+//			}
 			if (GUILayout.Button ("SyncToInspector")) {
 				one.ToTrsfData ();
 			}
 		}
 		EG_GUIHelper.FG_EndH ();
 		EG_GUIHelper.FG_Space(5);
+	}
+
+	void _ShowMonster(EM_Monster one){
+		if (!EN_OptMonster.Instance.isInitSuccessed) {
+			return;
+		}
+		Debug.Log ("===== show monster ====");
+		if (m_gobjModel != null) {
+			m_gobjModel.SetActive (m_isShowModel);
+			return;
+		}
+
+		if (!m_isShowModel)
+			return;
+		
+		EN_Monster exlMonster = EN_OptMonster.Instance.GetEntity (one.m_iUnqID);
+		if (exlMonster == null) {
+			Debug.LogWarning ("怪物Excel表中ID= [" + one.m_iUnqID + "],不存在！！");
+			return;
+		}
+
+		string path = "";
+		path = "Assets\\PackResources\\Arts\\Test\\Prefabs\\Monster\\"+ exlMonster.ModeRes + ".prefab";
+		bool isExists = File.Exists(path);
+
+		if (!isExists) {
+			Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+
+			path = "Assets\\PackResources\\Arts\\Prefabs\\Monster\\"+ exlMonster.ModeRes + ".prefab";
+
+			isExists = File.Exists(path);
+			if (!isExists) {
+				Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+				return;
+			}
+		}
+
+		GameObject gobj = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
+		m_gobjModel = GameObject.Instantiate(gobj, Vector3.zero, Quaternion.identity) as GameObject;
+		one.AddChild (m_gobjModel);
+		m_gobjModel.SetActive(true);
 	}
 }

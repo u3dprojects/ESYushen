@@ -64,6 +64,8 @@ public class EG_Map {
 	{
 		m_isInView = true;
 
+		_DrawChooseMonster ();
+
 		EG_GUIHelper.FEG_HeadTitMid ("MapList Excel 表",Color.cyan);
 
 		EG_GUIHelper.FEG_BeginH();
@@ -460,4 +462,32 @@ public class EG_Map {
 	}
 	#endregion
 
+	EN_OptMonster optMonster{
+		get{
+			return EN_OptMonster.Instance;
+		}
+	}
+
+	void _DrawChooseMonster(){
+		EG_GUIHelper.FEG_BeginH();
+
+		Color def = GUI.color;
+		if (optMonster.isInitSuccessed) {
+			GUI.color = Color.green;
+		} else {
+			GUI.color = Color.red;
+		}
+
+		EditorGUILayout.LabelField ("初始化了怪物数据", "状态："+(optMonster.isInitSuccessed ? "Success" : "未选择怪物Excel"));
+
+		if (GUILayout.Button("选取Monster Excel表"))
+		{
+			string path = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
+			optMonster.DoInit (path, 0);
+		}
+		EG_GUIHelper.FEG_EndH();
+
+		GUI.color = def;
+		EG_GUIHelper.FG_Space(10);
+	}
 }
