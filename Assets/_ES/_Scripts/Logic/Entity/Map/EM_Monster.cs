@@ -161,7 +161,11 @@ public class EM_Monster : EM_Cube {
 
 	public void AddChild(GameObject child){
 		if (child != null && m_trsf != null) {
-			child.transform.parent = m_trsf;
+			Transform trsf = child.transform;
+			trsf.parent = m_trsf;
+			trsf.localPosition = Vector3.zero;
+			trsf.localEulerAngles = Vector3.zero;
+			trsf.localScale = Vector3.one;
 		}
 	}
 
