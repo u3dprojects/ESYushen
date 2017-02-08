@@ -18,14 +18,14 @@ public class EM_Monster : EM_Cube {
 	// monsterID 数据表结构里面的唯一标识ID
 	public int m_iUnqID;
 
+	// 刷怪时间间隔
+	public float m_fReliveInv;
+	
 	// 出生点
 	public Vector3 m_v3Pos = new Vector3(0,3,0);
 
 	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;
-
-	// 刷怪时间间隔
-	public float m_fReliveInv;
 
 	public EM_Monster() : base(){
 		m_sPrefixName = "Monster";
@@ -71,17 +71,9 @@ public class EM_Monster : EM_Cube {
 		return ret;
 	}
 
-	public override void OnChangePosition (Transform trsf)
+	public override void OnChangeTransform (Transform trsf)
 	{
-		base.OnChangePosition (trsf);
-		if (trsf == m_trsf) {
-			ToData ();
-		}
-	}
-
-	public override void OnChangeRotation (Transform trsf)
-	{
-		base.OnChangeRotation (trsf);
+		base.OnChangeTransform (trsf);
 		if (trsf == m_trsf) {
 			ToData ();
 		}

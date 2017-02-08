@@ -133,10 +133,14 @@ public class EM_Base : EJ_Base{
 		m_gobj = null;
 	}
 
-	public virtual void OnChangePosition(Transform trsf){
+	public void OnCloneTrsfInfo(Transform trsf){
+		if (trsf != null && m_trsf != null) {
+			m_trsf.position = trsf.position;
+			m_trsf.eulerAngles = trsf.eulerAngles;
+		}
 	}
 
-	public virtual void OnChangeRotation(Transform trsf){
+	public virtual void OnChangeTransform(Transform trsf){
 	}
 
 	public void DoActiveInHierarchy(){
