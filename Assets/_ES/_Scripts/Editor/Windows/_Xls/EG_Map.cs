@@ -181,6 +181,8 @@ public class EG_Map {
 				}
 			}
 			UnityEditor.SceneManagement.EditorSceneManager.OpenScene (path);
+
+			EU_ScheduleTask.m_instance.DoTask (3f, ReRaycast);
 		}
 	}
 
@@ -202,6 +204,8 @@ public class EG_Map {
 					Debug.LogWarning ("资源路径path = [" + path + "],不存在！！！");
 				}
 			}
+
+			EU_ScheduleTask.m_instance.DoClear ();
 
 			OpenScene (ms_entity.SceneName);
 		}
@@ -296,6 +300,20 @@ public class EG_Map {
 		for (int i = 0; i < lens; i++) {
 			tmpCell = m_lMapCells [i];
 			tmpCell.m_isOpenFoldout = _IsHas(tmpCell.m_trsf,trsfs);
+		}
+	}
+
+
+	void ReRaycast(){
+		Debug.Log ("= ReRay =");
+		List<EM_Monster> list = GetLMonsters ();
+		int lens = list.Count;
+		if (lens <= 0) {
+			return;
+		}
+
+		for (int i = 0; i < lens; i++) {
+			(list [i]).DoRaycast();
 		}
 	}
 

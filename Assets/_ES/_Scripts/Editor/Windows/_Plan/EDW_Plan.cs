@@ -184,6 +184,8 @@ public class EDW_Plan : EditorWindow {
 		OnClearSWindow();
 		OnClearEditorDelegate ();
 		DoClear();
+
+		EU_ScheduleTask.m_instance.DoDestroy();
 	}
 
 	#endregion
@@ -214,6 +216,8 @@ public class EDW_Plan : EditorWindow {
 		m_egSkill.DoClear ();
 		m_egBullet.DoClear ();
 		m_egMap.DoClear ();
+
+		EU_ScheduleTask.m_instance.DoClear ();
 	}
 
 	void OnSceneGUI(SceneView sceneView) {
