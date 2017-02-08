@@ -27,6 +27,8 @@ public class EM_Monster : EM_Cube {
 	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;
 
+	public bool m_isShowModel;
+
 	float m_fDefaultY = 999;
 
 	public EM_Monster() : base(){

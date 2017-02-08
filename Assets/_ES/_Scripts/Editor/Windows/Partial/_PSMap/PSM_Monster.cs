@@ -12,7 +12,6 @@ using System.IO;
 public class PSM_Monster : PSM_Base<EM_Monster> {
 
 	int m_iMID = 0;
-	bool m_isShowModel = false;
 
 	GameObject m_gobjModel;
 
@@ -30,7 +29,7 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 			GUILayout.Label("怪物ID:", GUILayout.Width(80));
 			one.m_iUnqID = EditorGUILayout.IntField (one.m_iUnqID);
 			if (m_iMID != one.m_iUnqID) {
-				m_isShowModel = false;
+				one.m_isShowModel = false;
 				m_iMID = one.m_iUnqID;
 
 				one.DoDestroyChild ();
@@ -49,16 +48,7 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		one.m_fReliveInv = EditorGUILayout.FloatField ("刷新时间间隔:", one.m_fReliveInv);
 		EG_GUIHelper.FG_Space(5);
 
-		EG_GUIHelper.FG_BeginH ();
-		{
-			if (GUILayout.Button ("Choose Cell(选中物体)")) {
-				one.DoActiveInHierarchy();
-			}
-		}
-		EG_GUIHelper.FG_EndH ();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginToggleGroup ("是否显示怪物模型", ref m_isShowModel);
+		EG_GUIHelper.FEG_BeginToggleGroup ("是否显示怪物模型", ref one.m_isShowModel);
 		{
 			if (!EN_OptMonster.Instance.isInitSuccessed) {
 				EditorGUILayout.LabelField ("未选择怪物Excel,不能显示模型");
@@ -78,6 +68,15 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		}
 		EG_GUIHelper.FG_EndH ();
 		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FG_BeginH ();
+		{
+			if (GUILayout.Button ("Choose Cell(选中物体)")) {
+				one.DoActiveInHierarchy();
+			}
+		}
+		EG_GUIHelper.FG_EndH ();
+		EG_GUIHelper.FG_Space(5);
 	}
 
 	void _ShowMonster(EM_Monster one){
@@ -86,11 +85,11 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		}
 		Debug.Log ("===== show monster ====");
 		if (m_gobjModel != null) {
-			m_gobjModel.SetActive (m_isShowModel);
+			m_gobjModel.SetActive (one.m_isShowModel);
 			return;
 		}
 
-		if (!m_isShowModel)
+		if (!one.m_isShowModel)
 			return;
 		
 		EN_Monster exlMonster = EN_OptMonster.Instance.GetEntity (one.m_iUnqID);
