@@ -343,18 +343,15 @@ public class EG_Map {
 		m_lMapCells.Clear();
 	}
 
-	void OnChangeTransform(Transform trsf,int type = 0){
+	void OnChangeTransform(Transform trsf){
 		int lens = m_lMapCells.Count;
 		if (lens <= 0) {
 			return;
 		}
+
 		for (int i = 0; i < lens; i++) {
 			tmpCell = m_lMapCells [i];
-			if (type == 0) {
-				tmpCell.OnChangePosition (trsf);
-			} else {
-				tmpCell.OnChangeRotation(trsf);
-			}
+			tmpCell.OnChangeTransform (trsf);
 		}
 	}
 
@@ -403,27 +400,17 @@ public class EG_Map {
 		one.Reset (gobj);
 	}
 
-	void OnChangePosition(Transform trsf){
-		OnChangeTransform (trsf);
-	}
-
-	void OnChangeRotation(Transform trsf){
-		OnChangeTransform (trsf,1);
-	}
-
 	void OnReInitDelegate(){
 		OnClearDelegate ();
 		OnInitDelegate ();
 	}
 
 	void OnInitDelegate(){
-		TransformEditor.onChangePosition += OnChangePosition;
-		TransformEditor.onChangeRotation += OnChangeRotation;
+		TransformEditor.onChangeTransform += OnChangeTransform;
 	}
 
 	void OnClearDelegate(){
-		TransformEditor.onChangePosition -= OnChangePosition;
-		TransformEditor.onChangeRotation -= OnChangeRotation;
+		TransformEditor.onChangeTransform -= OnChangeTransform;
 	}
 
 	void OnChangeGobj (int instanceID, int types)
