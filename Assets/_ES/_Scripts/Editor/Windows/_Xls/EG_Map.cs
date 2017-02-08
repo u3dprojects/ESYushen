@@ -182,7 +182,7 @@ public class EG_Map {
 			}
 			UnityEditor.SceneManagement.EditorSceneManager.OpenScene (path);
 
-			EU_ScheduleTask.m_instance.DoTask (3f, ReRaycast);
+			EU_ScheduleTask.m_instance.DoTask (1.5f, ReRaycast);
 		}
 	}
 

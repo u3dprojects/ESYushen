@@ -45,8 +45,6 @@ public class EM_Monster : EM_Cube {
 
 			DoNew ();
 
-			OnRaycast();
-
 			ToTrsfData ();
 			return true;
 		}
@@ -130,14 +128,21 @@ public class EM_Monster : EM_Cube {
 		ToTrsfData ();
 	}
 
+	int layerMask = LayerMask.NameToLayer("Terrain");
+
 	void OnRaycast(){
 		// 默认一个y值
 		m_v3Pos.y = m_fDefaultY;
+		ToTrsfData ();
 
-		RaycastHit[] hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10,LayerMask.NameToLayer("Terrain"));
+		RaycastHit[] hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10);
+
+		RaycastHit hit;
 		if (hits != null && hits.Length > 0) {
-			var item = (hits [0]).transform;
-			m_v3Pos.y = item.position.y;
+			hit = hits [0];
+			// 取得碰撞点位置
+			var item = hit.point;
+			m_v3Pos.y = item.y;
 		} else {
 			m_v3Pos.y = 10;
 		}
