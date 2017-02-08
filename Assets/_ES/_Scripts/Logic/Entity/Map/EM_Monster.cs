@@ -142,7 +142,7 @@ public class EM_Monster : EM_Cube {
 			hit = hits [0];
 			// 取得碰撞点位置
 			var item = hit.point;
-			m_v3Pos.y = item.y;
+			m_v3Pos.y = item.y + m_trsf.lossyScale.y / 2f;
 		} else {
 			m_v3Pos.y = 10;
 		}

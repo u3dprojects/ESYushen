@@ -182,7 +182,7 @@ public class EG_Map {
 			}
 			UnityEditor.SceneManagement.EditorSceneManager.OpenScene (path);
 
-			EU_ScheduleTask.m_instance.DoTask (1.5f, ReRaycast);
+			EU_ScheduleTask.m_instance.DoTask (1.2f, ReRaycast);
 		}
 	}
 
@@ -305,7 +305,6 @@ public class EG_Map {
 
 
 	void ReRaycast(){
-		Debug.Log ("= ReRay =");
 		List<EM_Monster> list = GetLMonsters ();
 		int lens = list.Count;
 		if (lens <= 0) {
