@@ -22,10 +22,12 @@ public class EM_Monster : EM_Cube {
 	public float m_fReliveInv;
 	
 	// 出生点
-	public Vector3 m_v3Pos = new Vector3(0,3,0);
+	public Vector3 m_v3Pos = new Vector3(0,10,0);
 
 	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;
+
+	float m_fDefaultY = 999;
 
 	public EM_Monster() : base(){
 		m_sPrefixName = "Monster";
@@ -42,6 +44,9 @@ public class EM_Monster : EM_Cube {
 			m_v3Pos.z = float.Parse (m_jdOrg ["positionZ"].ToString ());
 
 			DoNew ();
+
+			OnRaycast();
+
 			ToTrsfData ();
 			return true;
 		}
@@ -118,6 +123,24 @@ public class EM_Monster : EM_Cube {
 		Vector3 v3Rotation = m_trsf.eulerAngles;
 		v3Rotation.y = m_fRotation;
 		m_trsf.eulerAngles = v3Rotation;
+	}
+
+	public void DoRaycast(){
+		OnRaycast ();
+		ToTrsfData ();
+	}
+
+	void OnRaycast(){
+		// 默认一个y值
+		m_v3Pos.y = m_fDefaultY;
+
+		RaycastHit[] hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10,LayerMask.NameToLayer("Terrain"));
+		if (hits != null && hits.Length > 0) {
+			var item = (hits [0]).transform;
+			m_v3Pos.y = item.position.y;
+		} else {
+			m_v3Pos.y = 10;
+		}
 	}
 
 	new public static void DoClearStatic ()
