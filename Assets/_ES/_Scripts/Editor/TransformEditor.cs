@@ -19,6 +19,8 @@ public class TransformEditor :Editor
 
 	static public System.Action<Transform> onChangeTransform;
 
+	static bool m_isChanged = false;
+
 	[InitializeOnLoadMethod]
 	static void IInitializeOnLoadMethod ()
 	{
@@ -33,11 +35,20 @@ public class TransformEditor :Editor
 	ArrayList list = new ArrayList ();
 	ArrayList rmList = new ArrayList ();
 
+	Transform m_trsf = null;
+	private Vector3 startPostion = Vector3.zero;
+	private Vector3 startRotation = Vector3.zero;
+	private Vector3 startScale = Vector3.zero;
+
 	void OnEnable ()
 	{
 		editor = Editor.CreateEditor (target, Assembly.GetAssembly (typeof(Editor)).GetType ("UnityEditor.TransformInspector", true));
 
-		Transform m_trsf = target as Transform;
+		m_trsf = target as Transform;
+		startPostion = m_trsf.localPosition;
+		startRotation = m_trsf.localRotation.eulerAngles;
+		startScale = m_trsf.localScale;
+
 		int id = m_trsf.GetInstanceID ();
 		mapIDS [id] = m_trsf;
 	}
@@ -69,8 +80,34 @@ public class TransformEditor :Editor
 	public override void OnInspectorGUI ()
 	{
 		editor.OnInspectorGUI ();
-		SyncAll (target);
+		SyncAll();
 		// Repaint ();
+	}
+
+	void SyncTarget(){
+		m_trsf = target as Transform;
+		m_isChanged = false;
+
+		if (GUI.changed || m_trsf.hasChanged) {
+			if(startPostion != m_trsf.localPosition)
+			{
+				m_isChanged = true;
+			}
+
+			if(startRotation !=  m_trsf.localRotation.eulerAngles)
+			{
+				m_isChanged = true;
+			}
+
+			if(startScale !=  m_trsf.localScale)
+			{
+				m_isChanged = true;
+			}
+
+			startPostion = m_trsf.localPosition;
+			startRotation = m_trsf.localRotation.eulerAngles;
+			startScale = m_trsf.localScale;
+		}
 	}
 
 	bool IsInTargets(Object org){
@@ -90,27 +127,27 @@ public class TransformEditor :Editor
 		return false;
 	}
 
-	void SyncOne(Object objTarget,Object orgActive){
+	void SyncOne(Object objTarget){
 		Transform m_trsfTemp = objTarget as Transform;
-		Transform org = orgActive as Transform;
-		if (m_trsfTemp != org) {
-			m_trsfTemp.localPosition = org.localPosition;
-			m_trsfTemp.localScale = org.localScale;
-			m_trsfTemp.localEulerAngles = org.localEulerAngles;
 
-			m_trsfTemp.hasChanged = true;
-		}
+		if (m_isChanged) {
+			if (m_trsfTemp != m_trsf) {
+				m_trsfTemp.localPosition = m_trsf.localPosition;
+				m_trsfTemp.localScale = m_trsf.localScale;
+				m_trsfTemp.localEulerAngles = m_trsf.localEulerAngles;
+			}
 
-		if (GUI.changed || m_trsfTemp.hasChanged) {
-			
 			if (onChangeTransform != null)
 				onChangeTransform (m_trsfTemp);
-			
-			m_trsfTemp.hasChanged = false;
 		}
 	}
 
-	void SyncAll(Object active){
+	void SyncAll(){
+		SyncTarget();
+		SyncObjects ();
+	}
+
+	void SyncObjects(){
 		Object[] objs = targets;
 		if (objs == null || objs.Length <= 0) {
 			return;
@@ -120,7 +157,9 @@ public class TransformEditor :Editor
 		Object obj = null;
 		for (int i = 0; i < lens; i++) {
 			obj = objs [i];
-			SyncOne (obj,active);
+			SyncOne (obj);
 		}
+
+		m_isChanged = false;
 	}
 }

@@ -128,7 +128,7 @@ public class EM_Monster : EM_Cube {
 		ToTrsfData ();
 	}
 
-	int layerMask = LayerMask.NameToLayer("Terrain");
+	// int layerMask = LayerMask.NameToLayer("Terrain");
 
 	void OnRaycast(){
 		// 默认一个y值
