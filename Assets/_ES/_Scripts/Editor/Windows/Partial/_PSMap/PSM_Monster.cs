@@ -24,6 +24,7 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		{
 			GUILayout.Label("怪物ID:", GUILayout.Width(80));
 			one.m_iUnqID = EditorGUILayout.IntField (one.m_iUnqID);
+			one.CheckUnqIDChange ();
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);

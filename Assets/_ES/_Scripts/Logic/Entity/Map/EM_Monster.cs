@@ -16,19 +16,9 @@ public class EM_Monster : EM_Cube {
 	int m_iCoreCursorMonster = 0;
 
 	// monsterID 数据表结构里面的唯一标识ID
-	[SerializeField]
+	// [SerializeField]
 	int _m_iUnqID;
-
-	public int m_iUnqID{
-		get{ return _m_iUnqID; }
-		set{
-			if (_m_iUnqID != value) {
-				m_isShowModel = false;
-				DoDestroyChild ();
-			}
-			_m_iUnqID = value;
-		}
-	}
+	public int m_iUnqID;
 
 	// 刷怪时间间隔
 	public float m_fReliveInv;
@@ -61,6 +51,8 @@ public class EM_Monster : EM_Cube {
 			this.m_fReliveInv = float.Parse (m_jdOrg ["reliveInterval"].ToString ());
 			m_v3Pos.x = float.Parse (m_jdOrg ["positionX"].ToString ());
 			m_v3Pos.z = float.Parse (m_jdOrg ["positionZ"].ToString ());
+
+			_m_iUnqID = m_iUnqID;
 
 			DoNew ();
 
@@ -189,6 +181,15 @@ public class EM_Monster : EM_Cube {
 			m_gobjModel.SetActive (m_isShowModel);
 			m_meshRender.enabled = !m_isShowModel;
 		}
+	}
+
+	public void CheckUnqIDChange(){
+		if (_m_iUnqID == m_iUnqID)
+			return;
+		_m_iUnqID = m_iUnqID;
+
+		m_isShowModel = false;
+		DoDestroyChild ();
 	}
 
 	new public static void DoClearStatic ()
