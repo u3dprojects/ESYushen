@@ -27,7 +27,9 @@ public class EM_Monster : EM_Cube {
 	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;
 
+	// 显示模型
 	public bool m_isShowModel;
+	public GameObject m_gobjModel;
 
 	float m_fDefaultY = 999;
 
@@ -150,24 +152,22 @@ public class EM_Monster : EM_Cube {
 		}
 	}
 
-	public void DoDestroyChild(){
-		if (m_trsf) {
-			while (true) {
-				if (m_trsf.childCount <= 0)
-					break;
-				GameObject.DestroyImmediate(m_trsf.GetChild(0));
-			}
-			m_trsf.DetachChildren ();
-		}
+	protected override void OnDestroyChild ()
+	{
+		base.OnDestroyChild ();
+		m_gobjModel = null;
 	}
 
-	public void AddChild(GameObject child){
-		if (child != null && m_trsf != null) {
-			Transform trsf = child.transform;
-			trsf.parent = m_trsf;
-			trsf.localPosition = Vector3.zero;
-			trsf.localEulerAngles = Vector3.zero;
-			trsf.localScale = Vector3.one;
+	public void AddModel(GameObject model){
+		m_gobjModel = model;
+		AddChild (model);
+		ModelActiveStatus ();
+	}
+
+	public void ModelActiveStatus(){
+		if (m_gobjModel != null) {
+			m_gobjModel.SetActive (m_isShowModel);
+			m_meshRender.enabled = !m_isShowModel;
 		}
 	}
 

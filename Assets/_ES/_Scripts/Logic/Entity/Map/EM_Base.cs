@@ -153,6 +153,33 @@ public class EM_Base : EJ_Base{
 		}
 	}
 
+	public void DoDestroyChild(){
+		if (m_trsf) {
+			while (true) {
+				if (m_trsf.childCount <= 0)
+					break;
+				GameObject.DestroyImmediate(m_trsf.GetChild(0));
+			}
+			m_trsf.DetachChildren ();
+		}
+
+		OnDestroyChild ();
+	}
+
+	protected virtual void OnDestroyChild(){}
+
+	public void AddChild(GameObject child,bool isReset = true){
+		if (child != null && m_trsf != null) {
+			Transform trsf = child.transform;
+			trsf.parent = m_trsf;
+			if (isReset) {
+				trsf.localPosition = Vector3.zero;
+				trsf.localEulerAngles = Vector3.zero;
+				trsf.localScale = Vector3.one;
+			}
+		}
+	}
+
 	public static void DoClearStatic ()
 	{
 		CORE_CURSOR = 0;

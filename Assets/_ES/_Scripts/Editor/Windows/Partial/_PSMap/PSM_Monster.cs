@@ -13,8 +13,6 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 
 	int m_iMID = 0;
 
-	GameObject m_gobjModel;
-
 	public PSM_Monster(string title,System.Action callNew,System.Action<EM_Monster> callRemove) : base(title,callNew,callRemove){
 	}
 
@@ -33,7 +31,6 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 				m_iMID = one.m_iUnqID;
 
 				one.DoDestroyChild ();
-				m_gobjModel = null;
 			}
 		}
 		EG_GUIHelper.FEG_EndH();
@@ -83,15 +80,13 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		if (!EN_OptMonster.Instance.isInitSuccessed) {
 			return;
 		}
-		Debug.Log ("===== show monster ====");
-		if (m_gobjModel != null) {
-			m_gobjModel.SetActive (one.m_isShowModel);
+
+		one.ModelActiveStatus ();
+
+		if (!one.m_isShowModel || one.m_gobjModel != null) {
 			return;
 		}
 
-		if (!one.m_isShowModel)
-			return;
-		
 		EN_Monster exlMonster = EN_OptMonster.Instance.GetEntity (one.m_iUnqID);
 		if (exlMonster == null) {
 			Debug.LogWarning ("怪物Excel表中ID= [" + one.m_iUnqID + "],不存在！！");
@@ -115,8 +110,7 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		}
 
 		GameObject gobj = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
-		m_gobjModel = GameObject.Instantiate(gobj, Vector3.zero, Quaternion.identity) as GameObject;
-		one.AddChild (m_gobjModel);
-		m_gobjModel.SetActive(true);
+		gobj = GameObject.Instantiate(gobj, Vector3.zero, Quaternion.identity) as GameObject;
+		one.AddModel (gobj);
 	}
 }

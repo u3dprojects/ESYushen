@@ -15,7 +15,7 @@ public class EM_Cube : EM_Base{
 
 	int m_iCoreCursorCube = 0;
 
-	MeshRenderer m_meshRender;
+	protected MeshRenderer m_meshRender;
 	Material m_matCub;
 
 	// 区域颜色
