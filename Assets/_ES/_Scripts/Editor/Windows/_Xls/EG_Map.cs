@@ -478,7 +478,7 @@ public class EG_Map {
 			GUI.color = Color.red;
 		}
 
-		EditorGUILayout.LabelField ("初始化了怪物数据", "状态："+(optMonster.isInitSuccessed ? "Success" : "未选择怪物Excel"));
+		EditorGUILayout.LabelField ("初始化了怪物数据", "状态："+(optMonster.isInitSuccessed ? "Success - " + optMonster.m_eOptXls.fileName : "未选择怪物Excel"));
 
 		if (GUILayout.Button("选取Monster Excel表"))
 		{
