@@ -29,6 +29,9 @@ public class EM_Monster : EM_Cube {
 
 	// 显示模型
 	public bool m_isShowModel;
+	bool m_isPreShowModel;
+
+	[System.NonSerialized]
 	public GameObject m_gobjModel;
 
 	float m_fDefaultY = 999;
@@ -165,6 +168,10 @@ public class EM_Monster : EM_Cube {
 	}
 
 	public void ModelActiveStatus(){
+		if (m_isShowModel == m_isPreShowModel)
+			return;
+		m_isPreShowModel = m_isShowModel;
+
 		if (m_gobjModel != null) {
 			m_gobjModel.SetActive (m_isShowModel);
 			m_meshRender.enabled = !m_isShowModel;
