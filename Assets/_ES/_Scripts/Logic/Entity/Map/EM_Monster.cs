@@ -16,7 +16,19 @@ public class EM_Monster : EM_Cube {
 	int m_iCoreCursorMonster = 0;
 
 	// monsterID 数据表结构里面的唯一标识ID
-	public int m_iUnqID;
+	[SerializeField]
+	int _m_iUnqID;
+
+	public int m_iUnqID{
+		get{ return _m_iUnqID; }
+		set{
+			if (_m_iUnqID != value) {
+				m_isShowModel = false;
+				DoDestroyChild ();
+			}
+			_m_iUnqID = value;
+		}
+	}
 
 	// 刷怪时间间隔
 	public float m_fReliveInv;
@@ -29,7 +41,7 @@ public class EM_Monster : EM_Cube {
 
 	// 显示模型
 	public bool m_isShowModel;
-	bool m_isPreShowModel;
+	bool _m_isShowModel;
 
 	[System.NonSerialized]
 	public GameObject m_gobjModel;
@@ -168,9 +180,10 @@ public class EM_Monster : EM_Cube {
 	}
 
 	public void ModelActiveStatus(){
-		if (m_isShowModel == m_isPreShowModel)
+		if (_m_isShowModel == m_isShowModel)
 			return;
-		m_isPreShowModel = m_isShowModel;
+
+		_m_isShowModel = m_isShowModel;
 
 		if (m_gobjModel != null) {
 			m_gobjModel.SetActive (m_isShowModel);

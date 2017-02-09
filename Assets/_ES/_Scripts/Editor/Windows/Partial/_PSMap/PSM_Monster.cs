@@ -10,9 +10,7 @@ using System.IO;
 /// 功能 : 
 /// </summary>
 public class PSM_Monster : PSM_Base<EM_Monster> {
-
-	int m_iMID = 0;
-
+	
 	public PSM_Monster(string title,System.Action callNew,System.Action<EM_Monster> callRemove) : base(title,callNew,callRemove){
 	}
 
@@ -26,12 +24,6 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		{
 			GUILayout.Label("怪物ID:", GUILayout.Width(80));
 			one.m_iUnqID = EditorGUILayout.IntField (one.m_iUnqID);
-			if (m_iMID != one.m_iUnqID) {
-				one.m_isShowModel = false;
-				m_iMID = one.m_iUnqID;
-
-				one.DoDestroyChild ();
-			}
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
@@ -81,9 +73,12 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 			return;
 		}
 
-		one.ModelActiveStatus ();
+		if (one.m_gobjModel != null) {
+			one.ModelActiveStatus ();
+			return;
+		}
 
-		if (!one.m_isShowModel || one.m_gobjModel != null) {
+		if (!one.m_isShowModel) {
 			return;
 		}
 
