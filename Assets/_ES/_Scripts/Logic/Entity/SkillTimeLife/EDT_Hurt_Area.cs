@@ -51,7 +51,7 @@ public class EDT_Hurt_Area : EDT_Base{
 	public Color m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.15f);
 
 	// 是否绘制伤害区域
-	public bool m_isShowArea;
+	public bool m_isShowArea = true;
 
 	// 绘制对象
 	bool _m_isDrawRuning = false;
