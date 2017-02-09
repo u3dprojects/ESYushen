@@ -155,10 +155,13 @@ public class EM_Base : EJ_Base{
 
 	public void DoDestroyChild(){
 		if (m_trsf) {
+			GameObject gobjChild;
 			while (true) {
 				if (m_trsf.childCount <= 0)
 					break;
-				GameObject.DestroyImmediate(m_trsf.GetChild(0));
+				
+				gobjChild = m_trsf.GetChild (0).gameObject;
+				GameObject.DestroyImmediate(gobjChild);
 			}
 			m_trsf.DetachChildren ();
 		}
