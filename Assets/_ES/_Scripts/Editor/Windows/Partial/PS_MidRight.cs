@@ -239,7 +239,6 @@ public partial class PS_MidRight{
 		EG_GUIHelper.FEG_BeginH();
 		{
 			EG_GUIHelper.FEG_BeginToggleGroup("控制动作进度??", ref isCtrlProgress);
-			isCanCanCtrlProgress = isCtrlProgress;
 			float cur_progress01 = cur_progress / max_progress;
 			if (isCanCanCtrlProgress) {
 				if (isCtrlProgress) {
