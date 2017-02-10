@@ -230,6 +230,8 @@ public class EDW_BuildFab : EditorWindow {
 			tmpPath = pathOrg + "/" + gobj.name + ".prefab";
 			gobj = PrefabUtility.CreatePrefab (tmpPath, gobj,ReplacePrefabOptions.ConnectToPrefab);
 			EditorUtility.SetDirty (gobj);
+
+			// SetAssetBundleInfo (tmpPath);
 		}
 
 		for (int i = 0; i < lens; i++) {
@@ -240,6 +242,14 @@ public class EDW_BuildFab : EditorWindow {
 		list.Clear ();
 
 		EditorUtility.DisplayDialog ("Congratulations", "Congratulations Build Prefab Successed!!!", "Okey");
+	}
+
+	void SetAssetBundleInfo(string tmpPath){
+		AssetImporter assett = AssetImporter.GetAtPath (tmpPath);
+		// 资源名
+		assett.assetBundleName = "ab_gobj";
+		// 资源后缀名
+		assett.assetBundleVariant = "var";
 	}
 		
 	#endregion
