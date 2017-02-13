@@ -139,14 +139,19 @@ public class EM_Monster : EM_Cube {
 		ToTrsfData ();
 	}
 
-	// int layerMask = LayerMask.NameToLayer("Terrain");
 
 	void OnRaycast(){
 		// 默认一个y值
 		m_v3Pos.y = m_fDefaultY;
 		ToTrsfData ();
 
-		RaycastHit[] hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10);
+		RaycastHit[] hits = null;
+
+		hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10);
+
+//		int layerTerrain = LayerMask.NameToLayer("Terrain");
+//		LayerMask mask = 1 << layerTerrain;
+//		hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10, mask);
 
 		RaycastHit hit;
 		if (hits != null && hits.Length > 0) {
