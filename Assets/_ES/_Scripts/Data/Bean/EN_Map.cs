@@ -15,6 +15,7 @@ public class EN_Map : EN_BaseXls{
 	public int DescID;
 
 	// 地图场景资源名
+	public int SceneResId;
 	public string SceneName;
 
 	// 雷达UI资源名
@@ -50,6 +51,9 @@ public class EN_Map : EN_BaseXls{
 	// 刷触发器点
 	public string strTriggers;
 
+	// 刷触发器点
+	public string strNpcs;
+
 	public EN_Map():base(){
 	}
 
@@ -60,6 +64,7 @@ public class EN_Map : EN_BaseXls{
 				this.ID,
 				this.NameID,
 				this.DescID,
+				this.SceneResId,
 				this.UIResName,
 				this.PosX,
 				this.PosZ,
@@ -70,7 +75,8 @@ public class EN_Map : EN_BaseXls{
 				this.NodeColumn,
 				this.NodeRow,
 				this.strMonsters,
-				this.strTriggers
+				this.strTriggers,
+				this.strNpcs
 			};
 			return ret;
 		}
@@ -84,7 +90,7 @@ public class EN_Map : EN_BaseXls{
 		this.ID = sheet.GetInt(rowIndex, colIndex++);
 		this.NameID = sheet.GetInt(rowIndex, colIndex++);
 		this.DescID = sheet.GetInt(rowIndex, colIndex++);
-		// this.SceneName = sheet.GetString(rowIndex, colIndex++);
+		this.SceneResId = sheet.GetInt(rowIndex, colIndex++);
 		this.UIResName = sheet.GetString(rowIndex, colIndex++);
 
 		this.PosX = sheet.GetFloat(rowIndex, colIndex++);
@@ -98,8 +104,9 @@ public class EN_Map : EN_BaseXls{
 		this.NodeRow = sheet.GetInt(rowIndex, colIndex++);
 		this.strMonsters = sheet.GetString(rowIndex, colIndex++);
 		this.strTriggers = sheet.GetString(rowIndex, colIndex++);
+		this.strNpcs = sheet.GetString(rowIndex, colIndex++);
 
-		this.SceneName = "Map_" + this.ID;
+		this.SceneName = "Map_" + this.SceneResId;
 	}
 
 	public override void DoClone (EN_BaseXls org)
@@ -115,6 +122,7 @@ public class EN_Map : EN_BaseXls{
 		this.ID = tmp.ID;
 		this.NameID = tmp.NameID;
 		this.DescID = tmp.DescID;
+		this.SceneResId = tmp.SceneResId;
 		this.SceneName = tmp.SceneName;
 		this.UIResName = tmp.UIResName;
 
@@ -129,5 +137,6 @@ public class EN_Map : EN_BaseXls{
 		this.NodeRow = tmp.NodeRow;
 		this.strMonsters = tmp.strMonsters;
 		this.strTriggers = tmp.strTriggers;
+		this.strNpcs = tmp.strNpcs;
 	}
 }

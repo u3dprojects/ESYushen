@@ -7,5 +7,5 @@ using System.Collections;
 /// 功能 : 创建类型分类判断
 /// </summary>
 public class EM_Cell : MonoBehaviour {
-	public EM_Monster m_entity;
+	public EM_UnitCell m_entity;
 }

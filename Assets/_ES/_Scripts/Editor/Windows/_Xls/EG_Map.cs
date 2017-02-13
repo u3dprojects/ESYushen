@@ -106,8 +106,8 @@ public class EG_Map {
 
 		EG_GUIHelper.FEG_BeginH ();
 		{
-			// ms_entity.SceneName = EditorGUILayout.TextField ("地图场景:", ms_entity.SceneName);
-			ms_entity.SceneName = "Map_" + ms_entity.ID;
+			ms_entity.SceneResId = EditorGUILayout.IntField ("地图场景资源ID:", ms_entity.SceneResId);
+			ms_entity.SceneName = "Map_" + ms_entity.SceneResId;
 			EditorGUILayout.LabelField ("地图场景:", ms_entity.SceneName);
 			if (GUILayout.Button ("加载场景")) {
 				OpenScene (ms_entity.SceneName);
@@ -154,7 +154,12 @@ public class EG_Map {
 
 		// 刷怪点
 		_DrawBornMonster();
+		EG_GUIHelper.FG_Space(5);
+
 		// 触发器点
+
+		// Npc
+		_DrawBornNpc();
 	}
 
 	void OpenScene(string sceneName){
@@ -263,15 +268,15 @@ public class EG_Map {
 		}
 	}
 
-	string ToJsonString(){
-		int lens = m_lMapCells.Count;
+	string ToJsonString<T>(List<T> list) where T : EM_Base{
+		int lens = list.Count;
 		if (lens <= 0) {
 			return "null";
 		}
 		jsonData.Clear ();
 		jsonData.SetJsonType (JsonType.Array);
 		for (int i = 0; i < lens; i++) {
-			tmpCell = m_lMapCells [i];
+			tmpCell = list [i];
 			tmpJD = tmpCell.ToJsonData ();
 			if (tmpJD == null)
 				continue;
@@ -385,7 +390,7 @@ public class EG_Map {
 			OnReInitDelegate ();
 		}
 
-		ms_entity.strMonsters = ToJsonString ();
+		ms_entity.strMonsters = ToJsonString<EM_Monster> (GetLMonsters());
 		EditorGUILayout.LabelField("刷怪点",ms_entity.strMonsters, EditorStyles.textArea);
 		EG_GUIHelper.FG_Space(5);
 
@@ -462,6 +467,35 @@ public class EG_Map {
 		
 		RefreshFoldOut (trsf);
 	}
+
+	List<EM_NPC> m_lNpcs = new List<EM_NPC> ();
+	PSM_Npc m_psNpc;
+
+	void _DrawBornNpc(){
+		if (m_psNpc == null) {
+			m_psNpc = new PSM_Npc ("刷NPC点", _NewNpc, RmMapCell);
+
+			OnReInitDelegate ();
+		}
+
+		ms_entity.strNpcs = ToJsonString<EM_NPC> (GetLNpcs());
+		EditorGUILayout.LabelField("刷NPC点",ms_entity.strNpcs, EditorStyles.textArea);
+		EG_GUIHelper.FG_Space(5);
+
+		m_psNpc.DoDraw (GetLNpcs ());
+	}
+
+	void _NewNpc(){
+		EM_NPC one = EM_NPC.NewEntity<EM_NPC> ();
+		one.DoMakeNew ();
+		m_lMapCells.Add (one);
+	}
+
+	public List<EM_NPC> GetLNpcs(){
+		EM_Base.GetList<EM_NPC> (m_lMapCells, ref m_lNpcs);
+		return m_lNpcs;
+	}
+
 	#endregion
 
 	EN_OptMonster optMonster{
