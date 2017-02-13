@@ -106,7 +106,9 @@ public class EG_Map {
 
 		EG_GUIHelper.FEG_BeginH ();
 		{
-			ms_entity.SceneName = EditorGUILayout.TextField ("地图场景:", ms_entity.SceneName);
+			// ms_entity.SceneName = EditorGUILayout.TextField ("地图场景:", ms_entity.SceneName);
+			ms_entity.SceneName = "Map_" + ms_entity.ID;
+			EditorGUILayout.LabelField ("地图场景:", ms_entity.SceneName);
 			if (GUILayout.Button ("加载场景")) {
 				OpenScene (ms_entity.SceneName);
 			}

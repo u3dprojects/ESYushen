@@ -60,7 +60,6 @@ public class EN_Map : EN_BaseXls{
 				this.ID,
 				this.NameID,
 				this.DescID,
-				this.SceneName,
 				this.UIResName,
 				this.PosX,
 				this.PosZ,
@@ -85,7 +84,7 @@ public class EN_Map : EN_BaseXls{
 		this.ID = sheet.GetInt(rowIndex, colIndex++);
 		this.NameID = sheet.GetInt(rowIndex, colIndex++);
 		this.DescID = sheet.GetInt(rowIndex, colIndex++);
-		this.SceneName = sheet.GetString(rowIndex, colIndex++);
+		// this.SceneName = sheet.GetString(rowIndex, colIndex++);
 		this.UIResName = sheet.GetString(rowIndex, colIndex++);
 
 		this.PosX = sheet.GetFloat(rowIndex, colIndex++);
@@ -99,6 +98,8 @@ public class EN_Map : EN_BaseXls{
 		this.NodeRow = sheet.GetInt(rowIndex, colIndex++);
 		this.strMonsters = sheet.GetString(rowIndex, colIndex++);
 		this.strTriggers = sheet.GetString(rowIndex, colIndex++);
+
+		this.SceneName = "Map_" + this.ID;
 	}
 
 	public override void DoClone (EN_BaseXls org)
