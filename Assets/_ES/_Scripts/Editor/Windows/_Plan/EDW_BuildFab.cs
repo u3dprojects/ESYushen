@@ -20,7 +20,7 @@ public class EDW_BuildFab : EditorWindow {
 
 	// 窗体宽高
 	static public float width = 600;
-	static public float height = 200;
+	static public float height = 235;
 
 	[MenuItem("Tools/Windows/BuildAsset2Fab")]
 	static void AddWindow()
@@ -63,6 +63,8 @@ public class EDW_BuildFab : EditorWindow {
 
 	UnityEngine.Object m_objFolderOrg,m_objFolderTo;
 
+	bool isSetUpWH = false;
+	float m_fWidth,m_fHight;
 	#endregion
 
 	#region  == EditorWindow Func ===
@@ -106,6 +108,15 @@ public class EDW_BuildFab : EditorWindow {
 			EG_GUIHelper.FEG_BeginH();
 			m_objFolderTo = EditorGUILayout.ObjectField ("Fab目标文件夹", m_objFolderTo, typeof(UnityEngine.Object), false);
 			EG_GUIHelper.FEG_EndH();
+			EG_GUIHelper.FG_Space(10);
+
+			EG_GUIHelper.FEG_BeginToggleGroup ("是否指定宽(Width),高(Height)", ref isSetUpWH);
+			{
+				m_fWidth = EditorGUILayout.FloatField ("Width:", m_fWidth);	
+				EG_GUIHelper.FG_Space(5);
+				m_fHight = EditorGUILayout.FloatField ("Height:", m_fHight);
+			}
+			EG_GUIHelper.FEG_EndToggleGroup ();
 			EG_GUIHelper.FG_Space(10);
 
 			_DrawOptBtns ();
@@ -201,7 +212,10 @@ public class EDW_BuildFab : EditorWindow {
 
 		Sprite spriteTemp;
 		Image imgUI;
+		RectTransform rectTrsf;
 		GameObject gobj;
+
+		bool isSetSelfWH = isSetUpWH && m_fWidth > 0 && m_fHight > 0;
 
 		for (int i = 0; i < lens; i++) {
 			tmpPath = arrPaths [i];
@@ -217,7 +231,12 @@ public class EDW_BuildFab : EditorWindow {
 				spriteTemp = AssetDatabase.LoadAssetAtPath<Sprite>(tmpPath);
 				imgUI.sprite = spriteTemp;//Sprite.Create (t2dTemp);
 				imgUI.raycastTarget = false;
-				imgUI.SetNativeSize ();
+				if (isSetSelfWH) {
+					rectTrsf = gobj.GetComponent<RectTransform> ();
+					rectTrsf.sizeDelta = new Vector2 (m_fWidth, m_fHight);
+				} else {
+					imgUI.SetNativeSize ();
+				}
 
 				list.Add(gobj);
 			}
