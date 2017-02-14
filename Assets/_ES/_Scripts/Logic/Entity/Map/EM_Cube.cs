@@ -25,9 +25,7 @@ public class EM_Cube : EM_Base{
 		m_gobj =  GameObject.CreatePrimitive (PrimitiveType.Cube);
 		m_trsf = m_gobj.transform;
 
-		m_meshRender = m_gobj.GetComponent<MeshRenderer> ();
-		m_matCub = new Material (Shader.Find ("Diffuse"));
-		m_meshRender.material = m_matCub;
+		ResetMeshMaterial ();
 
 		OnResetColor ();
 	}
@@ -35,6 +33,14 @@ public class EM_Cube : EM_Base{
 	public void OnResetColor(){
 		if (m_matCub != null && m_matCub.HasProperty ("_Color")) {
 			m_matCub.SetColor ("_Color", this.m_cAreaColor);
+		}
+	}
+
+	void ResetMeshMaterial(){
+		m_meshRender = m_gobj.GetComponent<MeshRenderer> ();
+		if (m_meshRender != null) {
+			m_matCub = new Material (Shader.Find ("Diffuse"));
+			m_meshRender.material = m_matCub;
 		}
 	}
 
@@ -49,9 +55,7 @@ public class EM_Cube : EM_Base{
 			EM_Cube tmp = (EM_Cube)org;
 			m_cAreaColor = tmp.m_cAreaColor;
 
-			m_meshRender = m_gobj.GetComponent<MeshRenderer> ();
-			m_matCub = new Material (Shader.Find ("Diffuse"));
-			m_meshRender.material = m_matCub;
+			ResetMeshMaterial ();
 
 			OnResetColor ();
 		}
