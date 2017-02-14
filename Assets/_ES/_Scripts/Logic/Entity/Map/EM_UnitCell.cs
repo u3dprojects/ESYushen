@@ -10,11 +10,6 @@ using LitJson;
 /// </summary>
 [System.Serializable]
 public class EM_UnitCell : EM_Cube {
-
-	// 对象的唯一标识 计数器
-	static int CORE_CURSOR = 0;
-	int m_iCoreCursorCell = 0;
-
 	// monsterID 数据表结构里面的唯一标识ID
 	// [SerializeField]
 	int _m_iUnqID;
@@ -39,8 +34,6 @@ public class EM_UnitCell : EM_Cube {
 	float m_fDefaultY = 999;
 
 	public EM_UnitCell() : base(){
-		m_sPrefixName = "Cell";
-		m_iCoreCursorCell = (CORE_CURSOR++);
 	}
 
 	protected override bool OnInit ()
@@ -66,14 +59,6 @@ public class EM_UnitCell : EM_Cube {
 			return true;
 		}
 		return false;
-	}
-
-	protected override void OnResetGobjName ()
-	{
-		if (string.IsNullOrEmpty (m_sGName)) {
-			m_sGName = m_sPrefixName + m_iCoreCursorCell;
-		}
-		ResetGobjName();
 	}
 
 	public override JsonData ToJsonData ()
@@ -201,12 +186,5 @@ public class EM_UnitCell : EM_Cube {
 
 		m_isShowModel = false;
 		DoDestroyChild ();
-	}
-
-	new public static void DoClearStatic ()
-	{
-		EM_Cube.DoClearStatic ();
-
-		CORE_CURSOR = 0;
 	}
 }

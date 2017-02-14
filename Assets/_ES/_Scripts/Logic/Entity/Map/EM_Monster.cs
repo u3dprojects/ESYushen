@@ -16,21 +16,16 @@ public class EM_Monster : EM_UnitCell {
 	int m_iCoreCursorMonster = 0;
 
 	public EM_Monster() : base(){
-		m_sPrefixName = "Monster";
 		m_iCoreCursorMonster = (CORE_CURSOR++);
 	}
 
 	protected override void OnResetGobjName ()
 	{
-		if (string.IsNullOrEmpty (m_sGName)) {
-			m_sGName = m_sPrefixName + m_iCoreCursorMonster;
-		}
-		ResetGobjName();
+		SetGobjName ("Monster" + m_iCoreCursorMonster);
 	}
 
 	new public static void DoClearStatic ()
 	{
-		EM_UnitCell.DoClearStatic ();
 		CORE_CURSOR = 0;
 	}
 }

@@ -9,12 +9,7 @@ using System.Collections;
 /// </summary>
 [System.Serializable]
 public class EM_Cube : EM_Base{
-
-	// 对象的唯一标识 计数器
-	static int CORE_CURSOR = 0;
-
-	int m_iCoreCursorCube = 0;
-
+	
 	protected MeshRenderer m_meshRender;
 	Material m_matCub;
 
@@ -23,8 +18,6 @@ public class EM_Cube : EM_Base{
 	public Color m_cAreaColor = Color.blue;
 
 	public EM_Cube():base(){
-		m_sPrefixName = "Cube";
-		m_iCoreCursorCube = (CORE_CURSOR++);
 	}
 
 	protected override void OnNew ()
@@ -43,14 +36,6 @@ public class EM_Cube : EM_Base{
 		if (m_matCub != null && m_matCub.HasProperty ("_Color")) {
 			m_matCub.SetColor ("_Color", this.m_cAreaColor);
 		}
-	}
-
-	protected override void OnResetGobjName ()
-	{
-		if (string.IsNullOrEmpty (m_sGName)) {
-			m_sGName = m_sPrefixName + m_iCoreCursorCube;
-		}
-		ResetGobjName();
 	}
 
 	protected override void OnClone (EM_Base org)
@@ -84,12 +69,5 @@ public class EM_Cube : EM_Base{
 			Material.DestroyImmediate (m_matCub);
 			m_matCub = null;
 		}
-	}
-
-	new public static void DoClearStatic ()
-	{
-		EM_Base.DoClearStatic ();
-
-		CORE_CURSOR = 0;
 	}
 }

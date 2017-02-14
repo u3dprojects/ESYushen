@@ -10,14 +10,6 @@ using LitJson;
 /// </summary>
 [System.Serializable]
 public class EM_Base : EJ_Base{
-
-	// 对象的唯一标识 计数器
-	static int CORE_CURSOR = 0;
-
-	// 前缀
-	[System.NonSerialized]
-	public string m_sPrefixName = "";
-
 	[System.NonSerialized]
 	public string m_sGName;
 
@@ -33,14 +25,11 @@ public class EM_Base : EJ_Base{
 	// 绘制的时候是否打开了视图Foldout
 	public bool m_isOpenFoldout;
 
-	int m_iCursorBase = 0;
-
 	// 类型脚本
 	[System.NonSerialized]
 	public EM_Cell m_csCell;
 
 	public EM_Base() : base(){
-		m_iCursorBase = (CORE_CURSOR++);
 	}
 
 	public void NewOrReset(GameObject org = null){
@@ -110,14 +99,12 @@ public class EM_Base : EJ_Base{
 	}
 
 	protected virtual void OnResetGobjName(){
-		ResetGobjName ();
+		SetGobjName ("Base");
 	}
 
-	protected void ResetGobjName(){
+	public void SetGobjName(string name){
+		this.m_sGName = name;
 		if (m_gobj) {
-			if (string.IsNullOrEmpty (m_sGName)) {
-				m_sGName = m_sPrefixName + m_iCursorBase;
-			}
 			m_gobj.name = this.m_sGName;
 		}
 	}
@@ -181,10 +168,5 @@ public class EM_Base : EJ_Base{
 				trsf.localScale = Vector3.one;
 			}
 		}
-	}
-
-	public static void DoClearStatic ()
-	{
-		CORE_CURSOR = 0;
 	}
 }

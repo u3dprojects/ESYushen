@@ -15,21 +15,16 @@ public class EM_NPC : EM_UnitCell {
 	int m_iCoreCursorNpc = 0;
 
 	public EM_NPC() : base(){
-		m_sPrefixName = "NPC";
 		m_iCoreCursorNpc = (CORE_CURSOR++);
 	}
 
 	protected override void OnResetGobjName ()
 	{
-		if (string.IsNullOrEmpty (m_sGName)) {
-			m_sGName = m_sPrefixName + m_iCoreCursorNpc;
-		}
-		ResetGobjName();
+		SetGobjName ("NPC" + CORE_CURSOR);
 	}
 
 	new public static void DoClearStatic ()
 	{
-		EM_UnitCell.DoClearStatic ();
 		CORE_CURSOR = 0;
 	}
 }
