@@ -94,14 +94,21 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		bool isExists = File.Exists(path);
 
 		if (!isExists) {
-			Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+			// Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
 
 			path = "Assets\\PackResources\\Arts\\Prefabs\\Monster\\"+ exlMonster.ModeRes + ".prefab";
 
 			isExists = File.Exists(path);
+
 			if (!isExists) {
-				Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
-				return;
+				path = "Assets\\PackResources\\Arts\\Prefabs\\"+ exlMonster.ModeRes + ".prefab";
+
+				isExists = File.Exists(path);
+
+				if (!isExists) {
+					// Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+					return;
+				}
 			}
 		}
 

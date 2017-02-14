@@ -97,6 +97,7 @@ public class EM_UnitCell : EM_Cube {
 			this.m_fRotation = tmp.m_fRotation;
 			this.m_iUnqID = tmp.m_iUnqID;
 			this.m_v3Pos = tmp.m_v3Pos;
+			this.m_isShowModel = tmp.m_isShowModel;
 		}
 	}
 
@@ -110,11 +111,15 @@ public class EM_UnitCell : EM_Cube {
 		m_fRotation = m_trsf.eulerAngles.y;
 	}
 
-	public void ToTrsfData(){
-		m_trsf.position = m_v3Pos;
+	protected void ToTrsfRotation(){
 		Vector3 v3Rotation = m_trsf.eulerAngles;
 		v3Rotation.y = m_fRotation;
 		m_trsf.eulerAngles = v3Rotation;
+	}
+
+	public void ToTrsfData(){
+		m_trsf.position = m_v3Pos;
+		ToTrsfRotation ();
 	}
 
 	public void DoRaycast(){
