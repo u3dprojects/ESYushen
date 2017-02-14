@@ -34,6 +34,8 @@ public class EM_NPC : EM_UnitCell {
 		if (ret) {
 			EUM_Npc m_csCell = org.GetComponent<EUM_Npc> ();
 			OnCloneData (m_csCell.m_entity);
+
+			ToData ();
 		}
 		return ret;
 	}

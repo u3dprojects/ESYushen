@@ -35,6 +35,8 @@ public class EM_Monster : EM_UnitCell {
 		if (ret) {
 			EUM_Monster m_csCell = org.GetComponent<EUM_Monster> ();
 			OnCloneData (m_csCell.m_entity);
+
+			ToData ();
 		}
 		return ret;
 	}
