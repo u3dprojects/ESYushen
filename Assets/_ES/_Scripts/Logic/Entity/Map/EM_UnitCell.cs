@@ -172,7 +172,7 @@ public class EM_UnitCell : EM_Cube {
 
 		if (m_gobjModel != null) {
 			m_gobjModel.SetActive (m_isShowModel);
-			m_meshRender.enabled = !m_isShowModel;
+			SetRenderEnable(!m_isShowModel);
 		}
 	}
 

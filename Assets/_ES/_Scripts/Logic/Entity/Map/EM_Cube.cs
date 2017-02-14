@@ -36,6 +36,12 @@ public class EM_Cube : EM_Base{
 		}
 	}
 
+	protected void SetRenderEnable(bool isEnabled){
+		if (m_meshRender != null) {
+			m_meshRender.enabled = isEnabled;
+		}
+	}
+
 	void ResetMeshMaterial(){
 		m_meshRender = m_gobj.GetComponent<MeshRenderer> ();
 		if (m_meshRender != null) {

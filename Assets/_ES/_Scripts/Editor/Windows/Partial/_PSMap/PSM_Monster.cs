@@ -101,12 +101,12 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 			isExists = File.Exists(path);
 
 			if (!isExists) {
-				path = "Assets\\PackResources\\Arts\\Prefabs\\"+ exlMonster.ModeRes + ".prefab";
+				path = "Assets\\PackResources\\Arts\\Sprites\\Prefabs\\"+ exlMonster.ModeRes + ".prefab";
 
 				isExists = File.Exists(path);
 
 				if (!isExists) {
-					// Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+					Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
 					return;
 				}
 			}
@@ -114,6 +114,11 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 
 		GameObject gobj = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
 		gobj = GameObject.Instantiate(gobj, Vector3.zero, Quaternion.identity) as GameObject;
+		EUM_Monster em = gobj.GetComponent<EUM_Monster> ();
+		if (em != null) {
+			GameObject.DestroyImmediate (em);
+		}
+
 		one.AddModel (gobj);
 	}
 }

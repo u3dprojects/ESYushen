@@ -35,8 +35,8 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 		one.m_fRotation = EditorGUILayout.FloatField ("初始旋转角度:", one.m_fRotation);
 		EG_GUIHelper.FG_Space(5);
 
-		one.m_fReliveInv = EditorGUILayout.FloatField ("刷新时间间隔:", one.m_fReliveInv);
-		EG_GUIHelper.FG_Space(5);
+//		one.m_fReliveInv = EditorGUILayout.FloatField ("刷新时间间隔:", one.m_fReliveInv);
+//		EG_GUIHelper.FG_Space(5);
 
 //		EG_GUIHelper.FEG_BeginToggleGroup ("是否显示怪物模型", ref one.m_isShowModel);
 //		{
@@ -45,7 +45,7 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 //			}
 //		}
 //		EG_GUIHelper.FEG_EndToggleGroup ();
-		_ShowMonster (one);
+//		_ShowMonster (one);
 
 		EG_GUIHelper.FG_BeginH ();
 		{
@@ -94,19 +94,31 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 		bool isExists = File.Exists(path);
 
 		if (!isExists) {
-			Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+			// Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
 
 			path = "Assets\\PackResources\\Arts\\Prefabs\\Monster\\"+ exlMonster.ModeRes + ".prefab";
 
 			isExists = File.Exists(path);
+
 			if (!isExists) {
-				Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
-				return;
+				path = "Assets\\PackResources\\Arts\\Sprites\\Prefabs\\"+ exlMonster.ModeRes + ".prefab";
+
+				isExists = File.Exists(path);
+
+				if (!isExists) {
+					Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+					return;
+				}
 			}
 		}
 
 		GameObject gobj = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
 		gobj = GameObject.Instantiate(gobj, Vector3.zero, Quaternion.identity) as GameObject;
+		EUM_Npc em = gobj.GetComponent<EUM_Npc> ();
+		if (em != null) {
+			GameObject.DestroyImmediate (em);
+		}
+
 		one.AddModel (gobj);
 	}
 }
