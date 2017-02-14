@@ -98,6 +98,8 @@ public class EM_UnitCell : EM_Cube {
 			this.m_iUnqID = tmp.m_iUnqID;
 			this.m_v3Pos = tmp.m_v3Pos;
 			this.m_isShowModel = tmp.m_isShowModel;
+
+			this._m_iUnqID = m_iUnqID;
 		}
 	}
 
