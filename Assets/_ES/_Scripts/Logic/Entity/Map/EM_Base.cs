@@ -25,10 +25,6 @@ public class EM_Base : EJ_Base{
 	// 绘制的时候是否打开了视图Foldout
 	public bool m_isOpenFoldout;
 
-	// 类型脚本
-	[System.NonSerialized]
-	public EM_Cell m_csCell;
-
 	public EM_Base() : base(){
 	}
 
@@ -48,10 +44,8 @@ public class EM_Base : EJ_Base{
 			DoClear ();
 		}
 
-		m_gobj = org;
-		m_trsf = org.transform;
-		EM_Cell csCell = org.GetComponent<EM_Cell> ();
-		OnClone (csCell.m_entity);
+
+		OnClone (org);
 
 		OnResetGobjInfo ();
 
@@ -59,7 +53,15 @@ public class EM_Base : EJ_Base{
 		DoActiveInHierarchy ();
 	}
 
-	protected virtual void OnClone(EM_Base org){
+	protected virtual bool OnClone(GameObject org){
+		if (org == null)
+			return false;
+		m_gobj = org;
+		m_trsf = org.transform;
+		return true;
+	}
+
+	protected virtual void OnCloneData(EM_Base org){
 	}
 
 	public void DoNew(){
@@ -83,13 +85,6 @@ public class EM_Base : EJ_Base{
 	}
 
 	protected virtual void ResetCShape(){
-		if (m_gobj != null && m_csCell == null) {
-			// 添加一个脚本作为类型判断
-			m_csCell = m_gobj.GetComponent<EM_Cell> ();
-			if (m_csCell == null) {
-				m_csCell = m_gobj.AddComponent<EM_Cell> ();
-			}
-		}
 	}
 
 	void ResetGobjInstanceID(){

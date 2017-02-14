@@ -6,6 +6,8 @@ using System.Collections;
 /// 日期 : 2017-02-06 16:06
 /// 功能 : 创建类型分类判断
 /// </summary>
-public class EM_Cell : MonoBehaviour {
-	public EM_UnitCell m_entity;
+public class EUM_Cell : MonoBehaviour {
+
+	public virtual void ToTrsfData(){
+	}
 }

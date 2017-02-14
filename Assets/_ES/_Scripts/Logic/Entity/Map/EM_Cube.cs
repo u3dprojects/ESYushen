@@ -38,12 +38,12 @@ public class EM_Cube : EM_Base{
 		}
 	}
 
-	protected override void OnClone (EM_Base org)
+	protected override void OnCloneData (EM_Base org)
 	{
 		if (org == null)
 			return;
 		
-		base.OnClone (org);
+		base.OnCloneData (org);
 
 		if (org is EM_Cube) {
 			EM_Cube tmp = (EM_Cube)org;

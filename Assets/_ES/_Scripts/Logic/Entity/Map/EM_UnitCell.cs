@@ -84,21 +84,13 @@ public class EM_UnitCell : EM_Cube {
 		}
 	}
 
-	protected override void ResetCShape ()
-	{
-		base.ResetCShape ();
-		if (m_csCell != null) {
-			m_csCell.m_entity = this;
-		}
-	}
-
-	protected override void OnClone (EM_Base org)
+	protected override void OnCloneData (EM_Base org)
 	{
 		if(org == null)
 		{
 			return;
 		}
-		base.OnClone (org);
+		base.OnCloneData (org);
 		if(org is EM_UnitCell){
 			EM_UnitCell tmp = (EM_UnitCell)org;
 			this.m_fReliveInv = tmp.m_fReliveInv;

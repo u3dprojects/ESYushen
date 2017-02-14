@@ -407,7 +407,7 @@ public class EG_Map {
 		if (gobj == null)
 			return;
 
-		EM_Cell enCell = gobj.GetComponent<EM_Cell> ();
+		EUM_Cell enCell = gobj.GetComponent<EUM_Cell> ();
 		if (enCell == null) {
 			return;
 		}
@@ -419,7 +419,11 @@ public class EG_Map {
 
 		if (one == null) {
 			// one = EM_Base.NewEntity<EM_Monster> ();
-			one = enCell.m_entity;
+			if (enCell is EUM_Monster) {
+				one = ((EUM_Monster)enCell).m_entity;
+			} else if (enCell is EUM_Npc) {
+				one = ((EUM_Npc)enCell).m_entity;
+			}
 			m_lMapCells.Add (one);
 		}
 

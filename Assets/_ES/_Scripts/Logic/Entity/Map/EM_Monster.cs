@@ -15,6 +15,11 @@ public class EM_Monster : EM_UnitCell {
 	static int CORE_CURSOR = 0;
 	int m_iCoreCursorMonster = 0;
 
+	// 类型脚本
+	[System.NonSerialized]
+	public EUM_Monster m_csCell;
+
+
 	public EM_Monster() : base(){
 		m_iCoreCursorMonster = (CORE_CURSOR++);
 	}
@@ -22,6 +27,31 @@ public class EM_Monster : EM_UnitCell {
 	protected override void OnResetGobjName ()
 	{
 		SetGobjName ("Monster" + m_iCoreCursorMonster);
+	}
+
+	protected override bool OnClone (GameObject org)
+	{
+		bool ret = base.OnClone (org);
+		if (ret) {
+			EUM_Monster m_csCell = org.GetComponent<EUM_Monster> ();
+			OnCloneData (m_csCell.m_entity);
+		}
+		return ret;
+	}
+
+	protected override void ResetCShape ()
+	{
+		if (m_gobj != null && m_csCell == null) {
+			// 添加一个脚本作为类型判断
+			m_csCell = m_gobj.GetComponent<EUM_Monster> ();
+			if (m_csCell == null) {
+				m_csCell = m_gobj.AddComponent<EUM_Monster> ();
+			}
+		}
+
+		if (m_csCell != null) {
+			m_csCell.m_entity = this;
+		}
 	}
 
 	new public static void DoClearStatic ()

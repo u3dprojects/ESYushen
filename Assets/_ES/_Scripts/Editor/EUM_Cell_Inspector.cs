@@ -3,14 +3,14 @@ using System.Collections;
 using UnityEditor;
 
 /// <summary>
-/// 类名 : 绘制EM_Cell的对象
+/// 类名 : 绘制EUM_Cell的对象
 /// 作者 : Canyon
 /// 日期 : 2017-02-07 18:10
 /// 功能 : 添加一个按钮进行同步
 /// </summary>
 [CanEditMultipleObjects]
-[CustomEditor(typeof(EM_Cell),true)]
-public class EM_Cell_Inspector : Editor {
+[CustomEditor(typeof(EUM_Cell),true)]
+public class EUM_Cell_Inspector : Editor {
 
 	static Hashtable mapIDS = new Hashtable ();
 
@@ -19,11 +19,11 @@ public class EM_Cell_Inspector : Editor {
 	ArrayList list = new ArrayList ();
 	ArrayList rmList = new ArrayList ();
 
-	EM_Cell m_entity;
+	EUM_Cell m_entity;
 
 	void OnEnable ()
 	{
-		m_entity = target as EM_Cell;
+		m_entity = target as EUM_Cell;
 		int id = m_entity.GetInstanceID ();
 		mapIDS [id] = m_entity;
 	}
@@ -39,7 +39,7 @@ public class EM_Cell_Inspector : Editor {
 
 		for (int i = 0; i < lens; i++) {
 			key = list [i];
-			isHas = IsInTargets ((EM_Cell)mapIDS [key]);
+			isHas = IsInTargets ((EUM_Cell)mapIDS [key]);
 			if (!isHas) {
 				rmList.Add (list [i]);
 			}
@@ -79,14 +79,14 @@ public class EM_Cell_Inspector : Editor {
 	}
 
 	void SyncTarget(){
-		m_entity = target as EM_Cell;
+		m_entity = target as EUM_Cell;
 		m_isChanged = true;
 	}
 
 	void SyncOne(Object objTarget){
-		EM_Cell temp = objTarget as EM_Cell;
+		EUM_Cell temp = objTarget as EUM_Cell;
 		if (m_isChanged) {
-			temp.m_entity.ToTrsfData ();
+			temp.ToTrsfData ();
 		}
 	}
 
