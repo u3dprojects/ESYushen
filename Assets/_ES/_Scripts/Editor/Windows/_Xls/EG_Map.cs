@@ -218,8 +218,10 @@ public class EG_Map {
 
 			OpenScene (ms_entity.SceneName);
 		}
+		m_lMapCells.Clear ();
 
-		ToList (ms_entity.strMonsters);
+		ToList<EM_Monster>(ms_entity.strMonsters);
+		ToList<EM_NPC>(ms_entity.strNpcs);
 	}
 
 	void OnInitAttrs2Entity()
@@ -243,9 +245,8 @@ public class EG_Map {
 	JsonData tmpJD;
 	EM_Base tmpCell;
 
-	void ToList(string json){
-		m_lMapCells.Clear ();
-
+	void ToList<T>(string json) where T : EM_Base,new()
+	{
 		if (string.IsNullOrEmpty (json) || "null".Equals (json,System.StringComparison.OrdinalIgnoreCase)) {
 			return;
 		}
@@ -256,15 +257,15 @@ public class EG_Map {
 		}
 
 		int lens = jsonData.Count;
-		EM_Monster tmpMonster;
+		T temp = null;
 		for (int i = 0; i < lens; i++) {
 			tmpJD = jsonData [i];
-			tmpMonster = EM_Monster.NewEntity<EM_Monster> (tmpJD);
-			if (tmpMonster == null) {
+			temp = EM_Base.NewEntity<T> (tmpJD);
+			if (temp == null) {
 				continue;
 			}
 
-			m_lMapCells.Add (tmpMonster);
+			m_lMapCells.Add (temp);
 		}
 	}
 
@@ -314,7 +315,11 @@ public class EG_Map {
 
 
 	void ReRaycast(){
-		List<EM_Monster> list = GetLMonsters ();
+		ReRaycast<EM_Monster> (GetLMonsters ());
+		ReRaycast<EM_NPC> (GetLNpcs ());
+	}
+
+	void ReRaycast<T>(List<T> list) where T : EM_UnitCell{
 		int lens = list.Count;
 		if (lens <= 0) {
 			return;
