@@ -22,8 +22,19 @@ public class EN_BaseXls : System.Object {
 		}
 	}
 
+	public bool IsCanCache{
+		get{
+			if (sheet == null || rowIndex < 1)
+				return false;
+			return true;
+		}
+	}
+
 	public void ToNSCell()
 	{
+		if (!IsCanCache)
+			return;
+		
 		object[] columns = Columns;
 		if (columns == null || columns.Length <= 0) {
 			return;

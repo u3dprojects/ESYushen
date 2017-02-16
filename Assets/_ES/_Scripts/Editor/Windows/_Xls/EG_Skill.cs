@@ -43,6 +43,8 @@ public class EG_Skill {
 	// 是否可以移动
 	bool ms_isCanMove = false;
 
+	int ms_iSkillID = 0;
+
 	#endregion
 
 	public void DoInit(string path){
@@ -60,12 +62,19 @@ public class EG_Skill {
 		EG_GUIHelper.FEG_HeadTitMid ("Skill Excel 表",Color.cyan);
 
 		EG_GUIHelper.FEG_BeginH();
-		ms_enity.ID = EditorGUILayout.IntField("ID:",ms_enity.ID);
+		ms_iSkillID = EditorGUILayout.IntField("ID:",ms_iSkillID);
+
 		if (GUILayout.Button("SeachSkill"))
 		{
 			if (isInited)
 			{
-				EN_Skill tmp = m_opt.GetEnSkill(ms_enity.ID);
+				if (ms_enity.IsCanCache) {
+//					if (EditorUtility.DisplayDialog ("Tips", "是否保存修改对象??", "Save", "Cancel")) {	
+//					}
+					OnInitAttrs2Entity ();
+				}
+
+				EN_Skill tmp = m_opt.GetEnSkill(ms_iSkillID);
 				OnInitEntity2Attrs(tmp);
 			}
 			else{
@@ -206,6 +215,8 @@ public class EG_Skill {
 			ms_enity.DoClone (entity);
 			m_ePSEvents.DoReInitEventJson (ms_enity.CastEvent_Str);
 		}
+
+		ms_enity.ID = ms_iSkillID;
 	}
 
 	void OnInitAttrs2Entity()
@@ -216,6 +227,7 @@ public class EG_Skill {
 	}
 
 	public void SaveExcel(string savePath){
+		ms_enity.ID = ms_iSkillID;
 		OnInitAttrs2Entity ();
 		m_opt.Save (savePath);
 	}
