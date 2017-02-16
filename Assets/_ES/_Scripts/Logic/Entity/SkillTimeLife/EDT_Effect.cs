@@ -30,6 +30,9 @@ public class EDT_Effect : EDT_Base {
 
 	// 是否跟随
 	public bool m_isFollow = true;
+
+	// 特效是否在指定点位置播放
+	public bool m_isAppointPos = false;
     
     // 创建出来的实体对象
     EN_Effect _m_eEffect;
@@ -132,6 +135,10 @@ public class EDT_Effect : EDT_Base {
 			this.m_isFollow = (bool)jsonData ["m_isBindInAttacker"];
 		}
 
+		if (dicJsonData.Contains("m_posType")) {
+			this.m_isAppointPos = ((int)jsonData ["m_posType"]) == 1;
+		}
+
 		JsonData tmp = null;
 		if (dicJsonData.Contains ("m_pos")) {
 			tmp = jsonData ["m_pos"];
@@ -173,6 +180,7 @@ public class EDT_Effect : EDT_Base {
 		ret["m_scale"] = Round2D(this.m_fScale,2);
 		ret["m_duration"] = Round2D(this.m_fDuration,2);
 		ret["m_isBindInAttacker"] = this.m_isFollow;
+		ret["m_posType"] = this.m_isAppointPos ? 1 : 0;
 
 		JsonData pos = new JsonData ();
 		pos ["x"] = Round2D(this.m_v3OffsetPos.x,2);

@@ -44,6 +44,7 @@ public class EG_Skill {
 	bool ms_isCanMove = false;
 
 	int ms_iSkillID = 0;
+	string[] FiledType = { "自己为中心", "目标为中心", "指定位置为中心" };
 
 	#endregion
 
@@ -186,6 +187,11 @@ public class EG_Skill {
 
 		EG_GUIHelper.FEG_BeginH();
 		ms_enity.MoveSpeed = EditorGUILayout.FloatField ("移动速度百分比(1正常,0不移动):",ms_enity.MoveSpeed);
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		ms_enity.DmgFieldType = EditorGUILayout.Popup("伤害范围:", ms_enity.DmgFieldType, FiledType);
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 

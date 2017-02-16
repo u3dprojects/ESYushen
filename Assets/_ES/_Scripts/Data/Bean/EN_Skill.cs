@@ -36,7 +36,11 @@ public class EN_Skill : EN_BaseXls{
 	public int CanMove;
 	public int NextSkillID;
 
+	// 速度比例, (仅在当前技能可以移动时有效), 为当前移动速度的百分比
 	public float MoveSpeed;
+
+	// 伤害结算范围类型, 0 以自己为中心, 1 以目标为中心, 2 以指定位置为中心
+	public int DmgFieldType;
 
 	public EN_Skill():base(){
 	}
@@ -70,7 +74,8 @@ public class EN_Skill : EN_BaseXls{
 				this.CanMove,
 				this.NextSkillID,
 
-				this.MoveSpeed
+				this.MoveSpeed,
+				this.DmgFieldType
             };
             return ret;
         }
@@ -107,6 +112,7 @@ public class EN_Skill : EN_BaseXls{
 		this.NextSkillID = sheet.GetInt(rowIndex, colIndex++);
 
 		this.MoveSpeed = sheet.GetFloat(rowIndex, colIndex++);
+		this.DmgFieldType = sheet.GetInt(rowIndex, colIndex++);
 	}
 
 	public override void DoClone (EN_BaseXls org)
@@ -144,5 +150,6 @@ public class EN_Skill : EN_BaseXls{
 		this.NextSkillID = tmp.NextSkillID;
 
 		this.MoveSpeed = tmp.MoveSpeed;
+		this.DmgFieldType = tmp.DmgFieldType;
 	}
 }

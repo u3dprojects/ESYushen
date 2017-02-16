@@ -174,6 +174,13 @@ public class PS_EvtEffect {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
+			one.m_isAppointPos = EditorGUILayout.Toggle("是否在指定点位置(主要针对天山掉线来的):", one.m_isAppointPos);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
 			EG_GUIHelper.FEG_BeginToggleGroup("手动位置??", ref isJoinTrsf);
 			one.m_trsfParent = EditorGUILayout.ObjectField("位置:", one.m_trsfParent, typeof(Transform), isJoinTrsf) as Transform;
 			EG_GUIHelper.FEG_EndToggleGroup();
