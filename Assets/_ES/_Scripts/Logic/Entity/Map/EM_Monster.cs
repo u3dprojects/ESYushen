@@ -58,7 +58,7 @@ public class EM_Monster : EM_UnitCell {
 		}
 	}
 
-	new public static void DoClearStatic ()
+	public static void DoClearStatic ()
 	{
 		CORE_CURSOR = 0;
 	}

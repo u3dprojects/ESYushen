@@ -119,7 +119,11 @@ public class PS_EvtAttrs {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("子分类:", GUILayout.Width(80));
-			one.m_iGID = EditorGUILayout.IntField (one.m_iGID);
+			Color def = GUI.color;
+			GUI.color = Color.yellow;
+			GUILayout.Label ("("+EnumExtension.GetDescription(one.m_iGID)+")");
+			GUI.color = def;
+			one.m_iGID = (EDT_Property.PlusType)EditorGUILayout.EnumPopup ((System.Enum)one.m_iGID);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);

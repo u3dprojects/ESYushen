@@ -37,8 +37,36 @@ public class EDT_Property : EDT_Base {
 		}
 	}
 
+	// 技能效果类型  SkillEffectType
+	public enum PlusType
+	{
+		// 按数值增减
+		[Description("无")]
+		None = 0,		// 
+		[Description("数值增减 - 当前生命值")]
+		HP = 1,		// 当前生命值
+
+		[Description("数值增减 - 最大生命值")]
+		HpMax = 2,		// 最大生命值
+
+		// 按百分比增减
+		[Description("百分比增减[以万为基数] - 当前生命值")]
+		Hp_Per	= 1001,		// 当前生命值
+
+		[Description("百分比增减[以万为基数] - 最大生命值")]
+		HpMax_Per	= 1002		// 最大生命值
+	}
+
 	// 属性分类
-	public int m_iGID = 0;
+	PlusType _m_iGID = PlusType.HP;
+	public PlusType m_iGID{
+		get{ return _m_iGID;}
+		set{
+			_m_iGID = value;
+			if (_m_iGID == PlusType.None)
+				_m_iGID = PlusType.HP;
+		}
+	}
 
 	public string m_sPars = "";
 
@@ -50,7 +78,7 @@ public class EDT_Property : EDT_Base {
 	{
 		base.OnReInit (castTime, jsonData);
 
-		this.m_iGID = (int)jsonData ["m_id"];
+		this.m_iGID = (PlusType)(int)jsonData ["m_id"];
 		this.m_sPars = (string)jsonData ["m_parmStr"];
 
 		this.m_isJsonDataToSelfSuccessed = true;
@@ -64,7 +92,7 @@ public class EDT_Property : EDT_Base {
 
 		JsonData ret = new JsonData ();
 		ret ["m_typeInt"] = (int)this.m_emType;
-		ret ["m_id"] = this.m_iGID;
+		ret ["m_id"] = (int)this.m_iGID;
 		ret ["m_parmStr"] = this.m_sPars;
 		return ret;
 	}

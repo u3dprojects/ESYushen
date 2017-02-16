@@ -56,7 +56,7 @@ public class EM_NPC : EM_UnitCell {
 		}
 	}
 
-	new public static void DoClearStatic ()
+	public static void DoClearStatic ()
 	{
 		CORE_CURSOR = 0;
 	}

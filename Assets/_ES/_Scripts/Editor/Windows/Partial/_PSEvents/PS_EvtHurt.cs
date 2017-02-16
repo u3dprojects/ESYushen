@@ -91,7 +91,7 @@ public class PS_EvtHurt {
 			}
 			EG_GUIHelper.FEG_EndH();
 
-			EG_GUIHelper.FG_Space(5);
+			EG_GUIHelper.FG_Space(8);
 
 			if (m_lFodeout.Count > index && m_lFodeout[index])
 			{
@@ -114,7 +114,7 @@ public class PS_EvtHurt {
 				}
 			}
 			EG_GUIHelper.FEG_EndH ();
-			EG_GUIHelper.FG_Space (5);
+			EG_GUIHelper.FG_Space (8);
 		}
 
 		EG_GUIHelper.FEG_BeginH();
@@ -123,31 +123,35 @@ public class PS_EvtHurt {
 			one.m_emTag = (EDT_Hurt.HurtType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emTag);
 		}
 		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
+		EG_GUIHelper.FG_Space(8);
 
 		EG_GUIHelper.FEG_BeginH();
 		{
 			one.m_isCanShow = EditorGUILayout.Toggle ("Play时播放事件??", one.m_isCanShow);
 		}
 		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
+		EG_GUIHelper.FG_Space(8);
 
 		if (one.m_emTag == EDT_Hurt.HurtType.MoveTarget) {
 			EG_GUIHelper.FEG_BeginH ();
 			{
 				GUILayout.Label ("优先目标:", GUILayout.Width (80));
-				one.m_iTargetFilter = EditorGUILayout.IntField (one.m_iTargetFilter);
+				Color def = GUI.color;
+				GUI.color = Color.yellow;
+				GUILayout.Label ("("+EnumExtension.GetDescription(one.m_iTargetFilter)+")");
+				GUI.color = def;
+				one.m_iTargetFilter = (EDT_Hurt.FitlerTargetType)EditorGUILayout.EnumPopup ((System.Enum)one.m_iTargetFilter);
 			}
 			EG_GUIHelper.FEG_EndH ();
-			EG_GUIHelper.FG_Space (5);
+			EG_GUIHelper.FG_Space (8);
 
 			EG_GUIHelper.FEG_BeginH ();
 			{
-				GUILayout.Label ("目标数量:", GUILayout.Width (80));
+				GUILayout.Label ("目标数量:", GUILayout.Width (100));
 				one.m_iTargetCount = EditorGUILayout.IntField (one.m_iTargetCount);
 			}
 			EG_GUIHelper.FEG_EndH ();
-			EG_GUIHelper.FG_Space (5);
+			EG_GUIHelper.FG_Space (8);
 
 			// 伤害区域
 			_DrawOneHurt_HurtAreas (one);

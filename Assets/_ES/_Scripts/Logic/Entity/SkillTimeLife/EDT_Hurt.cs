@@ -34,8 +34,32 @@ public class EDT_Hurt : EDT_Base {
 		}
 	}
 
+	// 攻击目标类型  AttackTargetType
+	public enum FitlerTargetType
+	{
+		[Description("无")]
+		None = 0, //
+
+		[Description("友方")]
+		Friend = 1, // 友方
+
+		[Description("敌方")]
+		Enermy = 2, // 敌方
+
+		[Description("自己")]
+		Self = 4, // 自己
+	}
+
 	// 优先目标
-	public int m_iTargetFilter;
+	FitlerTargetType _m_iTargetFilter  =  FitlerTargetType.Enermy;
+	public FitlerTargetType m_iTargetFilter{
+		get{ return _m_iTargetFilter; }
+		set{
+			_m_iTargetFilter = value;
+			if (_m_iTargetFilter == FitlerTargetType.None)
+				_m_iTargetFilter = FitlerTargetType.Enermy;
+		}
+	}
 
 	// 攻击数量
 	public int m_iTargetCount;
@@ -66,7 +90,7 @@ public class EDT_Hurt : EDT_Base {
 		IDictionary dicJsonData = (IDictionary)jsonData;
 
 		if (dicJsonData.Contains ("m_targetFilter")) {
-			this.m_iTargetFilter = (int)jsonData ["m_targetFilter"];
+			this.m_iTargetFilter = (FitlerTargetType)((int)jsonData ["m_targetFilter"]);
 		}
 
 		if (dicJsonData.Contains ("m_targetCount")) {
@@ -103,7 +127,7 @@ public class EDT_Hurt : EDT_Base {
 		JsonData tmp;
 
 		if (m_emTag == HurtType.MoveTarget) {
-			ret ["m_targetFilter"] = this.m_iTargetFilter;
+			ret ["m_targetFilter"] = (int)this.m_iTargetFilter;
 			ret ["m_targetCount"] = this.m_iTargetCount;
 
 			JsonData tmpArea = m_eHitArea.ToJsonData();
