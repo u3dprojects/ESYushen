@@ -12,15 +12,15 @@ public class EN_Monster : EN_BaseXls{
 	// 语言表里面的ID
 	public int NameID;
 
+	// 分类
+	public int Types;
+
 	// 资源名
 	public string ModeRes;
 
 	// 头像资源
 	public string HeadRes;
-	
-	// 等级
-	public int Level;
-	
+
 	// 生命
 	public int LifeHP;
 
@@ -43,13 +43,10 @@ public class EN_Monster : EN_BaseXls{
 	public float Height;
 
 	// AI
-	public string AI;
+	// public string AI;
 
 	// 选中时候的选中框
-	public string SelectBox;
-
-	// 分类
-	public int Types;
+	// public string SelectBox;
 
 	public EN_Monster():base(){
 	}
@@ -60,19 +57,18 @@ public class EN_Monster : EN_BaseXls{
 			object[] ret = {
 				this.ID,
 				this.NameID,
+				this.Types,
 				this.ModeRes,
 				this.HeadRes,
-				this.Level,
 				this.LifeHP,
 				this.Attack,
 				this.Defense,
 				this.MoveSpeed,
 				this.RotationSpeed,
 				this.Width,
-				this.Height,
-				this.AI,
-				this.SelectBox,
-				this.Types
+				this.Height
+//				this.AI,
+//				this.SelectBox
 			};
 			return ret;
 		}
@@ -85,10 +81,10 @@ public class EN_Monster : EN_BaseXls{
 		int colIndex = 0;
 		this.ID = sheet.GetInt(rowIndex, colIndex++);
 		this.NameID = sheet.GetInt(rowIndex, colIndex++);
+		this.Types = sheet.GetInt(rowIndex, colIndex++);
 		this.ModeRes = sheet.GetString(rowIndex, colIndex++);
 		this.HeadRes = sheet.GetString(rowIndex, colIndex++);
 
-		this.Level = sheet.GetInt(rowIndex, colIndex++);
 		this.LifeHP = sheet.GetInt(rowIndex, colIndex++);
 		this.Attack = sheet.GetInt(rowIndex, colIndex++);
 		this.Defense = sheet.GetInt(rowIndex, colIndex++);
@@ -97,9 +93,8 @@ public class EN_Monster : EN_BaseXls{
 		this.Width = sheet.GetFloat(rowIndex, colIndex++);
 		this.Height = sheet.GetFloat(rowIndex, colIndex++);
 
-		this.AI = sheet.GetString(rowIndex, colIndex++);
-		this.SelectBox = sheet.GetString(rowIndex, colIndex++);
-		this.Types = sheet.GetInt(rowIndex, colIndex++);
+//		this.AI = sheet.GetString(rowIndex, colIndex++);
+//		this.SelectBox = sheet.GetString(rowIndex, colIndex++);
 	}
 
 	public override void DoClone (EN_BaseXls org)
@@ -114,9 +109,9 @@ public class EN_Monster : EN_BaseXls{
 
 		this.ID = tmp.ID;
 		this.NameID = tmp.NameID;
+		this.Types = tmp.Types;
 		this.ModeRes = tmp.ModeRes;
 		this.HeadRes = tmp.HeadRes;
-		this.Level = tmp.Level;
 		this.LifeHP = tmp.LifeHP;
 		this.Attack = tmp.Attack;
 		this.Defense = tmp.Defense;
@@ -124,8 +119,7 @@ public class EN_Monster : EN_BaseXls{
 		this.RotationSpeed = tmp.RotationSpeed;
 		this.Width = tmp.Width;
 		this.Height = tmp.Height;
-		this.AI = tmp.AI;
-		this.SelectBox = tmp.SelectBox;
-		this.Types = tmp.Types;
+//		this.AI = tmp.AI;
+//		this.SelectBox = tmp.SelectBox;
 	}
 }

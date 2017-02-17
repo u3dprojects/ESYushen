@@ -42,29 +42,42 @@ public class EDT_Property : EDT_Base {
 	{
 		// 按数值增减
 		[Description("无")]
-		None = 0,		// 
-		[Description("数值增减 - 当前生命值")]
-		HP = 1,		// 当前生命值
+		None = 0,
+	
+		[Description("数值增 - 当前生命值")]
+		HPPlus = 1,
 
-		[Description("数值增减 - 最大生命值")]
-		HpMax = 2,		// 最大生命值
+		[Description("数值减 - 当前生命值")]
+		HPMinus = 2,
+
+		[Description("数值增 - 最大生命值")]
+		HpMaxPlus = 3,
+
+		[Description("数值减 - 最大生命值")]
+		HpMaxMinus = 4,
 
 		// 按百分比增减
-		[Description("百分比增减[以万为基数] - 当前生命值")]
-		Hp_Per	= 1001,		// 当前生命值
+		[Description("百分比增[以万为基数] - 当前生命值")]
+		Hp_Per_Plus	= 1001,
 
-		[Description("百分比增减[以万为基数] - 最大生命值")]
-		HpMax_Per	= 1002		// 最大生命值
+		[Description("百分比减[以万为基数] - 当前生命值")]
+		Hp_Per_Minus = 1002,
+
+		[Description("百分比增[以万为基数] - 最大生命值")]
+		HpMax_Per_Plus	= 1003,
+
+		[Description("百分比增[以万为基数] - 最大生命值")]
+		HpMax_Per_Minus	= 1004,
 	}
 
 	// 属性分类
-	PlusType _m_iGID = PlusType.HP;
+	PlusType _m_iGID = PlusType.HPPlus;
 	public PlusType m_iGID{
 		get{ return _m_iGID;}
 		set{
 			_m_iGID = value;
 			if (_m_iGID == PlusType.None)
-				_m_iGID = PlusType.HP;
+				_m_iGID = PlusType.HPPlus;
 		}
 	}
 
