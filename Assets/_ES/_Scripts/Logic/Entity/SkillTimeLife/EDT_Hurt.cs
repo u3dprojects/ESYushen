@@ -37,9 +37,6 @@ public class EDT_Hurt : EDT_Base {
 	// 攻击目标类型  AttackTargetType
 	public enum FitlerTargetType
 	{
-		[Description("无")]
-		None = 0, //
-
 		[Description("友方")]
 		Friend = 1, // 友方
 
@@ -50,16 +47,9 @@ public class EDT_Hurt : EDT_Base {
 		Self = 4, // 自己
 	}
 
-	// 优先目标
-	FitlerTargetType _m_iTargetFilter  =  FitlerTargetType.Enermy;
-	public FitlerTargetType m_iTargetFilter{
-		get{ return _m_iTargetFilter; }
-		set{
-			_m_iTargetFilter = value;
-			if (_m_iTargetFilter == FitlerTargetType.None)
-				_m_iTargetFilter = FitlerTargetType.Enermy;
-		}
-	}
+	// 优先目标 TF - TargetFilter
+	public int m_iTargetFilter;
+	public bool m_isTFFriend, m_isTFEnermy, m_isTFSelf;
 
 	// 攻击数量
 	public int m_iTargetCount;
@@ -90,8 +80,14 @@ public class EDT_Hurt : EDT_Base {
 		IDictionary dicJsonData = (IDictionary)jsonData;
 
 		if (dicJsonData.Contains ("m_targetFilter")) {
-			this.m_iTargetFilter = (FitlerTargetType)((int)jsonData ["m_targetFilter"]);
-		}
+			int vT = ((int)jsonData ["m_targetFilter"]);
+			vT = vT <= 0 ? 1 : vT;
+			this.m_iTargetFilter = vT;
+
+			this.m_isTFFriend = vT % 2 == 1;
+			this.m_isTFEnermy = vT == 2 || vT == 3 || vT == 6 || vT == 7;
+			this.m_isTFSelf = vT == 4 || vT == 5 || vT == 6 || vT == 7;
+ 		}
 
 		if (dicJsonData.Contains ("m_targetCount")) {
 			this.m_iTargetCount = (int)jsonData ["m_targetCount"];
@@ -193,5 +189,22 @@ public class EDT_Hurt : EDT_Base {
 
 	#endregion
 
+	public void ReckonFitlerTargetType(){
+		int vT = 0;
+		if (this.m_isTFFriend)
+			vT += 1;
+		
+		if (this.m_isTFEnermy)
+			vT += 2;
 
+		if (this.m_isTFSelf)
+			vT += 4;
+
+		if (vT == 0) {
+			this.m_isTFFriend = true;
+			vT = 1;
+		}
+
+		this.m_iTargetFilter = vT;
+	}
 }
