@@ -29,6 +29,9 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
+		one.m_iLevel = EditorGUILayout.IntField ("怪物等级:", one.m_iLevel);
+		EG_GUIHelper.FG_Space(5);
+
 		one.m_v3Pos = EditorGUILayout.Vector3Field ("产生点:", one.m_v3Pos);
 		EG_GUIHelper.FG_Space(5);
 

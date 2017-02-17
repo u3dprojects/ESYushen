@@ -56,6 +56,17 @@ public class EM_NPC : EM_UnitCell {
 		}
 	}
 
+	public override JsonData ToJsonData ()
+	{
+		JsonData ret = base.ToJsonData ();
+		if(ret != null){
+			IDictionary map = (IDictionary)ret;
+			map.Remove ("reliveInterval");
+			map.Remove ("level");
+		}
+		return ret;
+	}
+
 	public static void DoClearStatic ()
 	{
 		CORE_CURSOR = 0;

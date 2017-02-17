@@ -24,6 +24,9 @@ public class EM_UnitCell : EM_Cube {
 	// 旋转角度偏移量,就是y轴值
 	public float m_fRotation;
 
+	// 等级
+	public int m_iLevel;
+
 	// 显示模型
 	public bool m_isShowModel;
 	bool _m_isShowModel;
@@ -47,9 +50,16 @@ public class EM_UnitCell : EM_Cube {
 			}
 
 			this.m_fRotation = float.Parse (m_jdOrg ["rotateDegree"].ToString ());
-			this.m_fReliveInv = float.Parse (m_jdOrg ["reliveInterval"].ToString ());
 			m_v3Pos.x = float.Parse (m_jdOrg ["positionX"].ToString ());
 			m_v3Pos.z = float.Parse (m_jdOrg ["positionZ"].ToString ());
+
+			if (map.Contains ("reliveInterval")) {
+				this.m_fReliveInv = float.Parse (m_jdOrg ["reliveInterval"].ToString ());
+			}
+
+			if (map.Contains ("level")) {
+				this.m_iLevel = (int)m_jdOrg ["level"];
+			}
 
 			_m_iUnqID = m_iUnqID;
 
@@ -72,6 +82,7 @@ public class EM_UnitCell : EM_Cube {
 		ret ["reliveInterval"] = Round2D(this.m_fReliveInv,2);
 		ret ["positionX"] = Round2D(this.m_v3Pos.x,2);
 		ret ["positionZ"] = Round2D(this.m_v3Pos.z,2);
+		ret ["level"] = this.m_iLevel;
 
 		return ret;
 	}
@@ -98,6 +109,7 @@ public class EM_UnitCell : EM_Cube {
 			this.m_iUnqID = tmp.m_iUnqID;
 			this.m_v3Pos = tmp.m_v3Pos;
 			this.m_isShowModel = tmp.m_isShowModel;
+			this.m_iLevel = tmp.m_iLevel;
 
 			this._m_iUnqID = m_iUnqID;
 		}
