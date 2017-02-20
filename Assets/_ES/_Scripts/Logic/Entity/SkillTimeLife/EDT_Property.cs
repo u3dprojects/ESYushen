@@ -45,39 +45,262 @@ public class EDT_Property : EDT_Base {
 		None = 0,
 	
 		[Description("数值增 - 当前生命值")]
-		HPPlus = 1,
-
+		HP_Plus = 1,
 		[Description("数值减 - 当前生命值")]
-		HPMinus = 2,
-
+		HP_Minus = 2,
 		[Description("数值增 - 最大生命值")]
-		HpMaxPlus = 3,
-
+		HP_Max_Plus = 3,
 		[Description("数值减 - 最大生命值")]
-		HpMaxMinus = 4,
+		HP_Max_Minus = 4,
+
+		[Description("数值增 - 攻击")]
+		ATK_Plus = 5,
+		[Description("数值减 - 攻击")]
+		ATK_Minus = 6,
+
+		[Description("数值增 - 防御")]
+		DEF_Plus = 7,
+		[Description("数值减 - 防御")]
+		DEF_Minus = 8,
+
+		[Description("数值增 - 穿刺")]
+		IMPALE_Plus = 9,
+		[Description("数值减 - 穿刺")]
+		IMPALE_Minus = 10,
+
+		[Description("数值增 - 暴击")]
+		CRI_Plus = 11,
+		[Description("数值减 - 暴击")]
+		CRI_Minus = 12,
+
+		[Description("数值增 - 韧性")]
+		TOUGHNESS_Plus = 13,
+		[Description("数值减 - 韧性")]
+		TOUGHNESS_Minus = 14,
+
+		[Description("数值增 - 暴击伤害")]
+		CRIDMA_Plus = 15,
+		[Description("数值减 - 暴击伤害")]
+		CRIDMA_Minus = 16,
+
+		[Description("数值增 - 暴击防御")]
+		CRIDEF_Plus = 17,
+		[Description("数值减 - 暴击防御")]
+		CRIDEF_Minus = 18,
+
+		[Description("数值增 - 闪避")]
+		DODGE_Plus = 19,
+		[Description("数值减 - 闪避")]
+		DODGE_Minus = 20,
+
+		[Description("数值增 - 命中")]
+		HIT_Plus = 21,
+		[Description("数值减 - 闪避")]
+		HIT_Minus = 22,
+
+		[Description("数值增 - 打击回血")]
+		HIT_RECOVERY_Plus = 23,
+		[Description("数值减 - 打击回血")]
+		HIT_RECOVERY_Minus = 24,
+
+		[Description("数值增 - 生命恢复")]
+		HPRECOVERY_Plus = 25,
+		[Description("数值减 - 生命恢复")]
+		HPRECOVERY_Minus = 26,
+
+		[Description("数值增 - 冰系之力")]
+		ICE_Plus = 27,
+		[Description("数值减 - 冰系之力")]
+		ICE_Minus = 28,
+		[Description("数值增 - 火系之力")]
+		FIRE_Plus = 29,
+		[Description("数值减 - 火系之力")]
+		FIRE_Minus = 30,
+		[Description("数值增 - 雷系之力")]
+		THOUNDER_Plus = 31,
+		[Description("数值减 - 雷系之力")]
+		THOUNDER_Minus = 32,
+		[Description("数值增 - 毒系之力")]
+		POISION_Plus = 33,
+		[Description("数值减 - 毒系之力")]
+		POISION_Minus = 34,
+		[Description("数值增 - 暗系之力")]
+		DARK_Plus = 35,
+		[Description("数值减 - 暗系之力")]
+		DARK_Minus = 36,
+		[Description("数值增 - 光系之力")]
+		LIGHT_Plus = 37,
+		[Description("数值减 - 光系之力")]
+		LIGHT_Minus = 38,
+
+		[Description("数值增 - 召唤能力值")]
+		POWER_Plus = 39,
+		[Description("数值减 - 召唤能力值")]
+		POWER_Minus = 40,
+		[Description("数值增 - 打击回能")]
+		HIT_REPOWER_Plus = 41,
+		[Description("数值减 - 打击回能")]
+		HIT_REPOWER_Minus = 42,
+		[Description("数值增 - 回能")]
+		REPOWER_Plus = 43,
+		[Description("数值减 - 回能")]
+		REPOWER_Minus = 44,
+
+		[Description("数值增 - 变身精力值")]
+		ENERGY_Plus = 45,
+		[Description("数值减 - 变身精力值")]
+		ENERGY_Minus = 46,
+		[Description("数值增 - 恢复精力")]
+		REENERGY_Plus = 47,
+		[Description("数值减 - 恢复精力")]
+		REENERGY_Minus = 48,
+
+		[Description("数值增 - 减免伤害")]
+		REDUCE_DAM_Plus = 49,
+		[Description("数值减 - 减免伤害")]
+		REDUCE_DAM_Minus = 50,
+
+		[Description("数值增 - 增加伤害")]
+		ADD_DAM_Plus = 51,
+		[Description("数值减 - 增加伤害")]
+		ADD_DAM_Minus = 52,
+
+		[Description("数值增 - 攻击速度")]
+		ATK_SPEED_Plus = 53,
+		[Description("数值减 - 攻击速度")]
+		ATK_SPEED_Minus = 54,
 
 		// 按百分比增减
 		[Description("百分比增[以万为基数] - 当前生命值")]
-		Hp_Per_Plus	= 1001,
-
+		Per_Hp_Plus	= 1001,
 		[Description("百分比减[以万为基数] - 当前生命值")]
-		Hp_Per_Minus = 1002,
-
+		Per_Hp_Minus = 1002,
 		[Description("百分比增[以万为基数] - 最大生命值")]
-		HpMax_Per_Plus	= 1003,
-
+		Per_HpMax_Plus	= 1003,
 		[Description("百分比增[以万为基数] - 最大生命值")]
-		HpMax_Per_Minus	= 1004,
+		Per_HpMax_Minus	= 1004,
+
+		[Description("百分比增[以万为基数] - 防御")]
+		Per_DEF_Plus = 1007,
+		[Description("百分比减[以万为基数] - 防御")]
+		Per_DEF_Minus = 1008,
+
+		[Description("百分比增[以万为基数] - 穿刺")]
+		Per_IMPALE_Plus = 1009,
+		[Description("百分比减[以万为基数] - 穿刺")]
+		Per_IMPALE_Minus = 1010,
+
+		[Description("百分比增[以万为基数] - 暴击")]
+		Per_CRI_Plus = 1011,
+		[Description("百分比减[以万为基数] - 暴击")]
+		Per_CRI_Minus = 1012,
+
+		[Description("百分比增[以万为基数] - 韧性")]
+		Per_TOUGHNESS_Plus = 1013,
+		[Description("百分比减[以万为基数] - 韧性")]
+		Per_TOUGHNESS_Minus = 1014,
+
+		[Description("百分比增[以万为基数] - 暴击伤害")]
+		Per_CRIDMA_Plus = 1015,
+		[Description("百分比减[以万为基数] - 暴击伤害")]
+		Per_CRIDMA_Minus = 1016,
+
+		[Description("百分比增[以万为基数] - 暴击防御")]
+		Per_CRIDEF_Plus = 1017,
+		[Description("百分比减[以万为基数] - 暴击防御")]
+		Per_CRIDEF_Minus = 1018,
+
+		[Description("百分比增[以万为基数] - 闪避")]
+		Per_DODGE_Plus = 1019,
+		[Description("百分比减[以万为基数] - 闪避")]
+		Per_DODGE_Minus = 1020,
+
+		[Description("百分比增[以万为基数] - 命中")]
+		Per_HIT_Plus = 1021,
+		[Description("百分比减[以万为基数] - 闪避")]
+		Per_HIT_Minus = 1022,
+
+		[Description("百分比增[以万为基数] - 打击回血")]
+		Per_HIT_RECOVERY_Plus = 1023,
+		[Description("百分比减[以万为基数] - 打击回血")]
+		Per_HIT_RECOVERY_Minus = 1024,
+
+		[Description("百分比增[以万为基数] - 生命恢复")]
+		Per_HPRECOVERY_Plus = 1025,
+		[Description("百分比减[以万为基数] - 生命恢复")]
+		Per_HPRECOVERY_Minus = 1026,
+
+		[Description("百分比增[以万为基数] - 冰系之力")]
+		Per_ICE_Plus = 1027,
+		[Description("百分比减[以万为基数] - 冰系之力")]
+		Per_ICE_Minus = 1028,
+		[Description("百分比增[以万为基数] - 火系之力")]
+		Per_FIRE_Plus = 1029,
+		[Description("百分比减[以万为基数] - 火系之力")]
+		Per_FIRE_Minus = 1030,
+		[Description("百分比增[以万为基数] - 雷系之力")]
+		Per_THOUNDER_Plus = 1031,
+		[Description("百分比减[以万为基数] - 雷系之力")]
+		Per_THOUNDER_Minus = 1032,
+		[Description("百分比增[以万为基数] - 毒系之力")]
+		Per_POISION_Plus = 1033,
+		[Description("百分比减[以万为基数] - 毒系之力")]
+		Per_POISION_Minus = 1034,
+		[Description("百分比增[以万为基数] - 暗系之力")]
+		Per_DARK_Plus = 1035,
+		[Description("百分比减[以万为基数] - 暗系之力")]
+		Per_DARK_Minus = 1036,
+		[Description("百分比增[以万为基数] - 光系之力")]
+		Per_LIGHT_Plus = 1037,
+		[Description("百分比减[以万为基数] - 光系之力")]
+		Per_LIGHT_Minus = 1038,
+
+		[Description("百分比增[以万为基数] - 召唤能力值")]
+		Per_POWER_Plus = 1039,
+		[Description("百分比减[以万为基数] - 召唤能力值")]
+		Per_POWER_Minus = 1040,
+		[Description("百分比增[以万为基数] - 打击回能")]
+		Per_HIT_REPOWER_Plus = 1041,
+		[Description("百分比减[以万为基数] - 打击回能")]
+		Per_HIT_REPOWER_Minus = 1042,
+		[Description("百分比增[以万为基数] - 回能")]
+		Per_REPOWER_Plus = 1043,
+		[Description("百分比减[以万为基数] - 回能")]
+		Per_REPOWER_Minus = 1044,
+
+		[Description("百分比增[以万为基数] - 变身精力值")]
+		Per_ENERGY_Plus = 1045,
+		[Description("百分比减[以万为基数] - 变身精力值")]
+		Per_ENERGY_Minus = 1046,
+		[Description("百分比增[以万为基数] - 恢复精力")]
+		Per_REENERGY_Plus = 1047,
+		[Description("百分比减[以万为基数] - 恢复精力")]
+		Per_REENERGY_Minus = 1048,
+
+		[Description("百分比增[以万为基数] - 减免伤害")]
+		Per_REDUCE_DAM_Plus = 1049,
+		[Description("百分比减[以万为基数] - 减免伤害")]
+		Per_REDUCE_DAM_Minus = 1050,
+
+		[Description("百分比增[以万为基数] - 增加伤害")]
+		Per_ADD_DAM_Plus = 1051,
+		[Description("百分比减[以万为基数] - 增加伤害")]
+		Per_ADD_DAM_Minus = 1052,
+
+		[Description("百分比增[以万为基数] - 攻击速度")]
+		Per_ATK_SPEED_Plus = 1053,
+		[Description("百分比减[以万为基数] - 攻击速度")]
+		Per_ATK_SPEED_Minus = 1054,
 	}
 
 	// 属性分类
-	PlusType _m_iGID = PlusType.HPPlus;
+	PlusType _m_iGID = PlusType.HP_Plus;
 	public PlusType m_iGID{
 		get{ return _m_iGID;}
 		set{
 			_m_iGID = value;
 			if (_m_iGID == PlusType.None)
-				_m_iGID = PlusType.HPPlus;
+				_m_iGID = PlusType.HP_Plus;
 		}
 	}
 
