@@ -42,9 +42,13 @@ public class EG_Buff {
 	}
 
 	// 事件
-	PS_EvtHitEvent m_psInv = new PS_EvtHitEvent(new EMT_Event());
-	PS_EvtHitEvent m_psOne = new PS_EvtHitEvent(new EMT_Event());
-	PS_EvtHitEvent m_psDua = new PS_EvtHitEvent(new EMT_Event());
+	EMT_Event evt_Inv = new EMT_Event();
+	EMT_Event evt_One = new EMT_Event();
+	EMT_Event evt_Dua = new EMT_Event();
+
+	PS_EvtHurt m_psInv = null;
+	PS_EvtHurt m_psOne = null;
+	PS_EvtHurt m_psDua = null;
 
 	List<bool> m_lFodeout = new List<bool>(){false,false,false};
 
@@ -60,9 +64,18 @@ public class EG_Buff {
 
 	public void DoClear(){
 		m_opt.DoClear ();
-		m_psInv.DoClear ();
-		m_psOne.DoClear ();
-		m_psDua.DoClear ();
+		if(m_psInv != null)
+			m_psInv.DoClear ();
+
+		if(m_psOne != null)
+			m_psOne.DoClear ();
+
+		if(m_psDua != null)
+			m_psDua.DoClear ();
+
+		evt_Inv.DoClear ();
+		evt_One.DoClear ();
+		evt_Dua.DoClear ();
 
 		m_lFodeout [0] = false;
 		m_lFodeout [1] = false;
@@ -144,23 +157,23 @@ public class EG_Buff {
 		m_lFodeout[0] = EditorGUILayout.Foldout(m_lFodeout[0], "持续效果:");
 		EG_GUIHelper.FG_Space(5);
 		if (m_lFodeout [0]) {
-			m_psInv.DoDraw ();
+			_DrawInv();
 		}
-		ms_entity.strEvtInterval = m_psInv.ToJsonString ();
+		ms_entity.strEvtInterval = evt_Inv.ToJsonString ();
 
 		m_lFodeout[1] = EditorGUILayout.Foldout(m_lFodeout[1], "瞬时效果:");
 		EG_GUIHelper.FG_Space(5);
 		if (m_lFodeout [1]) {
-			m_psOne.DoDraw ();
+			_DrawOne ();
 		}
-		ms_entity.strEvtOnce = m_psOne.ToJsonString ();
+		ms_entity.strEvtOnce = evt_One.ToJsonString ();
 
 		m_lFodeout[2] = EditorGUILayout.Foldout(m_lFodeout[2], "每帧效果:");
 		EG_GUIHelper.FG_Space(5);
-		if (m_lFodeout [2]) {
-			m_psDua.DoDraw ();
+		if (m_lFodeout [2]) {			
+			_DrawDur();
 		}
-		ms_entity.strEvtDuration = m_psDua.ToJsonString ();
+		ms_entity.strEvtDuration = evt_Dua.ToJsonString ();
 	}
 
 	void OnInitEntity2Attrs(EN_Buff entity)
@@ -169,9 +182,9 @@ public class EG_Buff {
 		{
 			ms_entity.DoClone (entity);
 
-			m_psInv.DoReInit (ms_entity.strEvtInterval);
-			m_psOne.DoReInit (ms_entity.strEvtOnce);
-			m_psDua.DoReInit (ms_entity.strEvtDuration);
+			evt_Inv.DoReInit (ms_entity.strEvtInterval);
+			evt_One.DoReInit (ms_entity.strEvtOnce);
+			evt_Dua.DoReInit (ms_entity.strEvtDuration);
 
 			this.ms_isRest = ms_entity.IsResetWhenGet == 1 ? true : false;
 			if(!string.IsNullOrEmpty(ms_entity.EffectResName)){
@@ -198,5 +211,50 @@ public class EG_Buff {
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
 		m_opt.Save (savePath);
+	}
+
+	void _DrawInv(){
+		if (m_psInv == null) {
+			m_psInv = new PS_EvtHurt("目标事件列表",true,_NewEvtInv,RmEventInv,false);
+		}
+		m_psInv.DoDraw (0,0, evt_Inv.GetLHurts ());
+	}
+
+	void _NewEvtInv(){
+		evt_Inv.NewEvent<EDT_Hurt> ();
+	}
+
+	void RmEventInv(EDT_Base one){
+		evt_Inv.RmEvent (one);
+	}
+
+	void _DrawOne(){
+		if (m_psOne == null) {
+			m_psOne = new PS_EvtHurt("目标事件列表",true,_NewEvtOne,RmEventOne,false);
+		}
+		m_psOne.DoDraw (0,0, evt_One.GetLHurts ());
+	}
+
+	void _NewEvtOne(){
+		evt_One.NewEvent<EDT_Hurt> ();
+	}
+
+	void RmEventOne(EDT_Base one){
+		evt_One.RmEvent (one);
+	}
+
+	void _DrawDur(){
+		if (m_psDua == null) {
+			m_psDua = new PS_EvtHurt("目标事件列表",true,_NewEvtDur,RmEventDur,false);
+		}
+		m_psDua.DoDraw (0,0, evt_Dua.GetLHurts ());
+	}
+
+	void _NewEvtDur(){
+		evt_Dua.NewEvent<EDT_Hurt> ();
+	}
+
+	void RmEventDur(EDT_Base one){
+		evt_Dua.RmEvent (one);
 	}
 }
