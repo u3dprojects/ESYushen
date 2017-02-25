@@ -131,6 +131,12 @@ public class EG_Bullet {
 		ms_entity.BlowUpHitNum = EditorGUILayout.IntField ("爆炸可伤害个数:", ms_entity.BlowUpHitNum);
 		EG_GUIHelper.FG_Space(5);
 
+		ms_entity.FlyColliderFiter = EditorGUILayout.IntField ("飞行碰撞筛选标识:", ms_entity.FlyColliderFiter);
+		EG_GUIHelper.FG_Space(5);
+
+		ms_entity.BlowUpColliderFiter = EditorGUILayout.IntField ("爆炸碰撞筛选标识:", ms_entity.BlowUpColliderFiter);
+		EG_GUIHelper.FG_Space(5);
+
 		// 绘制飞行，和爆炸的相关事件(区域检查，命中处理)
 
 		m_lFodeout[0] = EditorGUILayout.Foldout(m_lFodeout[0], "飞行事件:");

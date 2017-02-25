@@ -35,8 +35,14 @@ public class EN_Bullet : EN_BaseXls{
 	// 穿透个数
 	public int ThroughNum;
 
+	// 飞行碰撞筛选标识
+	public int FlyColliderFiter;
+
 	// 飞行中伤害区域检查
 	public string AreaFlying;
+
+	// 爆炸碰撞筛选标识
+	public int BlowUpColliderFiter;
 
 	// 爆炸伤害数量
 	public int BlowUpHitNum;
@@ -66,7 +72,9 @@ public class EN_Bullet : EN_BaseXls{
 				this.BlowUpTime,
 				this.BlowUpEffectName,
 				this.ThroughNum,
+				this.FlyColliderFiter,
 				this.AreaFlying,
+				this.BlowUpColliderFiter,
 				this.BlowUpHitNum,
 				this.AreaBlowUp,
 				this.EvtFlying,
@@ -90,7 +98,9 @@ public class EN_Bullet : EN_BaseXls{
 		this.BlowUpTime = sheet.GetFloat(rowIndex, colIndex++);
 		this.BlowUpEffectName = sheet.GetString(rowIndex, colIndex++);
 		this.ThroughNum = sheet.GetInt(rowIndex, colIndex++);
+		this.FlyColliderFiter = sheet.GetInt(rowIndex, colIndex++);
 		this.AreaFlying = sheet.GetString(rowIndex, colIndex++);
+		this.BlowUpColliderFiter = sheet.GetInt(rowIndex, colIndex++);
 		this.BlowUpHitNum = sheet.GetInt(rowIndex, colIndex++);
 		this.AreaBlowUp = sheet.GetString(rowIndex, colIndex++);
 		this.EvtFlying = sheet.GetString(rowIndex, colIndex++);
@@ -120,5 +130,7 @@ public class EN_Bullet : EN_BaseXls{
 		this.AreaBlowUp = tmp.AreaBlowUp;
 		this.EvtFlying = tmp.EvtFlying;
 		this.EvtBlowUp = tmp.EvtBlowUp;
+		this.FlyColliderFiter = tmp.FlyColliderFiter;
+		this.BlowUpColliderFiter = tmp.BlowUpColliderFiter;
 	}
 }
