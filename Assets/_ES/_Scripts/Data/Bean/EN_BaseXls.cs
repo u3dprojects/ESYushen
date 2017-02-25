@@ -41,9 +41,15 @@ public class EN_BaseXls : System.Object {
 		}
 
 		int lens = columns.Length;
+		object val = null;
 		for(int i = 0; i < lens; i++)
 		{
-			this.sheet.SaveValueToCache(this.rowIndex, i, columns[i]);
+			val = columns [i];
+			if (val is string) {
+				if(string.IsNullOrEmpty(val.ToString().Trim()))
+					val = "null";
+			}
+			this.sheet.SaveValueToCache(this.rowIndex, i, val);
 		}
 	}
 
