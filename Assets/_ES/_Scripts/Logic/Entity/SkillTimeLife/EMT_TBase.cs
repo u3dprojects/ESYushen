@@ -38,6 +38,9 @@ public class EMT_TBases {
 	// 顿帧事件
 	List<EDT_Stay> m_lStays = new List<EDT_Stay>();
 
+	// 召唤事件
+	List<EDT_Summon> m_lSummons = new List<EDT_Summon>();
+
 	public T NewEvent<T>() where T : EDT_Base,new()
 	{
 		T ret = EDT_Base.NewEntity<T>();
@@ -124,25 +127,29 @@ public class EMT_TBases {
 
 	public virtual int OninitOne(JsonData one,float castTime = 0){
 		int typeInt = (int)((one) ["m_typeInt"]);
-		switch (typeInt) {
-		case 1:
+		EDT_Base.EventType evtType = (EDT_Base.EventType)typeInt;
+		switch (evtType) {
+		case EDT_Base.EventType.Effect:
 			ToEffect(castTime, one);
 			break;
-		case 2:
+		case EDT_Base.EventType.Audio:
 			ToAudio(castTime, one);
 			break;
-		case 3:
+		case EDT_Base.EventType.Shake:
 			ToShake(castTime, one);
 			break;
-		case 4:
+		case EDT_Base.EventType.Stay:
 			ToStay(castTime, one);
 			break;
-		case 5:
-		case 6:
+		case EDT_Base.EventType.HitTarget:
+		case EDT_Base.EventType.HitArea:
 			ToHurt(castTime, one,typeInt);
 			break;
-		case 10:
+		case EDT_Base.EventType.Bullet:
 			ToBullet(castTime, one);
+			break;
+		case EDT_Base.EventType.Summon:
+			ToSummon (castTime, one);
 			break;
 		}
 		return typeInt;
@@ -362,6 +369,11 @@ public class EMT_TBases {
 		NewEvent<EDT_Stay>(time,data);
 	}
 
+	// 转为 召唤 事件
+	protected void ToSummon(float time,JsonData data){
+		NewEvent<EDT_Summon>(time,data);
+	}
+
 	public List<EDT_Effect> GetLEffects(){
 		GetList<EDT_Effect> (ref m_lEffects);
 		return m_lEffects;
@@ -390,6 +402,11 @@ public class EMT_TBases {
 	public List<EDT_Stay> GetLStays(){
 		GetList<EDT_Stay> (ref m_lStays);
 		return m_lStays;
+	}
+
+	public List<EDT_Summon> GetLSummons(){
+		GetList<EDT_Summon> (ref m_lSummons);
+		return m_lSummons;
 	}
 
 	#endregion

@@ -82,11 +82,16 @@ public class EDT_Hurt : EDT_Base {
 		if (dicJsonData.Contains ("m_targetFilter")) {
 			int vT = ((int)jsonData ["m_targetFilter"]);
 			vT = vT <= 0 ? 1 : vT;
+
+			int firend = 1 << 0;
+			int enermy = 1 << 1;
+			int self = 1 << 2;
+
 			this.m_iTargetFilter = vT;
 
-			this.m_isTFFriend = vT % 2 == 1;
-			this.m_isTFEnermy = vT == 2 || vT == 3 || vT == 6 || vT == 7;
-			this.m_isTFSelf = vT == 4 || vT == 5 || vT == 6 || vT == 7;
+			this.m_isTFFriend = ((firend & vT) == firend);
+			this.m_isTFEnermy = ((enermy & vT) == enermy);
+			this.m_isTFSelf = ((self & vT) == self);
  		}
 
 		if (dicJsonData.Contains ("m_targetCount")) {

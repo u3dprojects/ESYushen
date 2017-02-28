@@ -119,6 +119,9 @@ public class PS_EvtHitEvent {
 			}
 
 			_DrawBullets ();
+			EG_GUIHelper.FG_Space (10);
+
+			_DrawSummon ();
 		}
 		EG_GUIHelper.FEG_EndV();
 		EG_GUIHelper.FG_Space(10);
@@ -224,6 +227,20 @@ public class PS_EvtHitEvent {
 
 	void _NewStay(){
 		m_evtHit.NewEvent<EDT_Stay> ();
+	}
+
+	// 召唤物
+	PS_EvtSummon m_psSummon;
+
+	void _DrawSummon(){
+		if (m_psSummon == null) {
+			m_psSummon = new PS_EvtSummon("召唤列表", m_isPlan, _NewSummon, _RmEvent,m_isShowCastTime);
+		}
+		m_psSummon.DoDraw (m_fDuration, m_evtHit.GetLSummons());
+	}
+
+	void _NewSummon(){
+		m_evtHit.NewEvent<EDT_Summon> ();
 	}
 
 	// 受击者受击时表现状态
