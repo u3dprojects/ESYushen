@@ -39,7 +39,7 @@ public class EG_Skill {
 
 	string[] ElementType = {"物理","冰","火"};
 	string[] BelongType = {"玩家","雇佣兵","怪物"};
-	string[] LockType = { "无锁定", "锁定目标", "锁定位置" };
+	string[] LockType = { "无锁定", "锁定目标", "锁定位置","原地释放" };
 	// 是否可以移动
 	bool ms_isCanMove = false;
 
