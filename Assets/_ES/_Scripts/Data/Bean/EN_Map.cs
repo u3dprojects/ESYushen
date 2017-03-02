@@ -21,6 +21,18 @@ public class EN_Map : EN_BaseXls{
 	// 雷达UI资源名
 	public string UIResName;
 
+	// 雷达起始点X
+	public float radarOffsetX;
+
+	// 雷达起始点Z
+	public float radarOffsetZ;
+
+	// 雷达长度
+	public float radarLength;
+
+	// 雷达宽度
+	public float radarWidth;
+
 	// 出生x坐标
 	public float PosX;
 
@@ -66,6 +78,10 @@ public class EN_Map : EN_BaseXls{
 				this.DescID,
 				this.SceneResId,
 				this.UIResName,
+				this.radarOffsetX,
+				this.radarOffsetZ,
+				this.radarLength,
+				this.radarWidth,
 				this.PosX,
 				this.PosZ,
 				this.Rotation,
@@ -92,6 +108,10 @@ public class EN_Map : EN_BaseXls{
 		this.DescID = sheet.GetInt(rowIndex, colIndex++);
 		this.SceneResId = sheet.GetInt(rowIndex, colIndex++);
 		this.UIResName = sheet.GetString(rowIndex, colIndex++);
+		this.radarOffsetX = sheet.GetFloat(rowIndex, colIndex++);
+		this.radarOffsetZ = sheet.GetFloat(rowIndex, colIndex++);
+		this.radarLength = sheet.GetFloat(rowIndex, colIndex++);
+		this.radarWidth = sheet.GetFloat(rowIndex, colIndex++);
 
 		this.PosX = sheet.GetFloat(rowIndex, colIndex++);
 		this.PosZ = sheet.GetFloat(rowIndex, colIndex++);
@@ -125,6 +145,11 @@ public class EN_Map : EN_BaseXls{
 		this.SceneResId = tmp.SceneResId;
 		this.SceneName = tmp.SceneName;
 		this.UIResName = tmp.UIResName;
+
+		this.radarOffsetX = tmp.radarOffsetX;
+		this.radarOffsetZ = tmp.radarOffsetZ;
+		this.radarLength = tmp.radarLength;
+		this.radarWidth = tmp.radarWidth;
 
 		this.PosX = tmp.PosX;
 		this.PosZ = tmp.PosZ;

@@ -25,6 +25,9 @@ public class EG_Map {
 
 	Vector3 m_v3PosBorn = Vector3.zero;
 
+	// 雷达的偏移量
+	Vector3 m_v3OffsetRadar = Vector3.zero;
+
 	// 音效
 	UnityEngine.Object m_objAudio,m_objPreAudio;
 
@@ -116,8 +119,20 @@ public class EG_Map {
 		EG_GUIHelper.FEG_EndH ();
 		EG_GUIHelper.FG_Space (5);
 
-		ms_entity.UIResName = EditorGUILayout.TextField("UI资源名:", ms_entity.UIResName);
+		ms_entity.UIResName = EditorGUILayout.TextField("雷达UI资源名:", ms_entity.UIResName);
 		EG_GUIHelper.FG_Space(5);
+
+		m_v3OffsetRadar = EditorGUILayout.Vector3Field ("雷达视图偏移量:", m_v3OffsetRadar);
+		EG_GUIHelper.FG_Space(5);
+		ms_entity.radarOffsetX = m_v3OffsetRadar.x;
+		ms_entity.radarOffsetZ = m_v3OffsetRadar.z;
+
+		ms_entity.radarLength = EditorGUILayout.FloatField ("雷达缩略图长:", ms_entity.radarLength);
+		EG_GUIHelper.FG_Space(5);
+
+		ms_entity.radarWidth = EditorGUILayout.FloatField ("雷达缩略图宽:", ms_entity.radarWidth);
+		EG_GUIHelper.FG_Space(5);
+
 
 		m_v3PosBorn = EditorGUILayout.Vector3Field ("出生点坐标:", m_v3PosBorn);
 		EG_GUIHelper.FG_Space(5);
@@ -197,11 +212,20 @@ public class EG_Map {
 
 	void OnInitEntity2Attrs(EN_Map entity)
 	{
+		m_v3PosBorn = Vector3.zero;
+		m_v3OffsetRadar = Vector3.zero;
+
 		if(entity != null)
 		{
 			EM_Monster.DoClearStatic ();
 
 			ms_entity.DoClone (entity);
+
+			m_v3PosBorn.x = ms_entity.PosX;
+			m_v3PosBorn.z = ms_entity.PosZ;
+
+			m_v3OffsetRadar.x = ms_entity.radarOffsetX;
+			m_v3OffsetRadar.z = ms_entity.radarOffsetZ;
 
 			if(!string.IsNullOrEmpty(ms_entity.BgMusic)){
 				string path = "Assets\\PackResources\\Arts\\Sound\\"+ms_entity.BgMusic+".mp3";
