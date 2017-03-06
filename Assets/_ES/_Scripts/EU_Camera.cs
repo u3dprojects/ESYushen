@@ -57,11 +57,6 @@ public class EU_Camera : MonoBehaviour
 		}
 		m_camera = gameObject.GetComponentInChildren<Camera> (true);
 
-	}
-
-	// Use this for initialization
-	void Start ()
-	{
 		reInitAfterClear();
 	}
 
@@ -73,6 +68,11 @@ public class EU_Camera : MonoBehaviour
 		this.doClear ();
 		this.OnInitAttrs ();
 	}
+	
+	// Use this for initialization
+//	void Start ()
+//	{
+//	}
 
 	// Update is called once per frame
 //	void Update ()
@@ -113,10 +113,10 @@ public class EU_Camera : MonoBehaviour
 
 	void OnInit (GameObject _target, bool _isRotate)
 	{
-		if (_target == null)
+		setTarget (_target);
+
+		if (target == null)
 			return;
-		parentTrsf (gobjLook, _target, true);
-		target = _target.transform;
 
 		setIsRotateDamping (_isRotate);
 
