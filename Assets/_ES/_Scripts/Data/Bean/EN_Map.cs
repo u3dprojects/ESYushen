@@ -63,8 +63,14 @@ public class EN_Map : EN_BaseXls{
 	// 刷触发器点
 	public string strTriggers;
 
-	// 刷触发器点
+	// 刷npc点
 	public string strNpcs;
+
+	// 区域类型
+	public int AreaStatus;
+
+	// 区域json
+	// public string strAreas;
 
 	public EN_Map():base(){
 	}
@@ -92,7 +98,9 @@ public class EN_Map : EN_BaseXls{
 				this.NodeRow,
 				this.strMonsters,
 				this.strTriggers,
-				this.strNpcs
+				this.strNpcs,
+				this.AreaStatus
+				// this.strAreas
 			};
 			return ret;
 		}
@@ -125,6 +133,8 @@ public class EN_Map : EN_BaseXls{
 		this.strMonsters = sheet.GetString(rowIndex, colIndex++);
 		this.strTriggers = sheet.GetString(rowIndex, colIndex++);
 		this.strNpcs = sheet.GetString(rowIndex, colIndex++);
+		this.AreaStatus = sheet.GetInt(rowIndex, colIndex++);
+		// this.strAreas = sheet.GetString(rowIndex, colIndex++);
 
 		this.SceneName = "Map_" + this.SceneResId;
 	}
@@ -163,5 +173,7 @@ public class EN_Map : EN_BaseXls{
 		this.strMonsters = tmp.strMonsters;
 		this.strTriggers = tmp.strTriggers;
 		this.strNpcs = tmp.strNpcs;
+		this.AreaStatus = tmp.AreaStatus;
+		// this.strAreas = tmp.strAreas;
 	}
 }

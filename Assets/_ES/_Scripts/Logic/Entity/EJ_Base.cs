@@ -55,6 +55,10 @@ public class EJ_Base : System.Object{
 	protected virtual void OnClear(){
 	}
 
+	protected IDictionary ToDictionary(JsonData jsonData){ 
+		return (IDictionary)jsonData;
+	}
+
 	#region == 静态方法 ==
 
 	static public T NewEntity<T>() where T : EJ_Base,new(){

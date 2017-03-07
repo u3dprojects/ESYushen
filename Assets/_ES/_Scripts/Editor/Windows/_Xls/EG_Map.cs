@@ -167,6 +167,12 @@ public class EG_Map {
 		ms_entity.NodeColumn = EditorGUILayout.IntField("分块列数:", ms_entity.NodeColumn);
 		EG_GUIHelper.FG_Space(5);
 
+		EG_GUIHelper.FEG_BeginH ();
+		EditorGUILayout.LabelField ("[0绝对和平地图,1和平地图,2战斗地图]:");
+		ms_entity.AreaStatus = EditorGUILayout.IntField(ms_entity.AreaStatus);
+		EG_GUIHelper.FEG_EndH ();
+		EG_GUIHelper.FG_Space(5);
+
 		// 刷怪点
 		_DrawBornMonster();
 		EG_GUIHelper.FG_Space(5);

@@ -26,7 +26,7 @@ public class EN_OptSkill
     private EN_OptSkill() { }
 
 	EN_OptBaseXls<EN_Skill> _m_eOptXls = new EN_OptBaseXls<EN_Skill>();
-	EN_OptBaseXls<EN_Skill> m_eOptXls{
+	public EN_OptBaseXls<EN_Skill> m_eOptXls{
 		get{
 			return _m_eOptXls;
 		}
