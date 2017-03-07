@@ -60,4 +60,38 @@ public class EDT_Bullet : EDT_Base {
 		this.m_emType = EventType.Bullet;
 		this.m_iID = 0;
 	}
+
+	EN_OptMonster optMonster {
+		get {
+			return EN_OptMonster.Instance;
+		}
+	}
+
+	void InitBulletFab(){
+		if (!optMonster.isInitSuccessed)
+			return;
+
+		EN_Monster one = optMonster.GetEntity (m_iID);
+		if (one == null)
+			return;
+		DoReInit (one.ModeRes, EventType.Bullet);
+	}
+
+	public override string GetPathByNameType (string objName, EventType type)
+	{
+		if (type != EventType.Bullet) {
+			return "类型不对";
+		}
+		return "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+objName+".prefab";
+	}
+
+	protected override bool OnCallEvent ()
+	{
+		return base.OnCallEvent ();
+	}
+
+	protected override void OnCallUpdate (float upDeltaTime)
+	{
+		base.OnCallUpdate (upDeltaTime);
+	}
 }

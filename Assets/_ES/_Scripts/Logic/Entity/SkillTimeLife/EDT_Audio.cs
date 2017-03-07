@@ -31,7 +31,7 @@ public class EDT_Audio : EDT_Base {
 		base.OnReInit (castTime, jsonData);
 
 		string resName = (string)jsonData ["m_audioName"];
-		bool isOkey = DoReInit (resName, 2);
+		bool isOkey = DoReInit (resName, m_emType);
 		if (!isOkey) {
 			return;
 		}
@@ -70,9 +70,9 @@ public class EDT_Audio : EDT_Base {
 		}
 	}
 
-	public override string GetPathByNameType(string objName, int type)
+	public override string GetPathByNameType(string objName, EventType type)
 	{
-		if (type != 2) {
+		if (type != EventType.Audio) {
 			return "类型不对";
 		}
 		return "Assets\\PackResources\\Arts\\Sound\\"+objName+".mp3";

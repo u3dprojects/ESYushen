@@ -112,7 +112,7 @@ public class EDT_Effect : EDT_Base {
 		base.OnReInit (castTime, jsonData);
 
 		string resName = (string)jsonData ["m_resName"];
-		bool isOkey = DoReInit (resName, 1);
+		bool isOkey = DoReInit (resName, m_emType);
 		if (!isOkey) {
 			return;
 		}
@@ -196,9 +196,9 @@ public class EDT_Effect : EDT_Base {
 		return ret;
 	}
 
-	public override string GetPathByNameType(string objName, int type)
+	public override string GetPathByNameType(string objName, EventType type)
 	{
-		if (type != 1) {
+		if (type != EventType.Effect) {
 			return "类型不对";
 		}
 		return "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+objName+".prefab";

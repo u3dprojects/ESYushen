@@ -139,7 +139,7 @@ public class EDT_Base {
 		this.m_jsonData = jsonData;
 	}
 
-	protected bool DoReInit(string objName,int type)
+	protected bool DoReInit(string objName,EventType type)
     {
         string path = GetPathByNameType(objName, type);
         bool isExists = File.Exists(path);
@@ -154,7 +154,7 @@ public class EDT_Base {
 		return true;
     }
 
-	public virtual string GetPathByNameType(string objName,int type)
+	public virtual string GetPathByNameType(string objName,EventType type)
 	{
 		return "";
 	}
