@@ -64,7 +64,6 @@ public class EM_MonsterCenter : EM_UnitCell {
 		if(ret != null){
 			IDictionary map = (IDictionary)ret;
 			map.Remove ("reliveInterval");
-			map.Remove ("level");
 			map.Remove ("rotateDegree");
 		}
 		return ret;
