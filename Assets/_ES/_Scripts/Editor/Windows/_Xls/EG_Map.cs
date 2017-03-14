@@ -346,6 +346,7 @@ public class EG_Map {
 	void ReRaycast(){
 		ReRaycast<EM_Monster> (GetLMonsters ());
 		ReRaycast<EM_NPC> (GetLNpcs ());
+		ReRaycast<EM_MonsterCenter> (GetLMCenters ());
 	}
 
 	void ReRaycast<T>(List<T> list) where T : EM_UnitCell{
