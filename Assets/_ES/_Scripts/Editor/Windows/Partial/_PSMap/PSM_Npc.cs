@@ -35,7 +35,7 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 		one.m_fRotation = EditorGUILayout.FloatField ("初始旋转角度:", one.m_fRotation);
 		EG_GUIHelper.FG_Space(5);
 
-		one.m_iTalkId = EditorGUILayout.IntField ("对话语言表中的ID",one.m_iTalkId);
+		one.m_iTalkId = EditorGUILayout.IntField ("对话ID <--> 语言表中ID",one.m_iTalkId);
 		EG_GUIHelper.FG_Space(5);
 
 //		one.m_fReliveInv = EditorGUILayout.FloatField ("刷新时间间隔:", one.m_fReliveInv);

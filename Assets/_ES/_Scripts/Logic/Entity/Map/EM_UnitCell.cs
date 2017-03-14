@@ -49,7 +49,9 @@ public class EM_UnitCell : EM_Cube {
 				this.m_iUnqID = (int)m_jdOrg ["ID"];
 			}
 
-			this.m_fRotation = float.Parse (m_jdOrg ["rotateDegree"].ToString ());
+			if (map.Contains ("rotateDegree")) {
+				this.m_fRotation = float.Parse (m_jdOrg ["rotateDegree"].ToString ());
+			}
 			m_v3Pos.x = float.Parse (m_jdOrg ["positionX"].ToString ());
 			m_v3Pos.z = float.Parse (m_jdOrg ["positionZ"].ToString ());
 

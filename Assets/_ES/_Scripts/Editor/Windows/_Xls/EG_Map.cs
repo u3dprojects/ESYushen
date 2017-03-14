@@ -175,9 +175,9 @@ public class EG_Map {
 
 		// 刷怪点
 		_DrawBornMonster();
-		EG_GUIHelper.FG_Space(5);
 
-		// 触发器点
+		// 怪物聚集中心点
+		_DrawMCenter();
 
 		// Npc
 		_DrawBornNpc();
@@ -269,8 +269,6 @@ public class EG_Map {
 	#region === 刷怪点 ===
 
 	List<EM_Base> m_lMapCells = new List<EM_Base> ();
-	List<EM_Monster> m_lMapMonsters = new List<EM_Monster> ();
-
 	JsonData jsonData = new JsonData ();
 	JsonData tmpJD;
 	EM_Base tmpCell;
@@ -375,11 +373,6 @@ public class EG_Map {
 		return isHas;
 	}
 
-	public List<EM_Monster> GetLMonsters(){
-		EM_Base.GetList<EM_Monster> (m_lMapCells, ref m_lMapMonsters);
-		return m_lMapMonsters;
-	}
-
 	void RmMapCell(EM_Base cell){
 		if (cell == null)
 			return;
@@ -416,29 +409,7 @@ public class EG_Map {
 		}
 	}
 
-	PSM_Monster m_psMonster;
-
-	void _DrawBornMonster(){
-		if (m_psMonster == null) {
-			m_psMonster = new PSM_Monster ("刷怪点", _NewMonster, RmMapCell);
-
-			OnReInitDelegate ();
-		}
-
-		ms_entity.strMonsters = ToJsonString<EM_Monster> (GetLMonsters());
-		EditorGUILayout.LabelField("刷怪点",ms_entity.strMonsters, EditorStyles.textArea);
-		EG_GUIHelper.FG_Space(5);
-
-		m_psMonster.DoDraw (GetLMonsters ());
-	}
-
-	void _NewMonster(){
-		EM_Monster one = EM_Monster.NewEntity<EM_Monster> ();
-		one.DoMakeNew ();
-		m_lMapCells.Add (one);
-	}
-
-	void _NewMonster(int instanceID, GameObject gobj){
+	void _NewMapCell(int instanceID, GameObject gobj){
 		if (gobj == null)
 			return;
 
@@ -458,6 +429,8 @@ public class EG_Map {
 				one = ((EUM_Monster)enCell).m_entity;
 			} else if (enCell is EUM_Npc) {
 				one = ((EUM_Npc)enCell).m_entity;
+			} else if (enCell is EUM_MonsterCenter) {
+				one = ((EUM_MonsterCenter)enCell).m_entity;
 			}
 			m_lMapCells.Add (one);
 		}
@@ -487,7 +460,7 @@ public class EG_Map {
 		case 1:
 			Object obj = EditorUtility.InstanceIDToObject (instanceID);
 			if (obj != null) {
-				_NewMonster (instanceID,obj as GameObject);
+				_NewMapCell (instanceID,obj as GameObject);
 			}
 			break;
 		case 2:
@@ -507,9 +480,44 @@ public class EG_Map {
 		RefreshFoldOut (trsf);
 	}
 
-	List<EM_NPC> m_lNpcs = new List<EM_NPC> ();
-	PSM_Npc m_psNpc;
+	// 刷怪点
+	List<EM_Monster> m_lMapMonsters = new List<EM_Monster> ();
+	public List<EM_Monster> GetLMonsters(){
+		EM_Base.GetList<EM_Monster> (m_lMapCells, ref m_lMapMonsters);
+		return m_lMapMonsters;
+	}
 
+	PSM_Monster m_psMonster;
+	void _DrawBornMonster(){
+		if (m_psMonster == null) {
+			m_psMonster = new PSM_Monster ("刷怪点", _NewMonster, RmMapCell);
+
+			OnReInitDelegate ();
+		}
+
+		ms_entity.strMonsters = ToJsonString<EM_Monster> (GetLMonsters());
+		EditorGUILayout.LabelField("刷怪点",ms_entity.strMonsters, EditorStyles.textArea);
+		EG_GUIHelper.FG_Space(5);
+
+		m_psMonster.DoDraw (GetLMonsters ());
+
+		EG_GUIHelper.FG_Space(10);
+	}
+
+	void _NewMonster(){
+		EM_Monster one = EM_Monster.NewEntity<EM_Monster> ();
+		one.DoMakeNew ();
+		m_lMapCells.Add (one);
+	}
+
+	// Npc点
+	List<EM_NPC> m_lNpcs = new List<EM_NPC> ();
+	public List<EM_NPC> GetLNpcs(){
+		EM_Base.GetList<EM_NPC> (m_lMapCells, ref m_lNpcs);
+		return m_lNpcs;
+	}
+
+	PSM_Npc m_psNpc;
 	void _DrawBornNpc(){
 		if (m_psNpc == null) {
 			m_psNpc = new PSM_Npc ("刷NPC点", _NewNpc, RmMapCell);
@@ -522,6 +530,8 @@ public class EG_Map {
 		EG_GUIHelper.FG_Space(5);
 
 		m_psNpc.DoDraw (GetLNpcs ());
+
+		EG_GUIHelper.FG_Space(10);
 	}
 
 	void _NewNpc(){
@@ -530,9 +540,34 @@ public class EG_Map {
 		m_lMapCells.Add (one);
 	}
 
-	public List<EM_NPC> GetLNpcs(){
-		EM_Base.GetList<EM_NPC> (m_lMapCells, ref m_lNpcs);
-		return m_lNpcs;
+	// 怪物聚集中心点
+	List<EM_MonsterCenter> m_lMCenter = new List<EM_MonsterCenter> ();
+	public List<EM_MonsterCenter> GetLMCenters(){
+		EM_Base.GetList<EM_MonsterCenter> (m_lMapCells, ref m_lMCenter);
+		return m_lMCenter;
+	}
+
+	PSM_MonsterCenter m_psMCenter;
+	void _DrawMCenter(){
+		if (m_psMCenter == null) {
+			m_psMCenter = new PSM_MonsterCenter ("怪物聚集中心点", _NewMCenter, RmMapCell);
+
+			OnReInitDelegate ();
+		}
+
+		ms_entity.strMonsterCenters = ToJsonString<EM_MonsterCenter> (GetLMCenters());
+		EditorGUILayout.LabelField("怪物聚集中心点",ms_entity.strMonsterCenters, EditorStyles.textArea);
+		EG_GUIHelper.FG_Space(5);
+
+		m_psMCenter.DoDraw (GetLMCenters ());
+
+		EG_GUIHelper.FG_Space(10);
+	}
+
+	void _NewMCenter(){
+		EM_MonsterCenter one = EM_MonsterCenter.NewEntity<EM_MonsterCenter> ();
+		one.DoMakeNew ();
+		m_lMapCells.Add (one);
 	}
 
 	#endregion

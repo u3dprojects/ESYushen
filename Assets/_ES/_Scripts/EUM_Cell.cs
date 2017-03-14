@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
 /// 类名 : Map Cell 单元
 /// 作者 : Canyon
 /// 日期 : 2017-02-06 16:06
