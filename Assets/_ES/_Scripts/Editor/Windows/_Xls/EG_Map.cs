@@ -252,6 +252,7 @@ public class EG_Map {
 
 		ToList<EM_Monster>(ms_entity.strMonsters);
 		ToList<EM_NPC>(ms_entity.strNpcs);
+		ToList<EM_MonsterCenter>(ms_entity.strMonsterCenters);
 	}
 
 	void OnInitAttrs2Entity()
