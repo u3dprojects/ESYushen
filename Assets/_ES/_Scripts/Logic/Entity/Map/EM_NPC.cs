@@ -18,9 +18,23 @@ public class EM_NPC : EM_UnitCell {
 	[System.NonSerialized]
 	public EUM_Npc m_csCell;
 
+	// 对话-语言表ID
+	public int m_iTalkId = 0;
 
 	public EM_NPC() : base(){
 		m_iCoreCursorMonster = (CORE_CURSOR++);
+	}
+
+	protected override bool OnInit ()
+	{
+		bool isOkey = base.OnInit ();
+		if (isOkey) {
+			IDictionary map = (IDictionary)m_jdOrg;
+			if (map.Contains ("talkID")) {
+				this.m_iTalkId = (int)m_jdOrg ["talkID"];
+			}
+		}
+		return isOkey;
 	}
 
 	protected override void OnResetGobjName ()
@@ -56,6 +70,27 @@ public class EM_NPC : EM_UnitCell {
 		}
 	}
 
+	protected Vector3 ToV3(string str,Vector3 def){
+		if (string.IsNullOrEmpty (str) || "".Equals(str.Trim())) {
+			return def;
+		}
+
+		string[] arrs = str.Split (",".ToCharArray ());
+		int lens = arrs.Length;
+		if (lens > 0)
+			def.x = float.Parse (arrs [0]);
+		if (lens > 1)
+			def.y = float.Parse (arrs [1]);
+		if (lens > 2)
+			def.z = float.Parse (arrs [2]);
+
+		return def;
+	}
+
+	protected string ToStr(Vector3 v3){
+		return Round2D (v3.x, 2) + "," + Round2D (v3.y, 2) + "," + Round2D (v3.z, 2);
+	}
+
 	public override JsonData ToJsonData ()
 	{
 		JsonData ret = base.ToJsonData ();
@@ -63,6 +98,8 @@ public class EM_NPC : EM_UnitCell {
 			IDictionary map = (IDictionary)ret;
 			map.Remove ("reliveInterval");
 			map.Remove ("level");
+
+			ret ["talkID"] = m_iTalkId;
 		}
 		return ret;
 	}
