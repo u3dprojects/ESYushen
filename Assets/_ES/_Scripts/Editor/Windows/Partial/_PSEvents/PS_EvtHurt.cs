@@ -136,15 +136,7 @@ public class PS_EvtHurt {
 			EG_GUIHelper.FEG_BeginH ();
 			{
 				GUILayout.Label ("优先目标:", GUILayout.Width (80));
-				Color def = GUI.color;
-				GUI.color = Color.yellow;
-				GUILayout.Label ("("+one.m_iTargetFilter+")");
-				GUI.color = def;
-
-				one.m_isTFFriend = EditorGUILayout.ToggleLeft("友方",one.m_isTFFriend);
-				one.m_isTFEnermy = EditorGUILayout.ToggleLeft("敌方",one.m_isTFEnermy);
-				one.m_isTFSelf = EditorGUILayout.ToggleLeft("自己",one.m_isTFSelf);
-				one.ReckonFitlerTargetType ();
+				one.m_iTargetFilter = EditorGUILayout.IntField (one.m_iTargetFilter);
 			}
 			EG_GUIHelper.FEG_EndH ();
 			EG_GUIHelper.FG_Space (8);

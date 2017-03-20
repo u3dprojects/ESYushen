@@ -170,6 +170,25 @@ public class EDT_Property : EDT_Base {
 		[Description("数值减 - 攻击速度")]
 		ATK_SPEED_Minus = 54,
 
+		[Description("定身-不能移动(参数忽略)")]
+		CantMove = 100,
+
+		[Description("沉默-不能释放技能(参数忽略)")]
+		CantSkill = 101,
+
+		[Description("冰系伤害-瞬时效果")]
+		icePowerDamage = 102,
+		[Description("火系伤害-瞬时效果")]
+		firePowerDamage = 103,
+		[Description("雷系伤害-瞬时效果")]
+		thunderPowerDamage = 104,
+		[Description("毒系伤害-瞬时效果")]
+		poisionPowerDamage = 105,
+		[Description("暗系伤害-瞬时效果")]
+		darkPowerDamage = 106,
+		[Description("光系伤害-瞬时效果")]
+		lightPowerDamage = 107,
+
 		// 按百分比增减
 		[Description("百分比增[以万为基数] - 当前生命值")]
 		Per_Hp_Plus	= 1001,
