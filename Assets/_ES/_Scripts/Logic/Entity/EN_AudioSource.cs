@@ -164,4 +164,11 @@ public class EN_AudioSource : System.Object{
 			}
 		}
 	}
+
+	// 设置播放速度(-3 ~ 3,1 为正常)
+	protected void SetSpeed(float speed){
+		if (this.m_auido != null) {
+			this.m_auido.pitch = speed;
+		}
+	}
 }
