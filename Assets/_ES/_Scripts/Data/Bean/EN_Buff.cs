@@ -23,6 +23,12 @@ public class EN_Buff : EN_BaseXls{
 	public string MateChange;
 	public int Tag;
 	public int GID;
+
+	// 分组
+	public int Group;
+	// 是否替换
+	public int IsReplace;
+	// 叠加时候重置
 	public int IsResetWhenGet;
 
 	public string strEvtInterval;
@@ -50,6 +56,8 @@ public class EN_Buff : EN_BaseXls{
 				this.MateChange,
 				this.Tag,
 				this.GID,
+				this.Group,
+				this.IsReplace,
 				this.IsResetWhenGet,
 				this.strEvtInterval,
 				this.strEvtOnce,
@@ -78,6 +86,8 @@ public class EN_Buff : EN_BaseXls{
 		this.MateChange = sheet.GetString(rowIndex, colIndex++);
 		this.Tag = sheet.GetInt(rowIndex, colIndex++);
 		this.GID = sheet.GetInt(rowIndex, colIndex++);
+		this.Group = sheet.GetInt(rowIndex, colIndex++);
+		this.IsReplace = sheet.GetInt(rowIndex, colIndex++);
 		this.IsResetWhenGet = sheet.GetInt(rowIndex, colIndex++);
 		this.strEvtInterval = sheet.GetString(rowIndex, colIndex++);
 		this.strEvtOnce = sheet.GetString(rowIndex, colIndex++);
@@ -108,6 +118,8 @@ public class EN_Buff : EN_BaseXls{
 		this.MateChange = tmp.MateChange;
 		this.Tag = tmp.Tag;
 		this.GID = tmp.GID;
+		this.Group = tmp.Group;
+		this.IsReplace = tmp.IsReplace;
 		this.IsResetWhenGet = tmp.IsResetWhenGet;
 		this.strEvtInterval = tmp.strEvtInterval;
 		this.strEvtOnce = tmp.strEvtOnce;

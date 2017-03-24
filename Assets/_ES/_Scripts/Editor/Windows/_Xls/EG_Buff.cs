@@ -34,6 +34,7 @@ public class EG_Buff {
 		"占位"
 	};
 	bool ms_isRest;
+	bool ms_isReplace;
 
 	EN_OptBuff m_opt{
 		get{
@@ -145,6 +146,13 @@ public class EG_Buff {
 		EG_GUIHelper.FG_Space(5);
 
 		ms_entity.GID = EditorGUILayout.Popup("子类型:", ms_entity.GID, GIDType);
+		EG_GUIHelper.FG_Space(5);
+
+		ms_entity.Group = EditorGUILayout.IntField("分组:", ms_entity.Group);
+		EG_GUIHelper.FG_Space(5);
+
+		ms_isReplace = EditorGUILayout.Toggle("同分组的是否替换:", ms_isReplace);
+		ms_entity.IsReplace = ms_isReplace ? 1 : 0;
 		EG_GUIHelper.FG_Space(5);
 
 		ms_isRest = EditorGUILayout.Toggle("替代是否重置:", ms_isRest);
