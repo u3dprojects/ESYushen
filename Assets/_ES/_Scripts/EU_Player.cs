@@ -9,7 +9,6 @@ public class EU_Player : MonoBehaviour {
 		ctrlCam.doBegin (gameObject, true);
 	}
 
-	Vector3 movement = Vector3.up;
 	Transform trsf;
 
 	public float speed = 5;
@@ -40,7 +39,7 @@ public class EU_Player : MonoBehaviour {
 		float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
 		translation *= Time.deltaTime;
 		rotation *= Time.deltaTime;
-		transform.Translate(0, 0, translation);
-		transform.Rotate(0, rotation, 0);
+		trsf.Translate(0, 0, translation);
+		trsf.Rotate(0, rotation, 0);
 	}
 }
