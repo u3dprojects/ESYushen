@@ -61,6 +61,9 @@ public class EG_Map {
 		OnClearDelegate ();
 
 		m_isInView = false;
+
+		optNpc.DoClear ();
+		optMonster.DoClear ();
 	}
 
 	public void DrawShow()
@@ -68,6 +71,8 @@ public class EG_Map {
 		m_isInView = true;
 
 		_DrawChooseMonster ();
+
+		_DrawChooseNpc ();
 
 		EG_GUIHelper.FEG_HeadTitMid ("MapList Excel 表",Color.cyan);
 
@@ -590,12 +595,41 @@ public class EG_Map {
 			GUI.color = Color.red;
 		}
 
-		EditorGUILayout.LabelField ("初始化了怪物数据", "状态："+(optMonster.isInitSuccessed ? "Success - " + optMonster.m_eOptXls.fileName : "未选择怪物Excel"));
+		EditorGUILayout.LabelField ("初始化怪物数据", "状态："+(optMonster.isInitSuccessed ? "Success - " + optMonster.m_eOptXls.fileName : "未选择怪物的Excel"));
 
 		if (GUILayout.Button("选取Monster Excel表"))
 		{
 			string path = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
 			optMonster.DoInit (path, 0);
+		}
+		EG_GUIHelper.FEG_EndH();
+
+		GUI.color = def;
+		EG_GUIHelper.FG_Space(10);
+	}
+
+	EN_OptNpc optNpc{
+		get{
+			return EN_OptNpc.Instance;
+		}
+	}
+
+	void _DrawChooseNpc(){
+		EG_GUIHelper.FEG_BeginH();
+
+		Color def = GUI.color;
+		if (optNpc.isInitSuccessed) {
+			GUI.color = Color.green;
+		} else {
+			GUI.color = Color.red;
+		}
+
+		EditorGUILayout.LabelField ("初始化NPC数据", "状态："+(optNpc.isInitSuccessed ? "Success - " + optNpc.m_eOptXls.fileName : "未选择NPC的Excel"));
+
+		if (GUILayout.Button("选取NPC Excel表"))
+		{
+			string path = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
+			optNpc.DoInit (path, 0);
 		}
 		EG_GUIHelper.FEG_EndH();
 

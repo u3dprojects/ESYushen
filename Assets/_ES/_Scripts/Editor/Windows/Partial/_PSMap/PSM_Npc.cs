@@ -41,20 +41,17 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 //		one.m_fReliveInv = EditorGUILayout.FloatField ("刷新时间间隔:", one.m_fReliveInv);
 //		EG_GUIHelper.FG_Space(5);
 
-//		EG_GUIHelper.FEG_BeginToggleGroup ("是否显示怪物模型", ref one.m_isShowModel);
-//		{
-//			if (!EN_OptMonster.Instance.isInitSuccessed) {
-//				EditorGUILayout.LabelField ("未选择怪物Excel,不能显示模型");
-//			}
-//		}
-//		EG_GUIHelper.FEG_EndToggleGroup ();
-//		_ShowMonster (one);
+		EG_GUIHelper.FEG_BeginToggleGroup ("是否显示模型", ref one.m_isShowModel);
+		{
+			if (!EN_OptNpc.Instance.isInitSuccessed) {
+				EditorGUILayout.LabelField ("未选择NPC Excel,不能显示模型");
+			}
+		}
+		EG_GUIHelper.FEG_EndToggleGroup ();
+		_ShowMonster (one);
 
 		EG_GUIHelper.FG_BeginH ();
 		{
-//			if (GUILayout.Button ("SyncToData")) {
-//				one.ToData ();
-//			}
 			if (GUILayout.Button ("SyncToInspector")) {
 				one.ToTrsfData ();
 			}
@@ -73,7 +70,7 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 	}
 
 	void _ShowMonster(EM_NPC one){
-		if (!EN_OptMonster.Instance.isInitSuccessed) {
+		if (!EN_OptNpc.Instance.isInitSuccessed) {
 			return;
 		}
 
@@ -86,30 +83,30 @@ public class PSM_Npc : PSM_Base<EM_NPC> {
 			return;
 		}
 
-		EN_Monster exlMonster = EN_OptMonster.Instance.GetEntity (one.m_iUnqID);
-		if (exlMonster == null) {
-			Debug.LogWarning ("怪物Excel表中ID= [" + one.m_iUnqID + "],不存在！！");
+		EN_Npc exlEntity = EN_OptNpc.Instance.GetEntity (one.m_iUnqID);
+		if (exlEntity == null) {
+			Debug.LogWarning ("Excel表中ID= [" + one.m_iUnqID + "],不存在！！");
 			return;
 		}
 
 		string path = "";
-		path = "Assets\\PackResources\\Arts\\Test\\Prefabs\\Monster\\"+ exlMonster.ModeRes + ".prefab";
+		path = "Assets\\PackResources\\Arts\\Test\\Prefabs\\Monster\\"+ exlEntity.ModeRes + ".prefab";
 		bool isExists = File.Exists(path);
 
 		if (!isExists) {
 			// Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
 
-			path = "Assets\\PackResources\\Arts\\Prefabs\\Monster\\"+ exlMonster.ModeRes + ".prefab";
+			path = "Assets\\PackResources\\Arts\\Prefabs\\Monster\\"+ exlEntity.ModeRes + ".prefab";
 
 			isExists = File.Exists(path);
 
 			if (!isExists) {
-				path = "Assets\\PackResources\\Arts\\Sprites\\Prefabs\\"+ exlMonster.ModeRes + ".prefab";
+				path = "Assets\\PackResources\\Arts\\Sprites\\Prefabs\\"+ exlEntity.ModeRes + ".prefab";
 
 				isExists = File.Exists(path);
 
 				if (!isExists) {
-					Debug.LogWarning ("怪物路径path = [" + path + "],不存在！！");
+					Debug.LogWarning ("模型路径path = [" + path + "],不存在！！");
 					return;
 				}
 			}
