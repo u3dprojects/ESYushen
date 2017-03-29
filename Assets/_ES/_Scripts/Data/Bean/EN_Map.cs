@@ -34,6 +34,9 @@ public class EN_Map : EN_BaseXls{
 	// 雷达宽度
 	public float radarWidth;
 
+	// 复活地图ID
+	public float reliveMapId;
+
 	// 出生x坐标
 	public float PosX;
 
@@ -89,6 +92,7 @@ public class EN_Map : EN_BaseXls{
 				this.radarOffsetZ,
 				this.radarLength,
 				this.radarWidth,
+				this.reliveMapId,
 				this.PosX,
 				this.PosZ,
 				this.Rotation,
@@ -122,6 +126,7 @@ public class EN_Map : EN_BaseXls{
 		this.radarLength = sheet.GetFloat(rowIndex, colIndex++);
 		this.radarWidth = sheet.GetFloat(rowIndex, colIndex++);
 
+		this.reliveMapId = sheet.GetInt(rowIndex, colIndex++);
 		this.PosX = sheet.GetFloat(rowIndex, colIndex++);
 		this.PosZ = sheet.GetFloat(rowIndex, colIndex++);
 		this.Rotation = sheet.GetFloat(rowIndex, colIndex++);
@@ -162,6 +167,7 @@ public class EN_Map : EN_BaseXls{
 		this.radarLength = tmp.radarLength;
 		this.radarWidth = tmp.radarWidth;
 
+		this.reliveMapId = tmp.reliveMapId;
 		this.PosX = tmp.PosX;
 		this.PosZ = tmp.PosZ;
 		this.Rotation = tmp.Rotation;
