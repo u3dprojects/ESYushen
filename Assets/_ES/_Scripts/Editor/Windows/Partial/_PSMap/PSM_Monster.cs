@@ -50,6 +50,10 @@ public class PSM_Monster : PSM_Base<EM_Monster> {
 		EG_GUIHelper.FEG_EndToggleGroup ();
 		_ShowMonster (one);
 
+		EG_GUIHelper.FG_Space(8);
+		one.m_iDropId = EditorGUILayout.IntField ("掉落ID:", one.m_iDropId);
+		EG_GUIHelper.FG_Space(8);
+
 		EG_GUIHelper.FG_BeginH ();
 		{
 //			if (GUILayout.Button ("SyncToData")) {

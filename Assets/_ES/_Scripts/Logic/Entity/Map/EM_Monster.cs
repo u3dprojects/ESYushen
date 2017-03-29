@@ -19,9 +19,23 @@ public class EM_Monster : EM_UnitCell {
 	[System.NonSerialized]
 	public EUM_Monster m_csCell;
 
+	// 掉落ID
+	public int m_iDropId;
 
 	public EM_Monster() : base(){
 		m_iCoreCursorMonster = (CORE_CURSOR++);
+	}
+
+	protected override bool OnInit ()
+	{
+		bool isOkey = base.OnInit ();
+		if (isOkey) {
+			IDictionary map = (IDictionary)m_jdOrg;
+			if (map.Contains ("dropID")) {
+				this.m_iDropId = (int)m_jdOrg ["dropID"];
+			}
+		}
+		return isOkey;
 	}
 
 	protected override void OnResetGobjName ()
@@ -56,6 +70,15 @@ public class EM_Monster : EM_UnitCell {
 		if (m_csCell != null) {
 			m_csCell.m_entity = this;
 		}
+	}
+
+	public override JsonData ToJsonData ()
+	{
+		JsonData ret = base.ToJsonData ();
+		if(ret != null){
+			ret ["dropID"] = m_iDropId;
+		}
+		return ret;
 	}
 
 	public static void DoClearStatic ()
