@@ -189,6 +189,9 @@ public class EDT_Property : EDT_Base {
 		[Description("光系伤害-瞬时效果")]
 		lightPowerDamage = 107,
 
+		[Description("百分比增[以万为基数] - 增加经验")]
+		Per_Exp_Plus = 108,
+
 		// 按百分比增减
 		[Description("百分比增[以万为基数] - 当前生命值")]
 		Per_Hp_Plus	= 1001,
