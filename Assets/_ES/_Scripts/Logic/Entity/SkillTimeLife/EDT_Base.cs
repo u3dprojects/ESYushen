@@ -137,6 +137,13 @@ public class EDT_Base {
 	public virtual void OnReInit(float castTime, JsonData jsonData){
 		this.m_fCastTime = castTime;
 		this.m_jsonData = jsonData;
+		if (this.m_jsonData != null) {
+			IDictionary map = (IDictionary)this.m_jsonData;
+			if (map.Contains ("m_typeInt")) {
+				int v = ((int)m_jsonData ["m_typeInt"]);
+				this.m_emType = (EventType)v;
+			}
+		}
 	}
 
 	protected bool DoReInit(string objName,EventType type)

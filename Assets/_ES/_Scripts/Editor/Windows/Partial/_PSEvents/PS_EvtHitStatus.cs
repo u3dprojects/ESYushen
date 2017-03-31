@@ -22,7 +22,6 @@ public class PS_EvtHitStatus {
 
 	List<bool> m_lFodeout = new List<bool>();
 
-	int m_hitStatus = 0;
 	string[] StatusType = { 
 		"默认",
 		"击退",
@@ -120,20 +119,11 @@ public class PS_EvtHitStatus {
 		EG_GUIHelper.FEG_BeginH();
 		{
 			GUILayout.Label("受击者的受击时表现:", GUILayout.Width(80));
-			m_hitStatus = EditorGUILayout.Popup (m_hitStatus, StatusType);
+			one.m_hitStatus = EditorGUILayout.Popup (one.m_hitStatus, StatusType);
 		}
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
-		switch (m_hitStatus) {
-		case 1:
-			one.m_emType = EDT_Base.EventType.BeHitBack;
-			break;
-		case 2:
-			one.m_emType = EDT_Base.EventType.BeHitFly;
-			break;
-		default:
-			one.m_emType = EDT_Base.EventType.BeHitDefault;
-			break;
-		}
+
+		one.Status2Enum ();
 	}
 }
