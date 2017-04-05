@@ -72,6 +72,10 @@ static public class Messenger
 			}
 		}
 	}
+	
+	static public void Brocast(string eventType){
+		Invoke (eventType);
+	}
 }
 
 
@@ -134,6 +138,10 @@ static public class Messenger<T>
 			}
 		}
 	}
+
+	static public void Brocast(string eventType, T arg1){
+		Invoke (eventType,arg1);
+	}
 }
 
 
@@ -195,5 +203,9 @@ static public class Messenger<T, U>
 				callback(arg1, arg2);
 			}
 		}
+	}
+
+	static public void Brocast(string eventType, T arg1, U arg2){
+		Invoke (eventType,arg1,arg2);
 	}
 }
