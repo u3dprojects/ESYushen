@@ -73,20 +73,12 @@ static public class Messenger
 		}
 	}
 	
+
 	static public void Brocast(string eventType){
 		Invoke (eventType);
 	}
-}
 
-
-/**
- * A messenger for events that have one parameter of type T.
- */
-static public class Messenger<T>
-{
-	private static Dictionary<string, Delegate> eventTable = new Dictionary<string, Delegate>();
-
-	static public void AddListener(string eventType, System.Action<T> handler)
+	static public void AddListener<T>(string eventType, System.Action<T> handler)
 	{
 		// Obtain a lock on the event table to keep this thread-safe.
 		lock (eventTable)
@@ -101,7 +93,7 @@ static public class Messenger<T>
 		}
 	}
 
-	static public void RemoveListener(string eventType, System.Action<T> handler)
+	static public void RemoveListener<T>(string eventType, System.Action<T> handler)
 	{
 		// Obtain a lock on the event table to keep this thread-safe.
 		lock (eventTable)
@@ -121,7 +113,7 @@ static public class Messenger<T>
 		}
 	}
 
-	static public void Invoke(string eventType, T arg1)
+	static public void Invoke<T>(string eventType, T arg1)
 	{
 		Delegate d;
 		// Invoke the delegate only if the event type is in the dictionary.
@@ -139,20 +131,11 @@ static public class Messenger<T>
 		}
 	}
 
-	static public void Brocast(string eventType, T arg1){
+	static public void Brocast<T>(string eventType, T arg1){
 		Invoke (eventType,arg1);
 	}
-}
 
-
-/**
- * A messenger for events that have two parameters of types T and U.
- */
-static public class Messenger<T, U>
-{
-	private static Dictionary<string, Delegate> eventTable = new Dictionary<string, Delegate>();
-
-	static public void AddListener(string eventType, System.Action<T, U> handler)
+	static public void AddListener<T, U>(string eventType, System.Action<T, U> handler)
 	{
 		// Obtain a lock on the event table to keep this thread-safe.
 		lock (eventTable)
@@ -167,7 +150,7 @@ static public class Messenger<T, U>
 		}
 	}
 
-	static public void RemoveListener(string eventType, System.Action<T, U> handler)
+	static public void RemoveListener<T, U>(string eventType, System.Action<T, U> handler)
 	{
 		// Obtain a lock on the event table to keep this thread-safe.
 		lock (eventTable)
@@ -187,7 +170,7 @@ static public class Messenger<T, U>
 		}
 	}
 
-	static public void Invoke(string eventType, T arg1, U arg2)
+	static public void Invoke<T, U>(string eventType, T arg1, U arg2)
 	{
 		Delegate d;
 		// Invoke the delegate only if the event type is in the dictionary.
@@ -205,7 +188,7 @@ static public class Messenger<T, U>
 		}
 	}
 
-	static public void Brocast(string eventType, T arg1, U arg2){
+	static public void Brocast<T, U>(string eventType, T arg1, U arg2){
 		Invoke (eventType,arg1,arg2);
 	}
 }
