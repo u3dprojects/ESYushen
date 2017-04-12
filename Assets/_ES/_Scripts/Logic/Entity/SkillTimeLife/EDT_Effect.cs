@@ -234,7 +234,7 @@ public class EDT_Effect : EDT_Base {
 				string path = "Assets/EffectFolder.txt";
 				bool isExists = File.Exists(path);
 				if (isExists) {
-					UnityEngine.TextAsset obj = UnityEditor.AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.TextAsset));
+					UnityEngine.TextAsset obj = UnityEditor.AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.TextAsset)) as UnityEngine.TextAsset;
 					folder = obj.text;
 				} else {
 					Debug.LogWarning ("路径path = [" + path + "],不存在！！！");
