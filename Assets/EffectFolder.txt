@@ -1,0 +1,3 @@
+Assets/PackResources/Arts/Effect/Prefabs/
+Assets/PackResources/Arts/Effect/Prefabs/by/
+Assets/PackResources/Arts/Effect/Prefabs/Effect_scene/
