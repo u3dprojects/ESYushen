@@ -72,9 +72,14 @@ public class EG_Skill {
 			if (isInited)
 			{
 				if (ms_enity.IsCanCache) {
-//					if (EditorUtility.DisplayDialog ("Tips", "是否保存修改对象??", "Save", "Cancel")) {	
-//					}
-					OnInitAttrs2Entity ();
+					bool isNew = m_opt.GetEnSkill (ms_iSkillID) == null;
+					if (isNew) {
+						if (EditorUtility.DisplayDialog ("Tips", "是否缓存新增对象?", "Save", "Cancel")) {	
+							OnInitAttrs2Entity ();
+						}
+					} else {
+						OnInitAttrs2Entity ();
+					}
 				}
 
 				EN_Skill tmp = m_opt.GetEnSkill(ms_iSkillID);
