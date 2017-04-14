@@ -302,5 +302,6 @@ public class EG_Buff {
 	}
 
 	void _RmAttr(EDT_Property one){
+		listAttrChange.Remove(one);
 	}
 }
