@@ -94,6 +94,8 @@ public class EM_UnitCell : EM_Cube {
 		base.OnChangeTransform (trsf);
 		if (trsf == m_trsf) {
 			ToData ();
+
+			CheckNavmesh ();
 		}
 	}
 
@@ -166,6 +168,8 @@ public class EM_UnitCell : EM_Cube {
 		} else {
 			m_v3Pos.y = 10;
 		}
+
+		CheckNavmesh ();
 	}
 
 	protected override void OnDestroyChild ()
@@ -199,5 +203,24 @@ public class EM_UnitCell : EM_Cube {
 
 		m_isShowModel = false;
 		DoDestroyChild ();
+	}
+
+	protected void CheckNavmesh(){
+		NavMeshHit navHit;
+		// 寻找最近边缘
+		NavMesh.FindClosestEdge (m_v3Pos, out navHit, NavMesh.AllAreas);
+		bool isHasNav = false;
+		if (navHit.hit) {
+//			Vector3 diff = navHit.position - m_v3Pos;
+//			isHasNav = diff.sqrMagnitude <= 0.001f;
+			isHasNav = true;
+		}
+		if (isHasNav) {
+			this.m_cAreaColor = Color.blue;
+		} else {
+			this.m_cAreaColor = Color.red;
+		}
+
+		OnResetColor ();
 	}
 }
