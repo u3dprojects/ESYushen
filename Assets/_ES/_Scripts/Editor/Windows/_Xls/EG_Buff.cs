@@ -192,7 +192,7 @@ public class EG_Buff {
 	}
 
 	GameObject GetFabEffect(string efcName){
-		string path = EDT_Effect.GetPath(efcName);
+		string path = EMgrResFolder.GetPathEffect(efcName);
 		bool isExists = File.Exists(path);
 		if (!isExists)
 		{

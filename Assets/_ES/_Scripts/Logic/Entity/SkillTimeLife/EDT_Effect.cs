@@ -89,9 +89,6 @@ public class EDT_Effect : EDT_Base {
 		this.m_fScale = 1;
 
         OnClearEffect();
-
-		m_strEffectFolderVal = "";
-		_pathFolders = null;
     }
 
     void OnClearEffect()
@@ -205,55 +202,7 @@ public class EDT_Effect : EDT_Base {
 			return "类型不对";
 		}
 
-		return GetPath (objName);
+		return EMgrResFolder.GetPathEffect(objName);
 	}
 
-
-	static string m_defFolder = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\";
-	static string m_strEffectFolderVal = "";
-	static string[] _pathFolders = null;
-	static public string[] PathFolders{
-		get{
-			if (string.IsNullOrEmpty (m_strEffectFolderVal)) {
-				string path = "Assets/EffectFolder.txt";
-				bool isExists = File.Exists(path);
-				if (isExists) {
-					UnityEngine.TextAsset obj = UnityEditor.AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.TextAsset)) as UnityEngine.TextAsset;
-					m_strEffectFolderVal = obj.text;
-				} else {
-					Debug.LogWarning ("路径path = [" + path + "],不存在！！！");
-				}
-			}
-			if (_pathFolders == null && !string.IsNullOrEmpty (m_strEffectFolderVal)) {
-				_pathFolders = m_strEffectFolderVal.Split ("\r\n\t".ToCharArray (),System.StringSplitOptions.RemoveEmptyEntries);
-			}
-			return _pathFolders;
-		}
-	}
-
-	static public string GetPath(string objName){
-		string path = "";
-		_pathFolders = PathFolders;
-		bool isExists = false;
-		if (_pathFolders != null) {
-			foreach (var item in _pathFolders) {
-				if (string.IsNullOrEmpty (item))
-					continue;
-
-				isExists = Directory.Exists(item);
-				if (isExists) {
-					path = item + objName+".prefab";
-					isExists = File.Exists(path);
-					if (isExists) {
-						break;
-					}
-				}
-			}
-		}
-
-		if (!isExists)
-			path = m_defFolder + objName+".prefab";
-		
-		return path;
-	}
 }
