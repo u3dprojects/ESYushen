@@ -36,6 +36,9 @@ public class EN_Buff : EN_BaseXls{
 	public float Interval;
 	public string strEvtDuration;
 
+	// 属性修改
+	public string strAttrChange;
+
 	public EN_Buff():base(){
 	}
 
@@ -62,7 +65,8 @@ public class EN_Buff : EN_BaseXls{
 				this.strEvtInterval,
 				this.strEvtOnce,
 				this.Interval,
-				this.strEvtDuration
+				this.strEvtDuration,
+				this.strAttrChange
 			};
 			return ret;
 		}
@@ -93,6 +97,7 @@ public class EN_Buff : EN_BaseXls{
 		this.strEvtOnce = sheet.GetString(rowIndex, colIndex++);
 		this.Interval = sheet.GetFloat(rowIndex, colIndex++);
 		this.strEvtDuration = sheet.GetString(rowIndex, colIndex++);
+		this.strAttrChange = sheet.GetString(rowIndex, colIndex++);
 	}
 
 	public override void DoClone (EN_BaseXls org)
@@ -125,5 +130,6 @@ public class EN_Buff : EN_BaseXls{
 		this.strEvtOnce = tmp.strEvtOnce;
 		this.Interval = tmp.Interval;
 		this.strEvtDuration = tmp.strEvtDuration;
+		this.strAttrChange = tmp.strAttrChange;
 	}
 }

@@ -53,6 +53,9 @@ public class EG_Buff {
 
 	List<bool> m_lFodeout = new List<bool>(){false,false,false};
 
+	// 修改技能
+	List<EDT_Property> listAttrChange = new List<EDT_Property>();
+
 	public void DoInit(string path){
 		m_opt.DoInit (path, 0);
 	}
@@ -83,6 +86,8 @@ public class EG_Buff {
 		m_lFodeout [2] = false;
 		ms_gobjEffect = null;
 		ms_preGobjEffect = null;
+
+		listAttrChange.Clear ();
 	}
 
 	public void DrawShow()
@@ -182,6 +187,8 @@ public class EG_Buff {
 			_DrawDur();
 		}
 		ms_entity.strEvtDuration = evt_Dua.ToJsonString ();
+
+		_DrawAttrChanges ();
 	}
 
 	void OnInitEntity2Attrs(EN_Buff entity)
@@ -198,13 +205,19 @@ public class EG_Buff {
 			if(!string.IsNullOrEmpty(ms_entity.EffectResName)){
 				string path = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+ms_entity.EffectResName+".prefab";
 				bool isExists = File.Exists(path);
-				if (!isExists)
-				{
+				if (isExists) {
+					this.ms_gobjEffect = AssetDatabase.LoadAssetAtPath (path, typeof(UnityEngine.GameObject)) as GameObject;
+					this.ms_preGobjEffect = this.ms_gobjEffect;
+				} else {
 					Debug.LogWarning("资源路径path = ["+path + "],不存在！！！");
-					return;
 				}
-				this.ms_gobjEffect = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
-				this.ms_preGobjEffect = this.ms_gobjEffect;
+			}
+
+			listAttrChange.Clear ();
+
+			List<EDT_Property> list = EDT_Property.ParseList (ms_entity.strAttrChange);
+			if (list != null) {
+				listAttrChange.AddRange (list);
 			}
 		}
 	}
@@ -264,5 +277,25 @@ public class EG_Buff {
 
 	void RmEventDur(EDT_Base one){
 		evt_Dua.RmEvent (one);
+	}
+
+
+	// 绘制修改属性
+	PS_EvtAttrs psEvtAttrs;
+	void _DrawAttrChanges(){
+		if (psEvtAttrs == null) {
+			psEvtAttrs = new PS_EvtAttrs ("属性修改列表:", false,_NewAttrs,_RmAttr, false);
+		}
+
+		psEvtAttrs.DoDraw (0, listAttrChange);
+		ms_entity.strAttrChange = EDT_Property.ToStrFmt (listAttrChange);
+	}
+
+	void _NewAttrs(){
+		EDT_Property newVal = EDT_Property.NewEntity<EDT_Property> ();
+		listAttrChange.Add (newVal);
+	}
+
+	void _RmAttr(EDT_Property one){
 	}
 }

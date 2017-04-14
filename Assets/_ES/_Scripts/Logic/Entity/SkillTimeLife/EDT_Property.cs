@@ -2,6 +2,7 @@
 using System.Collections;
 using LitJson;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 /// <summary>
 /// 类名 : 修改属性
@@ -360,5 +361,74 @@ public class EDT_Property : EDT_Base {
 		base.OnClear ();
 
 		m_emTag = PropretyTag.Forever;
+	}
+
+	public string ToFmtTpValStr(){
+		return (int)this.m_iGID + "," + this.m_sPars;
+	}
+		
+
+	/// <summary>
+	/// 格式 type-val(tp,val)
+	/// </summary>
+	/// <returns>The by.</returns>
+	/// <param name="notJson">Not json.</param>
+	static public EDT_Property Parse(string notJson){
+		string[] arrs = notJson.Split (",".ToCharArray (), System.StringSplitOptions.RemoveEmptyEntries);
+		if (arrs.Length < 2)
+			return null;
+		try {
+			int tp = int.Parse(arrs[0]);
+			if(tp == 0)
+				return null;
+			EDT_Property ret = new EDT_Property();
+			ret.m_iGID = (PlusType)tp;
+			ret.m_sPars = arrs[1];
+			return ret;
+		} catch (System.Exception ex) {
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// 格式: tp,val;tp,val
+	/// </summary>
+	/// <returns>The list.</returns>
+	/// <param name="str">格式: tp,val;tp,val </param>
+	static public List<EDT_Property> ParseList(string str){
+		string[] arrs = str.Split (";".ToCharArray (), System.StringSplitOptions.RemoveEmptyEntries);
+		if (arrs == null || arrs.Length <= 0)
+			return null;
+		List<EDT_Property> ret = new List<EDT_Property> ();
+		EDT_Property temp = null;
+		for (int i = 0; i < arrs.Length; i++) {
+			temp = Parse (arrs [i]);
+			if (temp != null) {
+				ret.Add (temp);
+			}
+		}
+		return ret;
+	}
+
+	/// <summary>
+	/// 转为字符串格式: tp,val;tp,val
+	/// </summary>
+	/// <returns>The string fmt.</returns>
+	/// <param name="list">List.</param>
+	static public string ToStrFmt(List<EDT_Property> list){
+		if (list == null || list.Count <= 0)
+			return "";
+		
+		System.Text.StringBuilder builder = new System.Text.StringBuilder ();
+
+		EDT_Property temp = null;
+		int lens = list.Count;
+		for (int i = 0; i < lens; i++) {
+			temp = list [i];
+			builder.Append (temp.ToFmtTpValStr ());
+			if(i < lens - 1)
+				builder.Append (";");
+		}
+		return builder.ToString ();
 	}
 }
