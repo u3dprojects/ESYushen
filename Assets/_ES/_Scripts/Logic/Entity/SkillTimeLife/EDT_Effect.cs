@@ -37,8 +37,6 @@ public class EDT_Effect : EDT_Base {
     // 创建出来的实体对象
     EN_Effect _m_eEffect;
 
-	string m_defFolder = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\";
-
     public EDT_Effect() : base()
     {
 		this.m_emType = EventType.Effect;
@@ -207,31 +205,11 @@ public class EDT_Effect : EDT_Base {
 			return "类型不对";
 		}
 
-		string path = "";
-		_pathFolders = PathFolders;
-		bool isExists = false;
-		if (_pathFolders != null) {
-			foreach (var item in _pathFolders) {
-				if (string.IsNullOrEmpty (item))
-					continue;
-				
-				isExists = Directory.Exists(item);
-				if (isExists) {
-					path = item + objName+".prefab";
-					isExists = File.Exists(path);
-					if (isExists) {
-						break;
-					}
-				}
-			}
-		}
-
-		if (isExists)
-			return path;
-		
-		return m_defFolder + objName+".prefab";
+		return GetPath (objName);
 	}
 
+
+	static string m_defFolder = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\";
 	static string m_strEffectFolderVal = "";
 	static string[] _pathFolders = null;
 	static public string[] PathFolders{
@@ -251,5 +229,31 @@ public class EDT_Effect : EDT_Base {
 			}
 			return _pathFolders;
 		}
+	}
+
+	static public string GetPath(string objName){
+		string path = "";
+		_pathFolders = PathFolders;
+		bool isExists = false;
+		if (_pathFolders != null) {
+			foreach (var item in _pathFolders) {
+				if (string.IsNullOrEmpty (item))
+					continue;
+
+				isExists = Directory.Exists(item);
+				if (isExists) {
+					path = item + objName+".prefab";
+					isExists = File.Exists(path);
+					if (isExists) {
+						break;
+					}
+				}
+			}
+		}
+
+		if (!isExists)
+			path = m_defFolder + objName+".prefab";
+		
+		return path;
 	}
 }

@@ -191,6 +191,17 @@ public class EG_Buff {
 		_DrawAttrChanges ();
 	}
 
+	GameObject GetFabEffect(string efcName){
+		string path = EDT_Effect.GetPath(efcName);
+		bool isExists = File.Exists(path);
+		if (!isExists)
+		{
+			Debug.LogWarning("资源路径path = ["+path + "],不存在！！！");
+			return null;
+		}
+		return AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.GameObject)) as GameObject;
+	}
+
 	void OnInitEntity2Attrs(EN_Buff entity)
 	{
 		if(entity != null)
@@ -203,14 +214,8 @@ public class EG_Buff {
 
 			this.ms_isRest = ms_entity.IsResetWhenGet == 1 ? true : false;
 			if(!string.IsNullOrEmpty(ms_entity.EffectResName)){
-				string path = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+ms_entity.EffectResName+".prefab";
-				bool isExists = File.Exists(path);
-				if (isExists) {
-					this.ms_gobjEffect = AssetDatabase.LoadAssetAtPath (path, typeof(UnityEngine.GameObject)) as GameObject;
-					this.ms_preGobjEffect = this.ms_gobjEffect;
-				} else {
-					Debug.LogWarning("资源路径path = ["+path + "],不存在！！！");
-				}
+				this.ms_gobjEffect = GetFabEffect (ms_entity.EffectResName);
+				this.ms_preGobjEffect = this.ms_gobjEffect;
 			}
 
 			listAttrChange.Clear ();

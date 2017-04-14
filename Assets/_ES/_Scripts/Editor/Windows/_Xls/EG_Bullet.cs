@@ -169,7 +169,7 @@ public class EG_Bullet {
 	}
 
 	GameObject GetFabEffect(string efcName){
-		string path = "Assets\\PackResources\\Arts\\Effect\\Prefabs\\"+efcName+".prefab";
+		string path = EDT_Effect.GetPath(efcName);
 		bool isExists = File.Exists(path);
 		if (!isExists)
 		{
