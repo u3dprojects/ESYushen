@@ -151,11 +151,11 @@ public class EM_UnitCell : EM_Cube {
 
 		RaycastHit[] hits = null;
 
-		hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10);
+		// hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10);
 
-//		int layerTerrain = LayerMask.NameToLayer("Terrain");
-//		LayerMask mask = 1 << layerTerrain;
-//		hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10, mask);
+		int layerTerrain = LayerMask.NameToLayer("Terrain");
+		LayerMask mask = 1 << layerTerrain;
+		hits = Physics.RaycastAll (m_v3Pos, Vector3.down, m_fDefaultY + 10, mask);
 
 		RaycastHit hit;
 		if (hits != null && hits.Length > 0) {
