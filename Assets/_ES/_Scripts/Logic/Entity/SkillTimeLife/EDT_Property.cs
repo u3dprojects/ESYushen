@@ -193,6 +193,9 @@ public class EDT_Property : EDT_Base {
 		[Description("百分比增[以万为基数] - 增加经验")]
 		Per_Exp_Plus = 108,
 
+		[Description("百分比增[以万为基数] - 增加移动速度")]
+		Per_MoveSpeed_Plus = 109,
+
 		// 按百分比增减
 		[Description("百分比增[以万为基数] - 当前生命值")]
 		Per_Hp_Plus	= 1001,
