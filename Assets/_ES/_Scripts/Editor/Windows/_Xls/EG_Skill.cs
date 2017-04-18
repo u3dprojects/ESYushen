@@ -37,6 +37,7 @@ public class EG_Skill {
 		"怪物技能",
 		"主角技能_6",
 		"主角技能_7",
+		"主角闪避",
 	};
 
 	string[] ElementType = {"物理","冰","火"};
