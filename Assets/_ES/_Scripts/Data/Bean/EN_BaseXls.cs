@@ -8,7 +8,11 @@ using System.Collections;
 /// 功能 : 
 /// </summary>
 public class EN_BaseXls : System.Object {
+
+	[System.NonSerialized]
 	public int rowIndex;
+
+	[System.NonSerialized]
 	public NH_Sheet sheet;
 
 	public int ID;

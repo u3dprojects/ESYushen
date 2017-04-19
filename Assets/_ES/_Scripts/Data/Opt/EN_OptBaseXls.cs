@@ -13,7 +13,7 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 {
 	int NumberOfRow = 0;
 	NH_Sheet m_sheet = null;
-	List<T> list = null;
+	public List<T> list = null;
 
 	public bool isInitSuccessed = false;
 
@@ -28,6 +28,11 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 		DoClear();
 		try
 		{
+			if(!File.Exists(path)){
+				Debug.LogError("Excel表不存在，Path = [" + path + "]");
+				return;
+			}
+
 			this.m_sheet = new NH_Sheet(path, sheetIndex);
 			this.list = new List<T>();
 
@@ -114,6 +119,10 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 		NPOIHssfEx.ToFile(m_sheet.ToWorkbook(), savePath);
 	}
 
+	public void SaveReplace(){
+		Save (m_sPath);
+	}
+
 	public void DoClear()
 	{
 		this.m_sheet = null;
@@ -125,5 +134,17 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 
 		NumberOfRow = 0;
 		isInitSuccessed = false;
+	}
+
+	public string GetPath(string name,string suffix){
+		return this.folder + Path.DirectorySeparatorChar + name + "." + suffix;
+	}
+
+	public string GetPath(string name){
+		return GetPath (name, this.suffix);
+	}
+
+	public string GetCurPath(){
+		return m_sPath;
 	}
 }

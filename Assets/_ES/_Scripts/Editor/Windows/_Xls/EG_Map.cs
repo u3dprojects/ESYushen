@@ -36,6 +36,9 @@ public class EG_Map {
 
 	bool m_isInView = false;
 
+	// 是否使用地图的路径
+	bool m_isUseMapPath = true;
+
 	public EG_Map(){
 		EH_Listen.call4GUI += OnChangeGobj;
 		EH_Listen.call4SelectionChange += OnSelectionChange;
@@ -64,11 +67,16 @@ public class EG_Map {
 
 		optNpc.DoClear ();
 		optMonster.DoClear ();
+		optGroup.DoClear ();
 	}
 
 	public void DrawShow()
 	{
 		m_isInView = true;
+
+		m_isUseMapPath = EditorGUILayout.ToggleLeft ("是否使用MapList的Folder路径", m_isUseMapPath);
+
+		_DrawChooseGroupMonsters ();
 
 		_DrawChooseMonster ();
 
@@ -255,7 +263,8 @@ public class EG_Map {
 		}
 		m_lMapCells.Clear ();
 
-		ToList<EM_Monster>(ms_entity.strMonsters);
+		// ToList<EM_Monster>(ms_entity.strMonsters);
+		ToMonsterByMapId(ms_entity.ID);
 		ToList<EM_NPC>(ms_entity.strNpcs);
 		ToList<EM_MonsterCenter>(ms_entity.strMonsterCenters);
 	}
@@ -270,6 +279,8 @@ public class EG_Map {
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
 		m_opt.Save (savePath);
+
+		ToGroupExcel ();
 	}
 
 	#region === 刷怪点 ===
@@ -279,7 +290,7 @@ public class EG_Map {
 	JsonData tmpJD;
 	EM_Base tmpCell;
 
-	void ToList<T>(string json) where T : EM_Base,new()
+	void ToList<T>(string json,System.Action<T> callInitOne = null) where T : EM_Base,new()
 	{
 		if (string.IsNullOrEmpty (json) || "null".Equals (json,System.StringComparison.OrdinalIgnoreCase)) {
 			return;
@@ -299,6 +310,9 @@ public class EG_Map {
 				continue;
 			}
 
+			if (callInitOne != null)
+				callInitOne (temp);
+			
 			m_lMapCells.Add (temp);
 		}
 	}
@@ -502,8 +516,9 @@ public class EG_Map {
 			OnReInitDelegate ();
 		}
 
-		ms_entity.strMonsters = ToJsonString<EM_Monster> (GetLMonsters());
-		EditorGUILayout.LabelField("刷怪点",ms_entity.strMonsters, EditorStyles.textArea);
+		string strMon = ToJsonString<EM_Monster> (GetLMonsters());
+		// ms_entity.strMonsters = strMon;
+		EditorGUILayout.LabelField("刷怪点",strMon, EditorStyles.textArea);
 		EG_GUIHelper.FG_Space(5);
 
 		m_psMonster.DoDraw (GetLMonsters ());
@@ -597,6 +612,11 @@ public class EG_Map {
 
 		EditorGUILayout.LabelField ("初始化怪物数据", "状态："+(optMonster.isInitSuccessed ? "Success - " + optMonster.m_eOptXls.fileName : "未选择怪物的Excel"));
 
+		if (m_isUseMapPath && m_opt.isInitSuccessed && !optMonster.isInitSuccessed) {
+			string path = m_opt.m_eOptXls.GetPath("Monster");
+			optMonster.DoInit (path, 0);
+		}
+
 		if (GUILayout.Button("选取Monster Excel表"))
 		{
 			string path = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
@@ -626,6 +646,11 @@ public class EG_Map {
 
 		EditorGUILayout.LabelField ("初始化NPC数据", "状态："+(optNpc.isInitSuccessed ? "Success - " + optNpc.m_eOptXls.fileName : "未选择NPC的Excel"));
 
+		if (m_isUseMapPath && m_opt.isInitSuccessed && !optNpc.isInitSuccessed) {
+			string path = m_opt.m_eOptXls.GetPath("NPC");
+			optNpc.DoInit (path, 0);
+		}
+
 		if (GUILayout.Button("选取NPC Excel表"))
 		{
 			string path = UnityEditor.EditorUtility.OpenFilePanel("选取excel文件", "", "xls");
@@ -636,4 +661,114 @@ public class EG_Map {
 		GUI.color = def;
 		EG_GUIHelper.FG_Space(10);
 	}
+
+
+	EN_OptMapGroupMonster optGroup{
+		get{
+			return EN_OptMapGroupMonster.Instance;
+		}
+	}
+
+	void _DrawChooseGroupMonsters(){
+		
+		EG_GUIHelper.FEG_BeginH();
+
+		Color def = GUI.color;
+		if (optGroup.isInitSuccessed) {
+			GUI.color = Color.green;
+		} else {
+			GUI.color = Color.red;
+		}
+
+		EditorGUILayout.LabelField ("初始化怪物分组数据", "状态："+(optGroup.isInitSuccessed ? "Success - " + optGroup.m_eOptXls.fileName : "未选择怪物的Excel"));
+
+		if (m_isUseMapPath && m_opt.isInitSuccessed && !optGroup.isInitSuccessed) {
+			string path = m_opt.m_eOptXls.GetPath("MapMonsterGroup");
+			optGroup.DoInit (path, 0);
+		}
+
+		if (GUILayout.Button ("选取Group Excel表")) {
+			string path = UnityEditor.EditorUtility.OpenFilePanel ("选取excel文件", "", "xls");
+			optGroup.DoInit (path, 0);
+		}
+
+		EG_GUIHelper.FEG_EndH();
+
+		GUI.color = def;
+		EG_GUIHelper.FG_Space(10);
+	}
+
+	void ToMonsterByMapId(int mapId){
+		if (!optGroup.isInitSuccessed) {
+			return;
+		}
+
+		List<EN_MapGroupMonster> list = optGroup.GetListByMapId (mapId);
+
+		if (list == null || list.Count <= 0) {
+			return;
+		}
+
+		foreach (var item in list) {
+			ToList<EM_Monster>(item.strMonsters,(one) => {
+				one.m_group = item;
+			});
+		}
+	}
+
+	// 转为GroupExcel表格
+	void ToGroupExcel(){
+
+		if (!optGroup.isInitSuccessed)
+			return;
+
+		List<EM_Monster> list =  GetLMonsters ();
+		if (list.Count <= 0)
+			return;
+		
+		Dictionary<int,List<EM_Monster>> dicGroupVal = new Dictionary<int, List<EM_Monster>> ();
+
+		Dictionary<int,EN_MapGroupMonster> dicGroup = new Dictionary<int, EN_MapGroupMonster> ();
+
+		int lens = list.Count;
+		EM_Monster tmp = null;
+		EN_MapGroupMonster tmpGroup = null;
+		List<EM_Monster> tmpList = null;
+		for (int i = 0; i < lens; i++) {
+			tmp = list [i];
+			tmpGroup = tmp.m_group;
+			if (tmpGroup.ID <= 0)
+				continue;
+			
+			if (dicGroup.ContainsKey (tmpGroup.ID)) {
+				tmpList = dicGroupVal [tmpGroup.ID];
+			} else {
+				dicGroup.Add (tmpGroup.ID, tmpGroup);
+
+				tmpList = dicGroupVal [tmpGroup.ID];
+				dicGroupVal.Add(tmpGroup.ID, tmpList);
+			}
+
+			tmpList.Add (tmp);
+		}
+
+		string strMon = "";
+		EN_MapGroupMonster nwGroup = null;
+		foreach (var item in dicGroup) {
+			tmpList = dicGroupVal [item.Key];
+			strMon = ToJsonString<EM_Monster> (tmpList);
+
+			tmpGroup = item.Value;
+			tmpGroup.strMonsters = strMon;
+			tmpGroup.MapId = ms_entity.ID;
+
+			nwGroup = optGroup.GetOrNew (item.Key);
+			tmpGroup.rowIndex = nwGroup.rowIndex;
+			nwGroup.DoClone (tmpGroup);
+		}
+
+		optGroup.SaveReplace ();
+
+	}
+
 }

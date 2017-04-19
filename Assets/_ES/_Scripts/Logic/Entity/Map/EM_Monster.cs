@@ -22,6 +22,9 @@ public class EM_Monster : EM_UnitCell {
 	// 掉落ID
 	public int m_iDropId;
 
+	// group entity
+	public EN_MapGroupMonster m_group;
+
 	public EM_Monster() : base(){
 		m_iCoreCursorMonster = (CORE_CURSOR++);
 	}
