@@ -38,7 +38,7 @@ public class EN_OptBaseXls<T> where T : EN_BaseXls,new()
 
 			T tmp = null;
 			object obj = null;
-			this.NumberOfRow = 5;
+			this.NumberOfRow = 4;
 
 			for (int i = 4; i < this.m_sheet.maxRow; i++)
 			{
