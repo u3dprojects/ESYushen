@@ -114,7 +114,8 @@ public class NH_Sheet {
         }
         catch (System.Exception ex)
         {
-            Debug.LogError("rIndex = " + rowIndex + ",cIndex = " + columnIndex + "\n" + ex);
+			if (!isNew)
+				Debug.LogError ("rIndex = " + rowIndex + ",cIndex = " + columnIndex + "\n" + ex);
         }
 
         if (isNew && ret == null)

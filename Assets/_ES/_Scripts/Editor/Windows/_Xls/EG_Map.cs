@@ -273,6 +273,7 @@ public class EG_Map {
 	{
 		EN_Map entity = m_opt.GetOrNew(ms_entity.ID);
 		ms_entity.rowIndex = entity.rowIndex;
+		ms_entity.sheet = entity.sheet;
 		entity.DoClone (ms_entity);
 	}
 
@@ -745,7 +746,7 @@ public class EG_Map {
 			} else {
 				dicGroup.Add (tmpGroup.ID, tmpGroup);
 
-				tmpList = dicGroupVal [tmpGroup.ID];
+				tmpList = new List<EM_Monster> ();
 				dicGroupVal.Add(tmpGroup.ID, tmpList);
 			}
 
@@ -764,6 +765,7 @@ public class EG_Map {
 
 			nwGroup = optGroup.GetOrNew (item.Key);
 			tmpGroup.rowIndex = nwGroup.rowIndex;
+			tmpGroup.sheet = nwGroup.sheet;
 			nwGroup.DoClone (tmpGroup);
 		}
 
