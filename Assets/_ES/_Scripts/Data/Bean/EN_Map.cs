@@ -62,7 +62,7 @@ public class EN_Map : EN_BaseXls{
 	public int NodeRow;
 
 	// 刷怪点
-	public string strMonsters;
+	// public string strMonsters;
 
 	// UI上面显示怪物聚集的中心点
 	public string strMonsterCenters;
@@ -101,7 +101,7 @@ public class EN_Map : EN_BaseXls{
 				this.BgMusic,
 				this.NodeColumn,
 				this.NodeRow,
-				this.strMonsters,
+				// this.strMonsters,
 				this.strMonsterCenters,
 				this.strNpcs,
 				this.AreaStatus
@@ -136,7 +136,7 @@ public class EN_Map : EN_BaseXls{
 		this.BgMusic = sheet.GetString(rowIndex, colIndex++);
 		this.NodeColumn = sheet.GetInt(rowIndex, colIndex++);
 		this.NodeRow = sheet.GetInt(rowIndex, colIndex++);
-		this.strMonsters = sheet.GetString(rowIndex, colIndex++);
+		// this.strMonsters = sheet.GetString(rowIndex, colIndex++);
 		this.strMonsterCenters = sheet.GetString(rowIndex, colIndex++);
 		this.strNpcs = sheet.GetString(rowIndex, colIndex++);
 		this.AreaStatus = sheet.GetInt(rowIndex, colIndex++);
@@ -177,7 +177,7 @@ public class EN_Map : EN_BaseXls{
 		this.BgMusic = tmp.BgMusic;
 		this.NodeColumn = tmp.NodeColumn;
 		this.NodeRow = tmp.NodeRow;
-		this.strMonsters = tmp.strMonsters;
+		// this.strMonsters = tmp.strMonsters;
 		this.strMonsterCenters = tmp.strMonsterCenters;
 		this.strNpcs = tmp.strNpcs;
 		this.AreaStatus = tmp.AreaStatus;
