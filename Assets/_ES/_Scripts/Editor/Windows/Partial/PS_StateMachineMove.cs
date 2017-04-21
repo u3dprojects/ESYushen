@@ -11,9 +11,9 @@ using UnityEditor;
 public class PS_StateMachineMove {
 	// 位移
 	bool isOpenMovPos = false;
-	// AnimationCurve x_curve;
-	// AnimationCurve y_curve;
-	AnimationCurve z_curve;
+	// AnimationCurve x_curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
+	// AnimationCurve y_curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
+	AnimationCurve z_curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
 
 	Vector3 preMovPos = Vector3.zero;
 	Vector3 movPos = Vector3.zero;
@@ -46,7 +46,7 @@ public class PS_StateMachineMove {
 
 	void syncMache(bool isReverse = false)
 	{
-		if (m_curAni.cur_state_mache == null)
+		if (m_curAni == null || m_curAni.cur_state_mache == null)
 		{
 			return;
 		}
@@ -87,8 +87,7 @@ public class PS_StateMachineMove {
 		{
 			EG_GUIHelper.FEG_BeginToggleGroup("开启位移??", ref isOpenMovPos);
 			{
-				InitMovPosCurve();
-
+				
 				EG_GUIHelper.FEG_BeginV();
 				{
 					EG_GUIHelper.FEG_BeginH();
@@ -131,6 +130,8 @@ public class PS_StateMachineMove {
 		this.m_myCtrl = ctrl;
 		this.isOpenMovPos = isOpen;
 		preMovPos = Vector3.zero;
+
+		InitMovPosCurve();
 	}
 
 	public void DrawMvStateMachine(){
@@ -142,10 +143,12 @@ public class PS_StateMachineMove {
 		if (isOpenMovPos)
 		{
 			movPos = Vector3.zero;
-			// movPos.x = x_curve.Evaluate(this.m_curAni.nt01);
-			// movPos.y = y_curve.Evaluate(this.m_curAni.nt01);
+			// movPos.x = x_curve.Evaluate(time);
+			// movPos.y = y_curve.Evaluate(time);
+
+			// time = time * z_curve.length;
+
 			movPos.z = z_curve.Evaluate(time);
-			// Debug.Log (z_curve.length);
 
 			if(m_myCtrl != null && m_myCtrl.enabled)
 			{

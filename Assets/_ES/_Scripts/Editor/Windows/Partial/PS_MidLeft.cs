@@ -377,7 +377,7 @@ public class PS_MidLeft{
 		m_ePSEvents.OnUpdate (m_curTime.DeltaTime, cur_speed);
 
         // 设置位移
-		m_ePSMove.OnUpdate(this.m_curAni.nt01);
+		m_ePSMove.OnUpdate(this.m_curAni.normalizedTime);
     }
 
     void DoPlay() {

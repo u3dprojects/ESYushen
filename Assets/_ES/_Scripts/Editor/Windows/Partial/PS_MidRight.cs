@@ -323,7 +323,7 @@ public partial class PS_MidRight{
 		m_egSkill.m_ePSEvents.OnUpdate (m_curTime.DeltaTime,cur_speed);
 
 		// 设置位移
-		m_ePSMove.OnUpdate(this.m_curAni.nt01);
+		m_ePSMove.OnUpdate(this.m_curAni.normalizedTime);
 	}
 
 	void DoPlay() {
@@ -331,7 +331,10 @@ public partial class PS_MidRight{
 
 		m_ePSMove.Init(m_curAni,trsfEntity, m_myCtrl,true);
 
-		m_curTime.DoStart ();
+		m_curAni.DoStart(null,(isloop) => {
+			if(trsfEntity != null)
+				trsfEntity.position = Vector3.zero;
+		});
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
 		OnResetProgress ();
 		this.m_curAni.DoStart();
@@ -361,6 +364,8 @@ public partial class PS_MidRight{
 		isRunnging = false;
 		isCtrlProgress = false;
 		isCanCanCtrlProgress = false;
+		if(trsfEntity != null)
+			trsfEntity.position = Vector3.zero;
 		m_egSkill.m_ePSEvents.DoEnd();
 	}
 }
