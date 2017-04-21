@@ -118,6 +118,18 @@ public class PS_EvtSummon {
 
 		EG_GUIHelper.FEG_BeginH();
 		{
+			GUILayout.Label("召唤物分类:", GUILayout.Width(80));
+			Color def = GUI.color;
+			GUI.color = Color.yellow;
+			GUILayout.Label ("("+EnumExtension.GetDescription(one.m_emSummonType)+")");
+			GUI.color = def;
+			one.m_emSummonType = (EDT_Summon.SummonType)EditorGUILayout.EnumPopup ((System.Enum)one.m_emSummonType);
+		}
+		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		EG_GUIHelper.FEG_BeginH();
+		{
 			GUILayout.Label("持续时间:", GUILayout.Width(80));
 			one.m_fDuration = EditorGUILayout.Slider (one.m_fDuration,0f,60f);
 		}
