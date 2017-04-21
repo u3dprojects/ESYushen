@@ -329,6 +329,8 @@ public partial class PS_MidRight{
 	void DoPlay() {
 		Messenger.Invoke (EDW_Skill.MSG_Stop_Left);
 
+		OnInitTime();
+
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
 
 		m_ePSMove.Init(m_curAni,trsfEntity, m_myCtrl,true);
@@ -367,5 +369,6 @@ public partial class PS_MidRight{
 		if(trsfEntity != null)
 			trsfEntity.position = Vector3.zero;
 		m_egSkill.m_ePSEvents.DoEnd();
+		OnInitTime();
 	}
 }

@@ -83,6 +83,8 @@ public class PS_EvtEffect {
 
 		bool isEmptyName = string.IsNullOrEmpty(one.m_sName);
 
+		reOneEffectTrsfParent (one);
+
 		EG_GUIHelper.FEG_BeginV();
 		{
 			EG_GUIHelper.FEG_BeginH();
@@ -153,13 +155,6 @@ public class PS_EvtEffect {
 	{
 		EG_GUIHelper.FEG_BeginH();
 		one.m_iJoint = EditorGUILayout.Popup("挂节点:", one.m_iJoint, JoinType);
-		if (m_eCsJoin == null) {
-			isJoinTrsf = true;
-		} else {
-			if (!isJoinTrsf) {
-				one.m_trsfParent = m_eCsJoin.jointArray [one.m_iJoint];
-			}
-		}
 		EG_GUIHelper.FEG_EndH();
 
 		EG_GUIHelper.FG_Space(5);
@@ -211,5 +206,14 @@ public class PS_EvtEffect {
 			one.m_fScale = EditorGUILayout.FloatField(one.m_fScale);
 		}
 		EG_GUIHelper.FEG_EndH();
+	}
+
+	void reOneEffectTrsfParent(EDT_Effect one){
+		if (m_eCsJoin == null) {
+			isJoinTrsf = true;
+		}
+		if (!isJoinTrsf) {
+			one.m_trsfParent = m_eCsJoin.jointArray [one.m_iJoint];
+		}
 	}
 }

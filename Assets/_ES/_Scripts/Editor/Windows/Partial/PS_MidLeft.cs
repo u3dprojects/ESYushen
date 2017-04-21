@@ -383,6 +383,8 @@ public class PS_MidLeft{
     void DoPlay() {
 		Messenger.Invoke (EDW_Skill.MSG_Stop_Right);
 
+		OnInitTime();
+
 		m_ePSMove.Init (m_curAni,trsfEntity, m_myCtrl);
 
 		m_curAni.DoStart(null,(isloop) => {
@@ -417,5 +419,6 @@ public class PS_MidLeft{
 		if(trsfEntity != null)
 			trsfEntity.position = Vector3.zero;
 		m_ePSEvents.DoEnd();
+		OnInitTime();
     }
 }
