@@ -329,9 +329,9 @@ public partial class PS_MidRight{
 	void DoPlay() {
 		Messenger.Invoke (EDW_Skill.MSG_Stop_Left);
 
-		m_ePSMove.Init(m_curAni,trsfEntity, m_myCtrl,true);
-
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
+
+		m_ePSMove.Init(m_curAni,trsfEntity, m_myCtrl,true);
 		OnResetProgress ();
 
 		m_curAni.DoStart(null,(isloop) => {
