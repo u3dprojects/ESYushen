@@ -331,13 +331,13 @@ public partial class PS_MidRight{
 
 		m_ePSMove.Init(m_curAni,trsfEntity, m_myCtrl,true);
 
-		m_curAni.DoStart(null,(isloop) => {
-			if(trsfEntity != null)
-				trsfEntity.position = Vector3.zero;
-		});
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
 		OnResetProgress ();
-		this.m_curAni.DoStart();
+
+		m_curAni.DoStart(null,(isloop) => {
+//			if(trsfEntity != null)
+//				trsfEntity.position = Vector3.zero;
+		});
 
 		isRunnging = true;
 		isPauseing = false;
