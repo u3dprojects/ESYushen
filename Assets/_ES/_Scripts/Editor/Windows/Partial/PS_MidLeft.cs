@@ -64,12 +64,8 @@ public class PS_MidLeft{
     bool isRound = false;
     int round_times = 1;
 
-    // 位移
-    bool isOpenMovPos = false;
-    AnimationCurve x_curve;
-    AnimationCurve y_curve;
-    AnimationCurve z_curve;
-    Vector3 movPos = Vector3.zero;
+	// 动作位移
+	PS_StateMachineMove m_ePSMove = new PS_StateMachineMove();
 
     // 事件
 	PS_Events m_ePSEvents = new PS_Events();
@@ -164,7 +160,7 @@ public class PS_MidLeft{
 
                     _DrawRoundTimes();
 
-                    _DrawMovPos();
+					m_ePSMove.DrawMvStateMachine ();
 
                     _DrawEvents();
                 }
@@ -329,73 +325,6 @@ public class PS_MidLeft{
         EG_GUIHelper.FEG_EndH();
     }
 
-    void InitMovPosCurve()
-    {
-        DefCurve();
-    }
-
-    void DefCurve()
-    {
-        x_curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
-        y_curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
-        z_curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
-    }
-
-    void SaveMache() { }
-
-    void RemoveMache() { }
-
-    void _DrawMovPos()
-    {
-        EG_GUIHelper.FEG_BeginH();
-        {
-            EG_GUIHelper.FEG_BeginToggleGroup("开启位移??", ref isOpenMovPos);
-            {
-                InitMovPosCurve();
-
-                EG_GUIHelper.FEG_BeginV();
-                {
-                    EG_GUIHelper.FEG_BeginH();
-                    GUI.color = Color.cyan;
-                    if (GUILayout.Button("SaveCurveMache"))
-                    {
-                        SaveMache();
-                    }
-
-                    GUI.color = Color.red;
-                    if (GUILayout.Button("RemoveCurveMache"))
-                    {
-                        RemoveMache();
-                    }
-                    GUI.color = Color.white;
-                    EG_GUIHelper.FEG_EndH();
-
-                    EG_GUIHelper.FG_Space(5);
-                }
-                
-                EG_GUIHelper.FEG_BeginH();
-                x_curve = EditorGUILayout.CurveField("x", x_curve);
-                EG_GUIHelper.FEG_EndH();
-
-                EG_GUIHelper.FG_Space(5);
-
-                EG_GUIHelper.FEG_BeginH();
-                y_curve = EditorGUILayout.CurveField("y", y_curve);
-                EG_GUIHelper.FEG_EndH();
-
-                EG_GUIHelper.FG_Space(5);
-
-                EG_GUIHelper.FEG_BeginH();
-                z_curve = EditorGUILayout.CurveField("z", z_curve);
-                EG_GUIHelper.FEG_EndH();
-
-                EG_GUIHelper.FEG_EndV();
-            }
-            EG_GUIHelper.FEG_EndToggleGroup();
-        }
-        EG_GUIHelper.FEG_EndH();
-    }
-
     void _DrawEvents()
     {
 		m_ePSEvents.DrawEvents(m_curAni.CurLens,0,m_curAni.CurLens);
@@ -448,26 +377,18 @@ public class PS_MidLeft{
 		m_ePSEvents.OnUpdate (m_curTime.DeltaTime, cur_speed);
 
         // 设置位移
-        if (isOpenMovPos)
-        {
-            movPos = Vector3.zero;
-            movPos.x = x_curve.Evaluate(this.m_curAni.nt01);
-            movPos.y = y_curve.Evaluate(this.m_curAni.nt01);
-            movPos.z = z_curve.Evaluate(this.m_curAni.nt01);
-            if(m_myCtrl != null && m_myCtrl.enabled)
-            {
-                m_myCtrl.Move(movPos);
-            }else
-            {
-                trsfEntity.Translate(movPos);
-            }
-        }
+		m_ePSMove.OnUpdate(this.m_curAni.nt01);
     }
 
     void DoPlay() {
 		Messenger.Invoke (EDW_Skill.MSG_Stop_Right);
 
-        this.m_curAni.DoStart();
+		m_ePSMove.Init (m_curAni,trsfEntity, m_myCtrl);
+
+		m_curAni.DoStart(null,(isloop) => {
+			if(trsfEntity != null)
+				trsfEntity.position = Vector3.zero;
+		});
 		m_curTime.DoStart ();
 
         isRunnging = true;

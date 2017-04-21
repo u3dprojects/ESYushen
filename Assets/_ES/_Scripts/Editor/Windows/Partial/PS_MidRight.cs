@@ -18,6 +18,16 @@ public partial class PS_MidRight{
 
 	ED_Ani_YGame m_curAni;
 
+	CharacterController m_myCtrl
+	{
+		get { return m_wSkill.m_myCtrl; }
+	}
+
+	Transform trsfEntity
+	{
+		get { return m_wSkill.trsfEntity; }
+	}
+
 	// 时间
 	EN_Time m_curTime;
 
@@ -54,6 +64,9 @@ public partial class PS_MidRight{
 
 	// 是否运行
 	bool isRunnging = false;
+
+	// 动作位移
+	PS_StateMachineMove m_ePSMove = new PS_StateMachineMove();
 
     #endregion
 
@@ -310,10 +323,13 @@ public partial class PS_MidRight{
 		m_egSkill.m_ePSEvents.OnUpdate (m_curTime.DeltaTime,cur_speed);
 
 		// 设置位移
+		m_ePSMove.OnUpdate(this.m_curAni.nt01);
 	}
 
 	void DoPlay() {
 		Messenger.Invoke (EDW_Skill.MSG_Stop_Left);
+
+		m_ePSMove.Init(m_curAni,trsfEntity, m_myCtrl,true);
 
 		m_curTime.DoStart ();
 		this.m_curAni.DoReady (m_egSkill.ms_enity.ActId);
