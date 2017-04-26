@@ -22,51 +22,64 @@ public class NH_Sheet {
     public int maxCol;
     public int maxRow;
 
+	// 拥有判断读取行数的连续出错多少行终止往下读取
+	int ErrorNumLimit = 2;
+	// 当前出错记录计算
+	int errorNum = 0;
+	int errorRowIndex = -1;
+
     protected HSSFWorkbook m_preWb;
 
     // 文件路径
-    public string pathFile;
+    public string pathFile = "";
+	// 文件名
+	string filename = "";
 
     // 表数据
     public List<NH_SheetCell> m_tableList = new List<NH_SheetCell>();
     
     public NH_Sheet(string path, int sheetIndex)
     {
+		this.pathFile = path;
+		this.filename = System.IO.Path.GetFileName (path);
         HSSFWorkbook wb = NPOIHssfEx.ToWorkBook(path);
         HSSFSheet hsheet = NPOIHssfEx.GetSheet(wb, sheetIndex);
         DoInit(wb, hsheet);
-        this.pathFile = path;
     }
 
     public NH_Sheet(string path, string sheetName)
     {
+		this.pathFile = path;
+		this.filename = System.IO.Path.GetFileName (path);
         HSSFWorkbook wb = NPOIHssfEx.ToWorkBook(path);
         HSSFSheet hsheet = NPOIHssfEx.GetSheet(wb, sheetName);
-        DoInit(wb, hsheet);
-        this.pathFile = path;
+		DoInit(wb, hsheet);
     }
 
     public NH_Sheet(HSSFWorkbook wb, int sheetIndex)
     {
         HSSFSheet hsheet = NPOIHssfEx.GetSheet(wb, sheetIndex);
-        DoInit(wb, hsheet);
+		DoInit(wb, hsheet);
     }
 
     public NH_Sheet(HSSFWorkbook wb, string sheetName)
     {
         HSSFSheet hsheet = NPOIHssfEx.GetSheet(wb, sheetName);
-        DoInit(wb, hsheet);
+		DoInit(wb, hsheet);
     }
 
     public NH_Sheet(HSSFWorkbook wb, HSSFSheet sheet)
     {
-        DoInit(wb, sheet);
+		DoInit(wb, sheet);
     }
+
+	public void ReInit(HSSFWorkbook wb, HSSFSheet sheet){
+		DoClear();
+		DoInit (wb, sheet);
+	}
 
     public void DoInit(HSSFWorkbook wb, HSSFSheet sheet)
     {
-        DoClear();
-
         this.m_wb = wb;
         this.m_sheet = sheet;
         this.sheetName = this.m_sheet.SheetName;
@@ -114,8 +127,8 @@ public class NH_Sheet {
         }
         catch (System.Exception ex)
         {
-			if (!isNew)
-				Debug.LogError ("rIndex = " + rowIndex + ",cIndex = " + columnIndex + "\n" + ex);
+			if (!isNew) 
+				Debug.LogError ( "excel name = " + this.filename + ",maxRow = " + this.maxRow +",rIndex = " + rowIndex + ",cIndex = " + columnIndex + "\n" + ex);
         }
 
         if (isNew && ret == null)
@@ -132,8 +145,10 @@ public class NH_Sheet {
             return null;
         
         HSSFCell cell = GetCell(rowIndex, columnIndex);
-        if (cell == null)
-            return null;
+		if (cell == null) {
+			CheckErrorNum (rowIndex);
+			return null;
+		}
 
         NPOI.SS.UserModel.CellType c_type = cell.CellType;
         switch (c_type)
@@ -384,6 +399,21 @@ public class NH_Sheet {
         }
         return null;
     }
+
+	void CheckErrorNum(int rowIndex){
+		if (errorRowIndex == -1 || errorRowIndex + 1 < rowIndex - 1) {
+			errorRowIndex = rowIndex;
+			this.errorNum = 0;
+		}
+
+		if (errorRowIndex != rowIndex) {
+			errorRowIndex = rowIndex;
+			errorNum++;
+			if (errorNum >= ErrorNumLimit) {
+				this.maxRow = rowIndex - ErrorNumLimit;
+			}
+		}
+	}
     
     public void DoClear()
     {
@@ -391,6 +421,7 @@ public class NH_Sheet {
         this.m_sheet = null;
         this.sheetName = "";
         this.pathFile = "";
+		this.filename = "";
         this.sheetIndex = -1;
         this.maxRow = -1;
         this.maxCol = -1;
@@ -398,5 +429,8 @@ public class NH_Sheet {
         m_tableList.Clear();
 
         this.m_preWb = null;
+
+		this.errorNum = 0;
+		this.errorRowIndex = -1;
     }
 }
