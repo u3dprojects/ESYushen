@@ -269,7 +269,7 @@ public class EDT_Base {
 
         DnCallEvent();
 
-        OnCallUpdate(upDeltaTime);
+		DoCallUpdate(upDeltaTime);
     }
 
     void DnCallEvent()

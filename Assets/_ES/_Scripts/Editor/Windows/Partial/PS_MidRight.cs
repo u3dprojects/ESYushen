@@ -324,6 +324,7 @@ public partial class PS_MidRight{
 
 		// 设置位移
 		m_ePSMove.OnUpdate(this.m_curAni.normalizedTime);
+		m_egSkill.OnUpdateMovement (trsfEntity, m_curTime.DeltaTime * cur_speed);
 	}
 
 	void DoPlay() {

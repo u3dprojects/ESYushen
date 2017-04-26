@@ -23,6 +23,8 @@ public class EG_Skill {
 	// 技能属性
 	public EN_Skill ms_enity = new EN_Skill ();
 
+	public EDT_Movement m_eMov = null;
+
 	string[] SkillTypes = { 
 		"暂未选择",
 		"主角普攻",
@@ -231,6 +233,8 @@ public class EG_Skill {
 		}
 
 		ms_enity.ID = ms_iSkillID;
+
+		m_eMov = EDT_Movement.Parse (ms_enity.MoveArgs_Str);
 	}
 
 	void OnInitAttrs2Entity()
@@ -246,7 +250,17 @@ public class EG_Skill {
 		m_opt.Save (savePath);
 	}
 
+	// 更新移动函数
+	public void OnUpdateMovement(Transform trsf,float time){
+		
+		if (m_eMov == null)
+			return;
+		m_eMov.m_trsfAffected = trsf;
+		m_eMov.DoUpdate (time);
+	}
+
 	public void DoClear(){
 		m_opt.DoClear ();
+		m_eMov = null;
 	}
 }

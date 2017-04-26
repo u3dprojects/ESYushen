@@ -42,6 +42,26 @@ public class EN_Skill : EN_BaseXls{
 	// 伤害结算范围类型, 0 以自己为中心, 1 以目标为中心, 2 以指定位置为中心
 	public int DmgFieldType;
 
+	// 技能图标
+	public string Icon;
+
+	// 搜索范围
+	public float SearchDis;
+
+	// 主角等级限定-解锁
+	public int UnlockLevel;
+
+	// 解锁消耗
+	public string UnlockCost;
+
+	// 移动参数：
+	// 技能移动参数: V4结构, 0,0,0,0
+	// 参数1: 代表距离可变类型 0代表可以距离不可变, 1代表距离可变
+	// 参数2:代表移动距离,当距离可以改变时,此参数代表最大可移动距离
+	// 参数3:代表开始移动时间点,技能时间轴正向时间节点
+	// 参数4:代表停止移动时间点,技能时间轴正向时间节点
+	public string MoveArgs_Str;
+
 	public EN_Skill():base(){
 	}
 
@@ -75,7 +95,12 @@ public class EN_Skill : EN_BaseXls{
 				this.NextSkillID,
 
 				this.MoveSpeed,
-				this.DmgFieldType
+				this.DmgFieldType,
+
+				this.Icon,
+				this.SearchDis,
+				this.UnlockLevel,
+				this.MoveArgs_Str
             };
             return ret;
         }
@@ -113,6 +138,11 @@ public class EN_Skill : EN_BaseXls{
 
 		this.MoveSpeed = sheet.GetFloat(rowIndex, colIndex++);
 		this.DmgFieldType = sheet.GetInt(rowIndex, colIndex++);
+
+		this.Icon = sheet.GetString(rowIndex, colIndex++);
+		this.SearchDis = sheet.GetFloat(rowIndex, colIndex++);
+		this.UnlockLevel = sheet.GetInt(rowIndex, colIndex++);
+		this.MoveArgs_Str = sheet.GetString(rowIndex, colIndex++);
 	}
 
 	public override void DoClone (EN_BaseXls org)
@@ -151,5 +181,10 @@ public class EN_Skill : EN_BaseXls{
 
 		this.MoveSpeed = tmp.MoveSpeed;
 		this.DmgFieldType = tmp.DmgFieldType;
+
+		this.Icon = tmp.Icon;
+		this.SearchDis = tmp.SearchDis;
+		this.UnlockLevel = tmp.UnlockLevel;
+		this.MoveArgs_Str = tmp.MoveArgs_Str;
 	}
 }
