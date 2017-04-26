@@ -44,7 +44,8 @@ public class EDT_HitStatus : EDT_Base {
 	{
 		JsonData ret = new JsonData ();
 		ret["m_typeInt"] = (int)this.m_emType;
-		ret["m_superLev"] = this.m_iSuperLev;
+		if (this.m_hitStatus > 0)
+			ret ["m_superLev"] = this.m_iSuperLev;
 		return ret;
 	}
 
