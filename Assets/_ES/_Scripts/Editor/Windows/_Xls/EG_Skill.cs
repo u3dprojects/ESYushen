@@ -250,13 +250,34 @@ public class EG_Skill {
 		m_opt.Save (savePath);
 	}
 
-	// 更新移动函数
-	public void OnUpdateMovement(Transform trsf,float time){
-		
+	// 开始移动
+	public void DoStart(Transform trsf){
+		m_ePSEvents.DoStart();
+
 		if (m_eMov == null)
 			return;
 		m_eMov.m_trsfAffected = trsf;
+		m_eMov.DoStart (true);
+	}
+
+	// 更新函数
+	public void OnUpdate(float deltatime,float speed){
+		m_ePSEvents.OnUpdate(deltatime, speed);
+		if (m_eMov == null)
+			return;
+		float time = deltatime * speed;
 		m_eMov.DoUpdate (time);
+	}
+
+	public void DoEnd(){
+		m_ePSEvents.DoEnd();
+		DoEndMovement ();
+	}
+
+	public void DoEndMovement(){
+		if (m_eMov == null)
+			return;
+		m_eMov.DoEnd ();
 	}
 
 	public void DoClear(){

@@ -320,11 +320,10 @@ public partial class PS_MidRight{
 
 		this.m_curTime.DoUpdateTime();
 		this.m_curAni.DoUpdateAnimator(m_curTime.DeltaTime,cur_speed);
-		m_egSkill.m_ePSEvents.OnUpdate (m_curTime.DeltaTime,cur_speed);
+		m_egSkill.OnUpdate (m_curTime.DeltaTime,cur_speed);
 
 		// 设置位移
 		m_ePSMove.OnUpdate(this.m_curAni.normalizedTime);
-		m_egSkill.OnUpdateMovement (trsfEntity, m_curTime.DeltaTime * cur_speed);
 	}
 
 	void DoPlay() {
@@ -338,8 +337,7 @@ public partial class PS_MidRight{
 		OnResetProgress ();
 
 		m_curAni.DoStart(null,(isloop) => {
-//			if(trsfEntity != null)
-//				trsfEntity.position = Vector3.zero;
+			m_egSkill.DoEndMovement();
 		});
 
 		isRunnging = true;
@@ -347,7 +345,7 @@ public partial class PS_MidRight{
 		isCtrlProgress = false;
 		isCanCanCtrlProgress = true;
 
-		m_egSkill.m_ePSEvents.DoStart();
+		m_egSkill.DoStart(trsfEntity);
 	}
 
 	void DoPause() {
@@ -369,7 +367,7 @@ public partial class PS_MidRight{
 		isCanCanCtrlProgress = false;
 		if(trsfEntity != null)
 			trsfEntity.position = Vector3.zero;
-		m_egSkill.m_ePSEvents.DoEnd();
+		m_egSkill.DoEnd();
 		OnInitTime();
 	}
 }

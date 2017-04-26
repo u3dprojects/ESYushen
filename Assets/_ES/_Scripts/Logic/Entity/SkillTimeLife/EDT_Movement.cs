@@ -60,6 +60,12 @@ public class EDT_Movement : EDT_Base {
 		}
 	}
 
+	public override void DoEnd ()
+	{
+		base.DoEnd ();
+		m_v3Movement = Vector3.zero;
+	}
+
 	public string ToFmtTpValStr(){
 		float distance = m_fDuration * m_fSpeed;
 		float begtime = m_fCastTime;
@@ -79,9 +85,6 @@ public class EDT_Movement : EDT_Base {
 
 		try {
 			int tp = int.Parse(arrs[0]);
-			if(tp == 0)
-				return null;
-			
 			float distance = float.Parse(arrs[1]);
 			float begtime = float.Parse(arrs[2]);
 			float endtime = float.Parse(arrs[3]);
