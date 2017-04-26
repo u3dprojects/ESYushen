@@ -70,11 +70,20 @@ public class EN_Map : EN_BaseXls{
 	// 刷npc点
 	public string strNpcs;
 
-	// 区域类型
-	public int AreaStatus;
+	// 战斗状态: 0, 绝对和平地图, 1 代表和平地图 2 战斗地图
+	public int MapFlag;
 
-	// 区域json
-	// public string strAreas;
+	// 战斗地图中的默认状态(1和平,2组队,3帮派,4本服,5全体)
+	public int DefHeroFlag;
+
+	// 服务器用的navmesh文件(定点数，面数信息)
+	public string NavMeshByteName;
+
+	// 回血back health point
+	public int BHP;
+
+	// 触发刷怪的区域
+	public string strAreasBornMoner;
 
 	public EN_Map():base(){
 	}
@@ -104,8 +113,12 @@ public class EN_Map : EN_BaseXls{
 				// this.strMonsters,
 				this.strMonsterCenters,
 				this.strNpcs,
-				this.AreaStatus
-				// this.strAreas
+				this.MapFlag,
+
+				this.DefHeroFlag,
+				this.NavMeshByteName,
+				this.BHP,
+				this.strAreasBornMoner
 			};
 			return ret;
 		}
@@ -139,8 +152,12 @@ public class EN_Map : EN_BaseXls{
 		// this.strMonsters = sheet.GetString(rowIndex, colIndex++);
 		this.strMonsterCenters = sheet.GetString(rowIndex, colIndex++);
 		this.strNpcs = sheet.GetString(rowIndex, colIndex++);
-		this.AreaStatus = sheet.GetInt(rowIndex, colIndex++);
-		// this.strAreas = sheet.GetString(rowIndex, colIndex++);
+		this.MapFlag = sheet.GetInt(rowIndex, colIndex++);
+
+		this.DefHeroFlag = sheet.GetInt(rowIndex, colIndex++);
+		this.NavMeshByteName = sheet.GetString(rowIndex, colIndex++);
+		this.BHP = sheet.GetInt(rowIndex, colIndex++);
+		this.strAreasBornMoner = sheet.GetString(rowIndex, colIndex++);
 
 		this.SceneName = "Map_" + this.SceneResId;
 	}
@@ -180,7 +197,11 @@ public class EN_Map : EN_BaseXls{
 		// this.strMonsters = tmp.strMonsters;
 		this.strMonsterCenters = tmp.strMonsterCenters;
 		this.strNpcs = tmp.strNpcs;
-		this.AreaStatus = tmp.AreaStatus;
-		// this.strAreas = tmp.strAreas;
+		this.MapFlag = tmp.MapFlag;
+
+		this.DefHeroFlag = tmp.DefHeroFlag;
+		this.NavMeshByteName = tmp.NavMeshByteName;
+		this.BHP = tmp.BHP;
+		this.strAreasBornMoner = tmp.strAreasBornMoner;
 	}
 }

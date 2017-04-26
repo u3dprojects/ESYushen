@@ -57,7 +57,7 @@ public class EG_Map {
 	public void DoClear(){
 		m_opt.DoClear ();
 
-		OnClearBornMonster ();
+		OnClearMapUnit ();
 
 		EM_Monster.DoClearStatic ();
 
@@ -182,7 +182,7 @@ public class EG_Map {
 
 		EG_GUIHelper.FEG_BeginH ();
 		EditorGUILayout.LabelField ("[0绝对和平地图,1和平地图,2战斗地图]:");
-		ms_entity.AreaStatus = EditorGUILayout.IntField(ms_entity.AreaStatus);
+		ms_entity.MapFlag = EditorGUILayout.IntField(ms_entity.MapFlag);
 		EG_GUIHelper.FEG_EndH ();
 		EG_GUIHelper.FG_Space(5);
 
@@ -194,6 +194,9 @@ public class EG_Map {
 
 		// Npc
 		_DrawBornNpc();
+
+		// 触发刷怪的区域
+		_DrawAreaBornMonster();
 	}
 
 	void OpenScene(string sceneName){
@@ -402,7 +405,7 @@ public class EG_Map {
 		m_lMapCells.Remove (cell);
 	}
 
-	void OnClearBornMonster(){
+	void OnClearMapUnit(){
 		jsonData.Clear ();
 		OnClearList();
 	}
@@ -589,6 +592,36 @@ public class EG_Map {
 
 	void _NewMCenter(){
 		EM_MonsterCenter one = EM_MonsterCenter.NewEntity<EM_MonsterCenter> ();
+		one.DoMakeNew ();
+		m_lMapCells.Add (one);
+	}
+
+	// 触发刷怪区域
+	List<EM_AreasBornMonster> m_lAreaBM = new List<EM_AreasBornMonster> ();
+	public List<EM_AreasBornMonster> GetLAreaBM(){
+		EM_Base.GetList<EM_AreasBornMonster> (m_lMapCells, ref m_lAreaBM);
+		return m_lAreaBM;
+	}
+
+	PSM_AreaBornMonster m_psAreaBM;
+	void _DrawAreaBornMonster(){
+		if (m_psAreaBM == null) {
+			m_psAreaBM = new PSM_AreaBornMonster ("触发刷怪区域点", _NewAreaBM, RmMapCell);
+
+			OnReInitDelegate ();
+		}
+
+		ms_entity.strAreasBornMoner = ToJsonString<EM_AreasBornMonster> (GetLAreaBM());
+		EditorGUILayout.LabelField("触发刷怪区域点",ms_entity.strAreasBornMoner, EditorStyles.textArea);
+		EG_GUIHelper.FG_Space(5);
+
+		m_psAreaBM.DoDraw (GetLAreaBM());
+
+		EG_GUIHelper.FG_Space(10);
+	}
+
+	void _NewAreaBM(){
+		EM_AreasBornMonster one = EM_AreasBornMonster.NewEntity<EM_AreasBornMonster> ();
 		one.DoMakeNew ();
 		m_lMapCells.Add (one);
 	}
