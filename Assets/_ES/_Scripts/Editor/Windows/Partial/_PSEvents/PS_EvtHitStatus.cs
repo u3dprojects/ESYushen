@@ -124,6 +124,16 @@ public class PS_EvtHitStatus {
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
+		if (one.m_hitStatus > 0) {
+			EG_GUIHelper.FEG_BeginH ();
+			{
+				GUILayout.Label ("霸体级别:", GUILayout.Width (80));
+				one.m_iSuperLev = EditorGUILayout.IntField (one.m_iSuperLev);
+			}
+			EG_GUIHelper.FEG_EndH ();
+			EG_GUIHelper.FG_Space (5);
+		}
+
 		one.Status2Enum ();
 	}
 }

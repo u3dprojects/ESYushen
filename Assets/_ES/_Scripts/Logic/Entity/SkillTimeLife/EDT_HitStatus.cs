@@ -12,9 +12,13 @@ public class EDT_HitStatus : EDT_Base {
 	// (0无，1退，2飞，3倒，4晕)
 	public int m_hitStatus = 0;
 
+	// 霸体级别(用于判断是否造成状态)
+	public int m_iSuperLev = 0;
+
 	public EDT_HitStatus():base(){
 		this.m_emType = EventType.BeHitDefault;
 		m_hitStatus = 0;
+		m_iSuperLev = 0;
 	}
 
 	public override void OnReInit (float castTime, LitJson.JsonData jsonData)
@@ -22,6 +26,16 @@ public class EDT_HitStatus : EDT_Base {
 		base.OnReInit (castTime, jsonData);
 
 		InitHitStatus ();
+
+
+		IDictionary dicJsonData = (IDictionary)jsonData;
+
+		if (dicJsonData.Contains("m_superLev")) {
+			this.m_iSuperLev = (int)jsonData ["m_superLev"];
+		} else {
+			this.m_iSuperLev = 0;
+		}
+
 		this.m_isJsonDataToSelfSuccessed = true;
 		this.m_isInitedFab = true;
 	}
@@ -30,6 +44,7 @@ public class EDT_HitStatus : EDT_Base {
 	{
 		JsonData ret = new JsonData ();
 		ret["m_typeInt"] = (int)this.m_emType;
+		ret["m_superLev"] = this.m_iSuperLev;
 		return ret;
 	}
 
