@@ -100,6 +100,7 @@ public class EN_Skill : EN_BaseXls{
 				this.Icon,
 				this.SearchDis,
 				this.UnlockLevel,
+				this.UnlockCost,
 				this.MoveArgs_Str
             };
             return ret;
@@ -142,6 +143,7 @@ public class EN_Skill : EN_BaseXls{
 		this.Icon = sheet.GetString(rowIndex, colIndex++);
 		this.SearchDis = sheet.GetFloat(rowIndex, colIndex++);
 		this.UnlockLevel = sheet.GetInt(rowIndex, colIndex++);
+		this.UnlockCost = sheet.GetString(rowIndex, colIndex++);
 		this.MoveArgs_Str = sheet.GetString(rowIndex, colIndex++);
 	}
 
@@ -185,6 +187,7 @@ public class EN_Skill : EN_BaseXls{
 		this.Icon = tmp.Icon;
 		this.SearchDis = tmp.SearchDis;
 		this.UnlockLevel = tmp.UnlockLevel;
+		this.UnlockCost = tmp.UnlockCost;
 		this.MoveArgs_Str = tmp.MoveArgs_Str;
 	}
 }
