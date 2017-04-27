@@ -26,6 +26,9 @@ public class EDT_Movement : EDT_Base {
 	// 受影响的对象
 	public Transform m_trsfAffected = null;
 
+	// 当前运行时间
+	float m_fTimeVal = 0.0f;
+
 	public EDT_Movement():base(){
 	}
 
@@ -38,7 +41,7 @@ public class EDT_Movement : EDT_Base {
 	protected override bool OnCallEvent ()
 	{
 		if (m_trsfAffected != null) {
-			if (m_iMvType == 1) {
+			if (m_iMvType == 0) {
 				m_v3Movement = m_trsfAffected.forward;
 			} else {
 				m_v3Movement = m_trsfAffected.position + Vector3.left;
@@ -47,12 +50,20 @@ public class EDT_Movement : EDT_Base {
 		} else {
 			m_v3Movement = Vector3.zero;
 		}
+
+		m_fTimeVal = 0.0f;
 		return base.OnCallEvent ();
 	}
 
 	protected override void OnCallUpdate (float upDeltaTime)
 	{
 		base.OnCallUpdate (upDeltaTime);
+		m_fTimeVal += upDeltaTime;
+
+		if (m_fTimeVal >= m_fDuration) {
+			m_v3Movement = Vector3.zero;
+		}
+
 		if (m_trsfAffected != null && m_v3Movement != Vector3.zero) {
 			float speed = m_fSpeed * upDeltaTime;
 			Vector3 finalMovement = m_v3Movement * speed;
