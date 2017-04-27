@@ -270,6 +270,7 @@ public class EG_Map {
 		ToMonsterByMapId(ms_entity.ID);
 		ToList<EM_NPC>(ms_entity.strNpcs);
 		ToList<EM_MonsterCenter>(ms_entity.strMonsterCenters);
+		ToList<EM_AreasBornMonster> (ms_entity.strAreasBornMoner);
 	}
 
 	void OnInitAttrs2Entity()
@@ -370,6 +371,7 @@ public class EG_Map {
 		ReRaycast<EM_Monster> (GetLMonsters ());
 		ReRaycast<EM_NPC> (GetLNpcs ());
 		ReRaycast<EM_MonsterCenter> (GetLMCenters ());
+		ReRaycast<EM_AreasBornMonster> (GetLAreaBM());
 	}
 
 	void ReRaycast<T>(List<T> list) where T : EM_UnitCell{
