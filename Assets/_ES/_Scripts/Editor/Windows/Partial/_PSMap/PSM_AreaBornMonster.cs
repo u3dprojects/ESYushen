@@ -36,6 +36,9 @@ public class PSM_AreaBornMonster : PSM_Base<EM_AreasBornMonster> {
 		one.m_fRadius = EditorGUILayout.FloatField("半径:", one.m_fRadius);
 		EG_GUIHelper.FG_Space(5);
 
+		one.m_isRound = EditorGUILayout.Toggle("是否循环:", one.m_isRound);
+		EG_GUIHelper.FG_Space(5);
+
 		EG_GUIHelper.FG_BeginH ();
 		{
 			if (GUILayout.Button ("SyncToInspector")) {

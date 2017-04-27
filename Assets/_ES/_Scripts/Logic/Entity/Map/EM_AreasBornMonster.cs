@@ -22,6 +22,9 @@ public class EM_AreasBornMonster : EM_UnitCell {
 	// 半径
 	public float m_fRadius;
 
+	// 是否循环(该group刷完后,再次刷新该组数据)
+	public bool m_isRound = false;
+
 	public EM_AreasBornMonster() : base(){
 		m_iCoreCursorMonster = (CORE_CURSOR++);
 	}
@@ -33,6 +36,10 @@ public class EM_AreasBornMonster : EM_UnitCell {
 			IDictionary map = (IDictionary)m_jdOrg;
 			if (map.Contains ("radius")) {
 				this.m_fRadius = float.Parse (m_jdOrg ["radius"].ToString ());
+			}
+
+			if (map.Contains ("isRound")) {
+				this.m_isRound = (bool)m_jdOrg ["isRound"];
 			}
 		}
 		return isOkey;
@@ -82,6 +89,7 @@ public class EM_AreasBornMonster : EM_UnitCell {
 			map.Remove ("level");
 
 			ret ["radius"] = Round2D(this.m_fRadius,2);
+			ret ["isRound"] = this.m_isRound;
 		}
 		return ret;
 	}
