@@ -212,6 +212,7 @@ public class PS_MidLeft{
             m_curAni.ResetAniState(ind_popup);
 
             OnResetProgress();
+			DoStop ();
         }
         EG_GUIHelper.FEG_EndH();
     }
@@ -420,5 +421,6 @@ public class PS_MidLeft{
 			trsfEntity.position = Vector3.zero;
 		m_ePSEvents.DoEnd();
 		OnInitTime();
+		m_ePSMove.DoEnd();
     }
 }

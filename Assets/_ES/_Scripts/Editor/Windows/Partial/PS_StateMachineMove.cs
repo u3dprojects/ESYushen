@@ -153,11 +153,14 @@ public class PS_StateMachineMove {
 			if(m_myCtrl != null && m_myCtrl.enabled)
 			{
 				m_myCtrl.Move(movPos - preMovPos);
-			}else
-			{
+			}else if(trsfEntity != null){
 				trsfEntity.Translate(movPos - preMovPos);
 			}
 			preMovPos = movPos;
 		}
+	}
+
+	public void DoEnd(){
+		isOpenMovPos = false;
 	}
 }

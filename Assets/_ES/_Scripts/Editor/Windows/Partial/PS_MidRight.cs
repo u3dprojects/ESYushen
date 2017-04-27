@@ -369,5 +369,6 @@ public partial class PS_MidRight{
 			trsfEntity.position = Vector3.zero;
 		m_egSkill.DoEnd();
 		OnInitTime();
+		m_ePSMove.DoEnd();
 	}
 }
