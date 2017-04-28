@@ -201,8 +201,8 @@ public class EG_Bullet {
 			m_evtAreaBlowUp.DoReInit (ms_entity.AreaBlowUp);
 			m_evtAreaFly.DoReInit (ms_entity.AreaFlying);
 
-			m_psFly.DoReInit (ms_entity.EvtBlowUp);
-			m_psBlowUp.DoReInit (ms_entity.EvtFlying);
+			m_psFly.DoReInit (ms_entity.EvtFlying);
+			m_psBlowUp.DoReInit (ms_entity.EvtBlowUp);
 		}
 	}
 
