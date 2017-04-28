@@ -24,6 +24,7 @@ public class EMT_HitArea {
 	}
 
 	public void DoReInit(string json){
+		DoClear();
 		if (string.IsNullOrEmpty (json)) {
 			return;
 		}
@@ -33,6 +34,7 @@ public class EMT_HitArea {
 	}
 
 	public void DoReInit(JsonData jsonData,float castTime){
+		DoClear();
 		if (!jsonData.IsArray) {
 			return;
 		}
