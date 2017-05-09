@@ -20,7 +20,7 @@ public class EDW_BuildFab : EditorWindow {
 
 	// 窗体宽高
 	static public float width = 600;
-	static public float height = 235;
+	static public float height = 295;
 
 	[MenuItem("Tools/Windows/BuildAsset2Fab")]
 	static void AddWindow()
@@ -61,10 +61,22 @@ public class EDW_BuildFab : EditorWindow {
 
 	#region  == Member Attribute ===
 
+	// 文件夹
 	UnityEngine.Object m_objFolderOrg,m_objFolderTo;
 
+	// UGUI的图片设置宽高
 	bool isSetUpWH = false;
 	float m_fWidth,m_fHight;
+
+	/// <summary>
+	/// prefab的asset资源name
+	/// </summary>
+	string abName = "";
+
+	/// <summary>
+	/// prefab的asset资源后缀名
+	/// </summary>
+	string abSuffix = "";
 	#endregion
 
 	#region  == EditorWindow Func ===
@@ -117,6 +129,12 @@ public class EDW_BuildFab : EditorWindow {
 				m_fHight = EditorGUILayout.FloatField ("Height:", m_fHight);
 			}
 			EG_GUIHelper.FEG_EndToggleGroup ();
+			EG_GUIHelper.FG_Space(10);
+
+			abName = EditorGUILayout.TextField ("Fab的Asset资源名", abName);
+			EG_GUIHelper.FG_Space(10);
+
+			abSuffix = EditorGUILayout.TextField ("Fab的Asset资源后缀", abSuffix);
 			EG_GUIHelper.FG_Space(10);
 
 			_DrawOptBtns ();
@@ -250,7 +268,7 @@ public class EDW_BuildFab : EditorWindow {
 			gobj = PrefabUtility.CreatePrefab (tmpPath, gobj,ReplacePrefabOptions.ConnectToPrefab);
 			EditorUtility.SetDirty (gobj);
 
-			// SetAssetBundleInfo (tmpPath);
+			SetAssetBundleInfo (tmpPath);
 		}
 
 		for (int i = 0; i < lens; i++) {
@@ -264,11 +282,26 @@ public class EDW_BuildFab : EditorWindow {
 	}
 
 	void SetAssetBundleInfo(string tmpPath){
+		abName = abName.Trim ();
+		abSuffix = abSuffix.Trim ();
+
+		bool isABName = !string.IsNullOrEmpty (abName);
+		bool isABSuffix = !string.IsNullOrEmpty (abSuffix);
+
+		if (!isABName)
+			return;
+		
 		AssetImporter assett = AssetImporter.GetAtPath (tmpPath);
-		// 资源名
-		assett.assetBundleName = "ab_gobj";
-		// 资源后缀名
-		assett.assetBundleVariant = "var";
+
+		if (isABName) {
+			// 资源名
+			assett.assetBundleName = abName;
+		}
+
+		if (isABSuffix) {
+			// 资源后缀名
+			assett.assetBundleVariant = abSuffix;
+		}
 	}
 		
 	#endregion
