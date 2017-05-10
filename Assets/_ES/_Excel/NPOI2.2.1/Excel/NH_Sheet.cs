@@ -146,7 +146,7 @@ public class NH_Sheet {
         
         HSSFCell cell = GetCell(rowIndex, columnIndex);
 		if (cell == null) {
-			CheckErrorNum (rowIndex);
+			CheckErrorNum (rowIndex,columnIndex);
 			return null;
 		}
 
@@ -400,7 +400,7 @@ public class NH_Sheet {
         return null;
     }
 
-	void CheckErrorNum(int rowIndex){
+	void CheckErrorNum(int rowIndex,int columnIndex){
 		if (errorRowIndex == -1 || errorRowIndex + 1 < rowIndex - 1) {
 			errorRowIndex = rowIndex;
 			this.errorNum = 0;
@@ -411,6 +411,9 @@ public class NH_Sheet {
 			errorNum++;
 			if (errorNum >= ErrorNumLimit) {
 				this.maxRow = rowIndex - ErrorNumLimit;
+
+				Debug.LogError(string.Format("continue error {0} rows for read xls cell ,end in row = {1},column = {2}",
+					errorNum,(rowIndex + 1),(columnIndex + 1)));
 			}
 		}
 	}
