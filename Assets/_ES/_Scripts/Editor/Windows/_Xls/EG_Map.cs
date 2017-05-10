@@ -288,6 +288,18 @@ public class EG_Map {
 		ToGroupExcel ();
 	}
 
+	/// <summary>
+	/// 添加scene视图绘制
+	/// </summary>
+	public void OnSceneGUI(SceneView sceneView){
+		List<EM_Base> list = new List<EM_Base> ();
+		list.AddRange (m_lMapCells);
+
+		for (int i = 0; i < list.Count; i++) {
+			(list [i]).OnSceneGUI ();
+		}
+	}
+
 	#region === 刷怪点 ===
 
 	List<EM_Base> m_lMapCells = new List<EM_Base> ();

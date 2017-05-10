@@ -216,9 +216,9 @@ public class EM_UnitCell : EM_Cube {
 			isHasNav = true;
 		}
 		if (isHasNav) {
-			this.m_cAreaColor = Color.blue;
+			this.m_curbeMatColor = Color.blue;
 		} else {
-			this.m_cAreaColor = Color.red;
+			this.m_curbeMatColor = Color.red;
 		}
 
 		OnResetColor ();

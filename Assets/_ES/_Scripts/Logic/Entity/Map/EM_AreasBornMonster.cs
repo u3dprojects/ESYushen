@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using LitJson;
+using UnityEditor;
 
 /// <summary>
 /// 类名 : 地图元素 - 触发刷怪区域
@@ -20,10 +21,20 @@ public class EM_AreasBornMonster : EM_UnitCell {
 	public EUM_AreasBornMonster m_csCell;
 
 	// 半径
-	public float m_fRadius;
+	public float m_fRadius = 1;
 
 	// 是否循环(该group刷完后,再次刷新该组数据)
 	public bool m_isRound = false;
+
+	// 间隔时间
+	public float m_fInterval = 1;
+
+	// 刷新次数
+	public int m_iNum = 1;
+
+
+	// 区域颜色
+	public Color m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.15f);
 
 	public EM_AreasBornMonster() : base(){
 		m_iCoreCursorMonster = (CORE_CURSOR++);
@@ -40,6 +51,14 @@ public class EM_AreasBornMonster : EM_UnitCell {
 
 			if (map.Contains ("isRound")) {
 				this.m_isRound = (bool)m_jdOrg ["isRound"];
+			}
+
+			if (map.Contains ("interval")) {
+				this.m_fInterval = float.Parse (m_jdOrg ["interval"].ToString ());
+			}
+
+			if (map.Contains ("num")) {
+				this.m_iNum = (int)m_jdOrg ["num"];
 			}
 		}
 		return isOkey;
@@ -90,8 +109,21 @@ public class EM_AreasBornMonster : EM_UnitCell {
 
 			ret ["radius"] = Round2D(this.m_fRadius,2);
 			ret ["isRound"] = this.m_isRound;
+			ret ["interval"] = Round2D(this.m_fInterval,2);
+			ret ["num"] = this.m_iNum;
 		}
 		return ret;
+	}
+
+	public override void OnSceneGUI ()
+	{
+		base.OnSceneGUI ();
+		if (this.m_trsf != null) {
+			Handles.color = this.m_cAreaColor;
+			Vector3 posOrg = this.m_trsf.position;
+			Vector3 pos = posOrg;
+			Handles.DrawSolidDisc(pos,Vector3.up,this.m_fRadius);
+		}
 	}
 
 	public static void DoClearStatic ()

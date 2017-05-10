@@ -15,7 +15,7 @@ public class EM_Cube : EM_Base{
 
 	// 区域颜色
 	// m_cAreaColor = new Color(Random.Range(0f,1.0f),Random.Range(0f,1.0f),Random.Range(0f,1.0f),0.5f);
-	public Color m_cAreaColor = Color.blue;
+	public Color m_curbeMatColor = Color.blue;
 
 	public EM_Cube():base(){
 	}
@@ -32,7 +32,7 @@ public class EM_Cube : EM_Base{
 
 	public void OnResetColor(){
 		if (m_matCub != null && m_matCub.HasProperty ("_Color")) {
-			m_matCub.SetColor ("_Color", this.m_cAreaColor);
+			m_matCub.SetColor ("_Color", this.m_curbeMatColor);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class EM_Cube : EM_Base{
 
 		if (org is EM_Cube) {
 			EM_Cube tmp = (EM_Cube)org;
-			m_cAreaColor = tmp.m_cAreaColor;
+			m_curbeMatColor = tmp.m_curbeMatColor;
 
 			ResetMeshMaterial ();
 

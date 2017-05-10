@@ -389,6 +389,7 @@ public class EDT_Property : EDT_Base {
 			ret.m_sPars = arrs[1];
 			return ret;
 		} catch (System.Exception ex) {
+			Debug.LogError(ex);
 		}
 		return null;
 	}

@@ -112,6 +112,7 @@ public class EDT_Movement : EDT_Base {
 
 			return ret;
 		} catch (System.Exception ex) {
+			Debug.LogError(ex);
 		}
 		return null;
 	}

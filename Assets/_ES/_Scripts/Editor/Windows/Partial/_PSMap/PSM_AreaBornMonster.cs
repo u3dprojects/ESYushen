@@ -32,8 +32,13 @@ public class PSM_AreaBornMonster : PSM_Base<EM_AreasBornMonster> {
 		one.m_v3Pos = EditorGUILayout.Vector3Field ("中心点:", one.m_v3Pos);
 		EG_GUIHelper.FG_Space(5);
 
-
 		one.m_fRadius = EditorGUILayout.FloatField("半径:", one.m_fRadius);
+		EG_GUIHelper.FG_Space(5);
+
+		one.m_fInterval = EditorGUILayout.FloatField("间隔时间(单位秒):", one.m_fInterval);
+		EG_GUIHelper.FG_Space(5);
+
+		one.m_iNum = EditorGUILayout.IntField("刷新次数限定:", one.m_iNum);
 		EG_GUIHelper.FG_Space(5);
 
 		one.m_isRound = EditorGUILayout.Toggle("是否循环:", one.m_isRound);

@@ -103,11 +103,13 @@ public class EDW_Plan : EditorWindow {
 		EditorApplication.update += OnUpdate;
 		SceneView.onSceneGUIDelegate += OnSceneGUI;
 		EH_Listen.DoInit ();
+
+		call4OnSceneViewGUI = m_egMap.OnSceneGUI;
 	}
 
 	void OnDisable()
 	{
-		OnClearEditorDelegate ();
+		DoClear();
 	}
 
 	void OnGUI()
@@ -131,7 +133,7 @@ public class EDW_Plan : EditorWindow {
 			m_emType = (EmExcelTable)EditorGUILayout.EnumPopup ("选择表类型:",(System.Enum)m_emType);
 
 			if (m_emType != m_emPreType) {
-				DoClear ();
+				OnClearData ();
 				m_emPreType = m_emType;
 			}
 			EG_GUIHelper.FEG_EndH ();
@@ -180,11 +182,8 @@ public class EDW_Plan : EditorWindow {
 
 	void OnDestroy()
 	{
-		EH_Listen.DoClear ();
+		DoClear ();
 		OnClearSWindow();
-		OnClearEditorDelegate ();
-		DoClear();
-
 		EU_ScheduleTask.m_instance.DoDestroy();
 	}
 
@@ -211,6 +210,18 @@ public class EDW_Plan : EditorWindow {
 	}
 
 	void DoClear()
+	{
+		EH_Listen.DoClear ();
+
+		OnClearEditorDelegate ();
+
+		call4OnUpdate = null;
+		call4OnSceneViewGUI = null;
+
+		OnClearData ();
+	}
+
+	void OnClearData()
 	{
 		m_egBuff.DoClear ();
 		m_egSkill.DoClear ();

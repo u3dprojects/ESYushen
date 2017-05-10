@@ -164,4 +164,10 @@ public class EM_Base : EJ_Base{
 			}
 		}
 	}
+
+	/// <summary>
+	/// 在Scene窗口中绘制回调
+	/// </summary>
+	public virtual void OnSceneGUI(){
+	}
 }
