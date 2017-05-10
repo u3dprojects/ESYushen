@@ -25,13 +25,13 @@ public class PS_EvtEffect {
 
 	string[] JoinType = {
 		"原点",
-		"头部",
 		"胸部",
 		"腰部",
-		"左手心",
-		"右手心",
-		"左武器攻击点",
-		"右武器攻击点"
+		"头部",
+		"左手",
+		"右手",
+		"左武器",
+		"右武器"
 	};
 
 	bool isJoinTrsf = false;
