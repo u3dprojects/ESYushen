@@ -12,22 +12,17 @@ public class EN_Skill : EN_BaseXls{
     // public int ID;
     public string Name;
 
-	public string Desc;
 	// 语言表里面的ID
 	public int NameID;
-	// 语言表里面的ID
-	public int DescID;
 
     public int ActId;
     public int SkillType;
     public int ElementType_Int;
-    public float DmgAdditional;
     public int SlotObjTp_Int;
     public int SlotIdx_Int;
     public int LockTp_Int;
     public float CastDistFarthest;
     public float CastDistNearest;
-    public float CD;
     public float Duration;
     public string CastEvent_Str;
     public float PreCastTiming;
@@ -71,21 +66,15 @@ public class EN_Skill : EN_BaseXls{
             object[] ret = {
                 this.ID,
                 this.Name,
-
-//				this.Desc,
 				this.NameID,
-//				this.DescID,
-
                 this.ActId,
                 this.SkillType,
                 this.ElementType_Int,
-//                this.DmgAdditional,
                 this.SlotObjTp_Int,
                 this.SlotIdx_Int,
                 this.LockTp_Int,
                 this.CastDistFarthest,
                 this.CastDistNearest,
-//                this.CD,
                 this.Duration,
                 this.CastEvent_Str,
                 this.PreCastTiming,
@@ -115,20 +104,16 @@ public class EN_Skill : EN_BaseXls{
 		this.ID = sheet.GetInt(rowIndex, colIndex++);
 		this.Name = sheet.GetString(rowIndex, colIndex++);
 
-//		this.Desc = sheet.GetString(rowIndex, colIndex++);
 		this.NameID = sheet.GetInt(rowIndex, colIndex++);
-//		this.DescID = sheet.GetInt(rowIndex, colIndex++);
 
 		this.ActId = sheet.GetInt(rowIndex, colIndex++);
 		this.SkillType = sheet.GetInt(rowIndex, colIndex++);
 		this.ElementType_Int = sheet.GetInt(rowIndex, colIndex++);
-//		this.DmgAdditional = sheet.GetFloat(rowIndex, colIndex++);
 		this.SlotObjTp_Int = sheet.GetInt(rowIndex, colIndex++);
 		this.SlotIdx_Int = sheet.GetInt(rowIndex, colIndex++);
 		this.LockTp_Int = sheet.GetInt(rowIndex, colIndex++);
 		this.CastDistFarthest = sheet.GetFloat(rowIndex, colIndex++);
 		this.CastDistNearest = sheet.GetFloat(rowIndex, colIndex++);
-//		this.CD = sheet.GetFloat(rowIndex, colIndex++);
 		this.Duration = sheet.GetFloat(rowIndex, colIndex++);
 		this.CastEvent_Str = sheet.GetString(rowIndex, colIndex++);
 		this.PreCastTiming = sheet.GetFloat(rowIndex, colIndex++);
@@ -159,20 +144,16 @@ public class EN_Skill : EN_BaseXls{
 		this.ID = tmp.ID;
 		this.Name = tmp.Name;
 
-		this.Desc = tmp.Desc;
 		this.NameID = tmp.NameID;
-		this.DescID = tmp.DescID;
 
 		this.ActId = tmp.ActId;
 		this.SkillType = tmp.SkillType;
 		this.ElementType_Int = tmp.ElementType_Int;
-		this.DmgAdditional = tmp.DmgAdditional;
 		this.SlotObjTp_Int = tmp.SlotObjTp_Int;
 		this.SlotIdx_Int = tmp.SlotIdx_Int;
 		this.LockTp_Int = tmp.LockTp_Int;
 		this.CastDistFarthest = tmp.CastDistFarthest;
 		this.CastDistNearest = tmp.CastDistNearest;
-		this.CD = tmp.CD;
 		this.Duration = tmp.Duration;
 		this.CastEvent_Str = tmp.CastEvent_Str;
 		this.PreCastTiming = tmp.PreCastTiming;

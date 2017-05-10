@@ -106,16 +106,6 @@ public class EG_Skill {
 		EG_GUIHelper.FG_Space(5);
 
 		EG_GUIHelper.FEG_BeginH();
-		ms_enity.Desc = EditorGUILayout.TextField("描述:", ms_enity.Desc);
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		ms_enity.DescID = EditorGUILayout.IntField("描述ID:", ms_enity.DescID);
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
 		ms_enity.ActId = EditorGUILayout.IntField("SkillIndex:", ms_enity.ActId);
 
 		GUI.color = Color.yellow;
@@ -131,11 +121,6 @@ public class EG_Skill {
 
 		EG_GUIHelper.FEG_BeginH();
 		ms_enity.ElementType_Int = EditorGUILayout.Popup("元素类型:", ms_enity.ElementType_Int, ElementType);
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		ms_enity.DmgAdditional = EditorGUILayout.FloatField("元素伤害系数:", ms_enity.DmgAdditional);
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
@@ -161,11 +146,6 @@ public class EG_Skill {
 
 		EG_GUIHelper.FEG_BeginH();
 		ms_enity.CastDistNearest = EditorGUILayout.FloatField("最小释放距离(单位米):", ms_enity.CastDistNearest);
-		EG_GUIHelper.FEG_EndH();
-		EG_GUIHelper.FG_Space(5);
-
-		EG_GUIHelper.FEG_BeginH();
-		ms_enity.CD = EditorGUILayout.FloatField("冷却时间:", ms_enity.CD);
 		EG_GUIHelper.FEG_EndH();
 		EG_GUIHelper.FG_Space(5);
 
