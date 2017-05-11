@@ -37,6 +37,10 @@ public class EDT_Effect : EDT_Base {
     // 创建出来的实体对象
     EN_Effect _m_eEffect;
 
+	// 打印特效形象
+	Transform effectEntity;
+	public bool m_isPrintTrsf = false;
+
     public EDT_Effect() : base()
     {
 		this.m_emType = EventType.Effect;
@@ -49,18 +53,18 @@ public class EDT_Effect : EDT_Base {
         if(this.m_objOrg != null && this.m_objOrg is GameObject)
         {
             UnityEngine.GameObject gobj = GameObject.Instantiate(this.m_objOrg, Vector3.zero, Quaternion.identity) as GameObject;
-            Transform trsfGobj = gobj.transform;
+			effectEntity = gobj.transform;
             if(this.m_trsfParent != null)
             {
-                trsfGobj.parent = m_trsfParent;
+				effectEntity.parent = m_trsfParent;
             }
 
-            trsfGobj.localPosition = m_v3OffsetPos;
-            trsfGobj.localEulerAngles = m_v3EulerAngle;
-            trsfGobj.localScale = Vector3.one;
+			effectEntity.localPosition = m_v3OffsetPos;
+			effectEntity.localEulerAngles = m_v3EulerAngle;
+			effectEntity.localScale = Vector3.one;
 
 			if (!this.m_isFollow) {
-				trsfGobj.parent = null;
+				effectEntity.parent = null;
 			}
 
 			_m_eEffect = new EN_Effect(gobj,m_fDuration);
@@ -78,6 +82,10 @@ public class EDT_Effect : EDT_Base {
             _m_eEffect.DoUpdate(upDeltaTime);
             this.m_isEnd = _m_eEffect.isEnd;
         }
+
+		if (!this.m_isEnd) {
+			PrintEntityTrsfInfo ();
+		}
     }
 
     public override void OnClear()
@@ -93,6 +101,7 @@ public class EDT_Effect : EDT_Base {
 
     void OnClearEffect()
     {
+		effectEntity = null;
         if (_m_eEffect != null)
         {
             _m_eEffect.DoDestory();
@@ -203,6 +212,25 @@ public class EDT_Effect : EDT_Base {
 		}
 
 		return EMgrResFolder.GetPathEffect(objName);
+	}
+
+	/// <summary>
+	/// 打印实体的transform信息
+	/// </summary>
+	void PrintEntityTrsfInfo(){
+		if (effectEntity == null || !m_isPrintTrsf) {
+			return;
+		}
+
+		string info = string.Format ("= efc trsf world = [pos = {0},rotation = {1},scale={2}],local = [pos = {3},rotation = {4},scale={5}]",
+			effectEntity.position,
+			effectEntity.eulerAngles,
+			effectEntity.lossyScale,
+			effectEntity.localPosition,
+			effectEntity.localEulerAngles,
+			effectEntity.localScale);
+		
+		UnityEngine.Debug.Log (info);
 	}
 
 }

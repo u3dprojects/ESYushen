@@ -294,12 +294,14 @@ public class PS_MidLeft{
             EG_GUIHelper.FG_Space(3);
 
             cur_progress = EditorGUILayout.Slider(cur_progress, min_progress, max_progress);
+
+			GUIStyle style2 = new GUIStyle();
+			style2.alignment = TextAnchor.MiddleRight;
+			style2.normal.textColor = Color.yellow;
+			EditorGUILayout.LabelField(string.Format("当前运行帧数: {0} ",m_curAni.runFrameCount), style2);
             EG_GUIHelper.FEG_EndToggleGroup();
 
-            //GUIStyle style = new GUIStyle();
-            //style.alignment = TextAnchor.MiddleRight;
-            //style.normal.textColor = Color.yellow;
-            //EditorGUILayout.LabelField("(勾选时，才可控制 [当前进度]！！！)", style);
+            
         }
         EG_GUIHelper.FEG_EndH();
     }

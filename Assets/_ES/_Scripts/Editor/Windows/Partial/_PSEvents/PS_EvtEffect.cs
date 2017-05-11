@@ -206,6 +206,10 @@ public class PS_EvtEffect {
 			one.m_fScale = EditorGUILayout.FloatField(one.m_fScale);
 		}
 		EG_GUIHelper.FEG_EndH();
+		EG_GUIHelper.FG_Space(5);
+
+		one.m_isPrintTrsf = EditorGUILayout.Toggle("是否打印特效变换信息:", one.m_isPrintTrsf);
+		EG_GUIHelper.FG_Space(5);
 	}
 
 	void reOneEffectTrsfParent(EDT_Effect one){

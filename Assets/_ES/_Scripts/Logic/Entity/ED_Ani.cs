@@ -57,6 +57,9 @@ public class ED_Ani : ED_AniBase {
 
     // 计算
     
+	// 当前运行到多少帧率
+	public int runFrameCount{get;private set;}
+
     // 当前阶段(在一个周期中的阶段)[0-1]
     float cur_Phase = 0.0f;
 
@@ -182,6 +185,18 @@ public class ED_Ani : ED_AniBase {
     {
         get { return cur_loop_times; }
     }
+
+	/// <summary>
+	/// 当前运行时候所在的帧数
+	/// </summary>
+	/// <value>The current run frame count.</value>
+	public int CurRunFrameCount
+	{
+		get
+		{
+			return runFrameCount;
+		}
+	}
 
     public void ResetAniState(int index_key)
     {
@@ -456,6 +471,9 @@ public class ED_Ani : ED_AniBase {
         // 新的模式用于外部调用
         OnUpdateCallPhase();
         OnUpdateCallProgress();
+
+		// 计算当前时间所在的帧数
+		runFrameCount = Mathf.FloorToInt(cur_Phase * cur_FrameCount);
     }
 
     void OnCompleteAllRound()
