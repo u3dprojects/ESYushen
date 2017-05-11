@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 /// <summary>
 /// 类名 : U3D - 粒子系统数据
@@ -441,4 +442,50 @@ public class EN_Particle : System.Object {
 
         this.m_loop_count = (int)(this.m_run_time / this.maxTime);
     }
+
+	public override string ToString ()
+	{
+		return string.Format ("[EN_Particle: loopTimes={0}, curScale={1}, maxTime={2}, curState={3}, isEnd={4},info={5}]",
+			loopTimes, curScale, maxTime, curState, isEnd,
+			ToPsDefaultInfo()
+		);
+	}
+
+	/// <summary>
+	/// 数据转换
+	/// </summary>
+	/// <returns>The string array.</returns>
+	/// <param name="list">List.</param>
+	string[] toStrArray(IList list){
+		if(list == null || list.Count <= 0)
+			return new string[]{};
+		int lens = list.Count;
+		string[] ret = new string[lens];
+		for (int i = 0; i < lens; i++) {
+			ret [i] = list [i] == null ? "" : list [i].ToString ();
+		}
+		return ret;
+	}
+
+	/// <summary>
+	/// 粒子信息
+	/// </summary>
+	/// <returns>The ps info.</returns>
+	public string ToPsDefaultInfo(){
+		ParticleSystem ps;
+		System.Text.StringBuilder builder = new System.Text.StringBuilder ("");
+		for (int i = 0; i < lens; i++)
+		{
+			ps = listAll[i];
+			builder.Append ("(").Append (ps.name).Append ("=[");
+			builder.Append(string.Join (",", toStrArray(dicDefaultScale [ps.GetInstanceID()])));
+			builder.Append("])");
+			if (i < lens - 1) {
+				builder.Append (",");
+			}
+		}
+		string retStr = builder.ToString();
+		builder.Length = 0;
+		return retStr;
+	}
 }
