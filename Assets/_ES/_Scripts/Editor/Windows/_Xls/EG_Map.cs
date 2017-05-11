@@ -470,6 +470,8 @@ public class EG_Map {
 				one = ((EUM_Npc)enCell).m_entity;
 			} else if (enCell is EUM_MonsterCenter) {
 				one = ((EUM_MonsterCenter)enCell).m_entity;
+			}else if (enCell is EUM_AreasBornMonster) {
+				one = ((EUM_AreasBornMonster)enCell).m_entity;
 			}
 			m_lMapCells.Add (one);
 		}
