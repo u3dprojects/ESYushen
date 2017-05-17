@@ -120,6 +120,9 @@ public class EG_Map {
 //			ms_entity.SceneName = "";
 //		}
 
+		ms_entity.mapType = EditorGUILayout.IntField ("地图分类:", ms_entity.mapType);
+		EG_GUIHelper.FG_Space (5);
+
 		EG_GUIHelper.FEG_BeginH ();
 		{
 			ms_entity.SceneResId = EditorGUILayout.IntField ("地图场景资源ID:", ms_entity.SceneResId);

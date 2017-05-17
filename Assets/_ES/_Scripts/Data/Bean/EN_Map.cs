@@ -15,6 +15,9 @@ public class EN_Map : EN_BaseXls{
 	// 语言表里面的ID
 	public int DescID;
 
+	// 地图类型
+	public int mapType;
+
 	// 地图场景资源名
 	public int SceneResId;
 	public string SceneName;
@@ -95,6 +98,7 @@ public class EN_Map : EN_BaseXls{
 				this.ID,
 				this.NameID,
 				this.DescID,
+				this.mapType,
 				this.SceneResId,
 				this.UIResName,
 				this.radarOffsetX,
@@ -132,6 +136,7 @@ public class EN_Map : EN_BaseXls{
 		this.ID = sheet.GetInt(rowIndex, colIndex++);
 		this.NameID = sheet.GetInt(rowIndex, colIndex++);
 		this.DescID = sheet.GetInt(rowIndex, colIndex++);
+		this.mapType = sheet.GetInt(rowIndex, colIndex++);
 		this.SceneResId = sheet.GetInt(rowIndex, colIndex++);
 		this.UIResName = sheet.GetString(rowIndex, colIndex++);
 		this.radarOffsetX = sheet.GetFloat(rowIndex, colIndex++);
@@ -175,6 +180,7 @@ public class EN_Map : EN_BaseXls{
 		this.ID = tmp.ID;
 		this.NameID = tmp.NameID;
 		this.DescID = tmp.DescID;
+		this.mapType = tmp.mapType;
 		this.SceneResId = tmp.SceneResId;
 		this.SceneName = tmp.SceneName;
 		this.UIResName = tmp.UIResName;
