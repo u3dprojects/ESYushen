@@ -13,7 +13,7 @@ using LitJson;
 /// 日期 : 2017-02-03 11:10
 /// 功能 : 
 /// </summary>
-public class EG_Map {
+public partial class EG_Map {
 
 	EN_Map ms_entity = new EN_Map ();
 
@@ -381,7 +381,6 @@ public class EG_Map {
 		}
 	}
 
-
 	void ReRaycast(){
 		ReRaycast<EM_Monster> (GetLMonsters ());
 		ReRaycast<EM_NPC> (GetLNpcs ());
@@ -499,7 +498,9 @@ public class EG_Map {
 	{
 		if (!m_isInView)
 			return;
-		
+
+		OnChangeGobjInHierarchyGUI (instanceID, types);
+
 		switch (types) {
 		case 1:
 			Object obj = EditorUtility.InstanceIDToObject (instanceID);
