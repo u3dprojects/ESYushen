@@ -52,8 +52,14 @@ public class EM_UnitCell : EM_Cube {
 			if (map.Contains ("rotateDegree")) {
 				this.m_fRotation = float.Parse (m_jdOrg ["rotateDegree"].ToString ());
 			}
-			m_v3Pos.x = float.Parse (m_jdOrg ["positionX"].ToString ());
-			m_v3Pos.z = float.Parse (m_jdOrg ["positionZ"].ToString ());
+
+			if (map.Contains ("positionX")) {
+				m_v3Pos.x = float.Parse (m_jdOrg ["positionX"].ToString ());
+			}
+
+			if (map.Contains ("positionZ")) {
+				m_v3Pos.z = float.Parse (m_jdOrg ["positionZ"].ToString ());
+			}
 
 			if (map.Contains ("reliveInterval")) {
 				this.m_fReliveInv = float.Parse (m_jdOrg ["reliveInterval"].ToString ());

@@ -88,6 +88,11 @@ public class EN_Map : EN_BaseXls{
 	// 触发刷怪的区域
 	public string strAreasBornMoner;
 
+	/// <summary>
+	///  剧情触发点
+	/// </summary>
+	public string strStory;
+
 	public EN_Map():base(){
 	}
 
@@ -122,7 +127,8 @@ public class EN_Map : EN_BaseXls{
 				this.DefHeroFlag,
 				this.NavMeshByteName,
 				this.BHP,
-				this.strAreasBornMoner
+				this.strAreasBornMoner,
+				this.strStory
 			};
 			return ret;
 		}
@@ -163,6 +169,7 @@ public class EN_Map : EN_BaseXls{
 		this.NavMeshByteName = sheet.GetString(rowIndex, colIndex++);
 		this.BHP = sheet.GetInt(rowIndex, colIndex++);
 		this.strAreasBornMoner = sheet.GetString(rowIndex, colIndex++);
+		this.strStory = sheet.GetString(rowIndex, colIndex++);
 
 		this.SceneName = "Map_" + this.SceneResId;
 	}
@@ -209,5 +216,7 @@ public class EN_Map : EN_BaseXls{
 		this.NavMeshByteName = tmp.NavMeshByteName;
 		this.BHP = tmp.BHP;
 		this.strAreasBornMoner = tmp.strAreasBornMoner;
+
+		this.strStory = tmp.strStory;
 	}
 }
