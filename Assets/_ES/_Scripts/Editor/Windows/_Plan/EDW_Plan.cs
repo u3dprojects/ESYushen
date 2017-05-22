@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEditor;
 using System.IO;
+using System.ComponentModel;
 
 /// <summary>
 /// 类名 : excel 数据编辑器窗口Class
@@ -60,7 +61,9 @@ public class EDW_Plan : EditorWindow {
 		Buffer,
 		Bullet,
 		Skill,
-		Map
+		Map,
+		[Description ("编写MapList的剧情")]
+		Map_Plot,
 	}
 	#region  == Member Attribute ===
 
@@ -81,6 +84,11 @@ public class EDW_Plan : EditorWindow {
 	EG_Skill m_egSkill = new EG_Skill();
 	EG_Bullet m_egBullet = new EG_Bullet();
 	EG_Map m_egMap = new EG_Map();
+
+	/// <summary>
+	/// 剧情控制
+	/// </summary>
+	EG_MapPlot m_egMapPlot = new EG_MapPlot();
 
 	// delegate 更新
 	System.Action call4OnUpdate;
@@ -105,6 +113,7 @@ public class EDW_Plan : EditorWindow {
 		EH_Listen.DoInit ();
 
 		call4OnSceneViewGUI = m_egMap.OnSceneGUI;
+		call4OnSceneViewGUI += m_egMapPlot.OnSceneGUI;
 	}
 
 	void OnDisable()
@@ -227,6 +236,7 @@ public class EDW_Plan : EditorWindow {
 		m_egSkill.DoClear ();
 		m_egBullet.DoClear ();
 		m_egMap.DoClear ();
+		m_egMapPlot.DoClear ();
 
 		EU_ScheduleTask.m_instance.DoClear ();
 	}
@@ -300,6 +310,8 @@ public class EDW_Plan : EditorWindow {
 			return m_egBullet.isInited;
 		case EmExcelTable.Map:
 			return m_egMap.isInited;
+		case EmExcelTable.Map_Plot:
+			return m_egMapPlot.isInited;
 		}
 		return false;
 	}
@@ -318,6 +330,9 @@ public class EDW_Plan : EditorWindow {
 		case EmExcelTable.Map:
 			m_egMap.DoInit (pathOpen);
 			break;
+		case EmExcelTable.Map_Plot:
+			m_egMapPlot.DoInit (pathOpen);
+			break;
 		}
 	}
 
@@ -335,6 +350,9 @@ public class EDW_Plan : EditorWindow {
 		case EmExcelTable.Map:
 			m_egMap.SaveExcel (savePath);
 			break;
+		case EmExcelTable.Map_Plot:
+			m_egMapPlot.SaveExcel (savePath);
+			break;
 		}
 	}
 
@@ -351,6 +369,9 @@ public class EDW_Plan : EditorWindow {
 			break;
 		case EmExcelTable.Map:
 			m_egMap.DrawShow ();
+			break;
+		case EmExcelTable.Map_Plot:
+			m_egMapPlot.DrawShow ();
 			break;
 		}
 	}
