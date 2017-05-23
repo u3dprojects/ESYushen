@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/// <summary>
+/// 是否是美术工程
+/// </summary>
+// #define YuShenGameArtProject
+
+using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using System.IO;
@@ -25,6 +30,16 @@ public partial class EG_MapPlot {
 
 	bool m_isInView = false;
 
+	/// <summary>
+	/// 剧情json对象
+	/// </summary>
+	JsonData m_jsonData = new JsonData ();
+
+	/// <summary>
+	/// 延迟更新数据
+	/// </summary>
+	float m_reDelay = 0.1f;
+
 	public EG_MapPlot(){
 		EH_Listen.call4GUI += OnChangeGobj;
 	}
@@ -42,10 +57,14 @@ public partial class EG_MapPlot {
 	public void DoClear(){
 		m_opt.DoClear ();
 		m_isInView = false;
+		OnClearDelegate();
 	}
 
 	public void DrawShow()
 	{
+
+		OnInitDelegate ();
+
 		m_isInView = true;
 
 		EG_GUIHelper.FEG_HeadTitMid ("MapList Excel 表 - 编写 剧情模块",Color.yellow);
@@ -78,6 +97,22 @@ public partial class EG_MapPlot {
 		EG_GUIHelper.FEG_EndH ();
 		EG_GUIHelper.FG_Space (5);
 
+		try {
+			CheckPlotJson ();
+			#if YuShenGameArtProject
+			m_reDelay -= Time.fixedDeltaTime;
+			if (m_reDelay < 0) {
+				m_reDelay = 0.1f;
+				RefreshAllJsonData ();
+			}
+			#endif
+			ms_entity.strStory = m_jsonData.Count > 0 ? m_jsonData.ToJson () : "null";
+			EditorGUILayout.LabelField("场景触发区域:", ms_entity.strStory, EditorStyles.textArea);
+		} catch (System.Exception ex) {
+			#if YuShenGameArtProject
+			m_dicPlot.Clear ();
+			#endif
+		}
 	}
 
 	void OpenScene(string sceneName){
@@ -108,8 +143,6 @@ public partial class EG_MapPlot {
 				}
 			}
 			UnityEditor.SceneManagement.EditorSceneManager.OpenScene (path);
-
-			EU_ScheduleTask.m_instance.DoTask (1.2f, ReRaycast);
 		}
 	}
 
@@ -118,16 +151,40 @@ public partial class EG_MapPlot {
 		
 		if(entity != null)
 		{
-			
+			#if YuShenGameArtProject
+			m_dicPlot.Clear ();
+			#endif
+
 			ms_entity.DoClone (entity);
 
-			EU_ScheduleTask.m_instance.DoClear ();
 
 			OpenScene (ms_entity.SceneName);
 		}
-		m_lPlot.Clear ();
 
-		// ToList<EM_Monster>(ms_entity.strMonsters);
+//		if (!string.IsNullOrEmpty (ms_entity.strStory) && !"null".Equals(ms_entity.strStory.ToLower().Trim())) {
+//			JsonData data = JsonMapper.ToObject (ms_entity.strStory);
+//			if (data.IsArray) {
+//				int lens = data.Count;
+//				JsonData mapData = null;
+//				for (int i = 0; i < lens; i++) {
+//					mapData = data [i];
+//					int unique = (int)mapData ["unique"];
+//					InitPlotCell (unique);
+//				}
+//			}
+//		}
+	}
+
+	void CheckPlotJson(){
+		if (m_jsonData == null) {
+			m_jsonData = new JsonData ();
+		}
+
+
+		if (!m_jsonData.IsArray) {
+			m_jsonData.Clear ();
+			m_jsonData.SetJsonType (JsonType.Array);
+		}
 	}
 
 	void OnInitAttrs2Entity()
@@ -141,6 +198,8 @@ public partial class EG_MapPlot {
 	public void SaveExcel(string savePath){
 		OnInitAttrs2Entity ();
 		m_opt.Save (savePath);
+
+		SaveScene ();
 	}
 
 	/// <summary>
@@ -150,47 +209,189 @@ public partial class EG_MapPlot {
 		
 	}
 
-	#region === 刷怪点 ===
-
-	List<UnityEngine.MonoBehaviour> m_lPlot = new List<UnityEngine.MonoBehaviour> ();
-
-	void ReRaycast(){
-		
+	void OnInitDelegate(){
+		TransformEditor.AddEvent(OnChangeTransform);
 	}
 
-	void ReRaycast<T>(List<T> list) where T : UnityEngine.MonoBehaviour{
-		int lens = list.Count;
-		if (lens <= 0) {
-			return;
-		}
+	void OnClearDelegate(){
+		TransformEditor.RemoveEvent(OnChangeTransform);
+	}
 
+	void OnChangeTransform(Transform trsf){
+		#if YuShenGameArtProject
+		RefreshAllJsonData ();
+		#endif
+	}
+
+
+	void SaveScene(){
+
+		#if YuShenGameArtProject
+		m_jsonData.Clear ();
+		m_lPlot.Clear ();
+		m_lPlot.AddRange (m_dicPlot.Values);
+		int lens = m_lPlot.Count;
+		bool isValid = false;
+		MapTrigger tmp = null;
 		for (int i = 0; i < lens; i++) {
-			
+			tmp = m_lPlot [i];
+			isValid = IsValid (tmp);
+			if (!isValid) {
+				RmPlotCell(tmp);
+				GameObject.DestroyImmediate (tmp.gameObject);
+			}
 		}
-	}
+		#endif
 
-	void RmMapCell(UnityEngine.MonoBehaviour cell){
-		if (cell == null)
-			return;
-		m_lPlot.Remove (cell);
+		UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
+		UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 	}
 
 	void OnChangeGobj (int instanceID, int types)
 	{
 		if (!m_isInView)
 			return;
-		
+
+		// Debug.Log (string.Format("id = {0},types = {1}",instanceID,types));
+
+		#if YuShenGameArtProject
 		switch (types) {
 		case 1:
-			Object obj = EditorUtility.InstanceIDToObject (instanceID);
-			if (obj != null) {
-				
-			}
+			InitPlotCell (instanceID);
 			break;
 		case 2:
+			RmPlotCell (instanceID);
 			break;
 		}
+		#endif
 	}
+
+	#region === 刷怪点 ===
+
+	#if YuShenGameArtProject
+
+	Dictionary<int,MapTrigger> m_dicPlot = new Dictionary<int, MapTrigger>();
+	List<MapTrigger> m_lPlot = new List<MapTrigger> ();
+
+	bool IsValid(MapTrigger one){
+		if (one.triggerID <= 0)
+			return false;
+		
+		if (one.totalTime <= 0)
+			return false;
+
+		if (one.destPos == Vector3.zero) {
+			return false;
+		}
+
+		if (one.masterAniID <= 0) {
+			return false;
+		}
+
+		Collider col = one.GetComponent<Collider> ();
+		if (col == null) {
+			return false;
+		}
+
+
+		return true;
+	}
+
+	JsonData ToJsonData(MapTrigger one){
+		if (!IsValid(one)) {
+			return null;
+		}
+
+		Collider col = one.GetComponent<Collider> ();
+
+		JsonData data = new JsonData ();
+		data.SetJsonType (JsonType.Object);
+		// data ["unique"] = one.GetInstanceID ();
+		data ["storyID"] = one.triggerID;
+		data ["timeLength"] = EJ_Base.Round2D(one.totalTime,2);
+
+		JsonData tmp = new JsonData ();
+		tmp["x"] = EJ_Base.Round2D(one.destPos.x,2);
+		tmp["y"] = EJ_Base.Round2D(one.destPos.y,2);
+		tmp["z"] = EJ_Base.Round2D(one.destPos.z,2);
+		data ["destPos"] = tmp;
+
+		int area_type = 1;
+		if (col is BoxCollider) {
+			area_type = 2;
+		}
+
+		Transform trsf = one.transform;
+		data ["area_type"] = area_type;
+		data ["area_centerX"] = EJ_Base.Round2D(trsf.position.x,2);
+		data ["area_centerZ"] = EJ_Base.Round2D(trsf.position.z,2);
+		if (area_type == 1) {
+			CapsuleCollider capCol = col as CapsuleCollider;
+			data ["area_range"] = EJ_Base.Round2D(capCol.radius,2);
+			data ["area_width"] = 0;
+			data ["area_rot"] = 0;
+		} else {
+			data ["area_range"] = EJ_Base.Round2D(col.bounds.size.x,2);	
+			data ["area_width"] = EJ_Base.Round2D(col.bounds.size.z,2);
+			data ["area_rot"] = EJ_Base.Round2D(trsf.eulerAngles.y,2);
+		}
+		return data;
+	}
+
+	void RmPlotCell(int instanceID){
+		m_dicPlot.Remove (instanceID);
+	}
+
+	void RmPlotCell(UnityEngine.MonoBehaviour cell){
+		if (cell == null)
+			return;
+		RmPlotCell(cell.GetInstanceID ());
+	}
+
+	void InitPlotCell(int instanceID){
+		Object obj = EditorUtility.InstanceIDToObject (instanceID);
+		if (obj != null) {
+			GameObject gobj = obj as GameObject;
+			MapTrigger[] arrs = gobj.GetComponentsInChildren<MapTrigger> (true);
+			if (arrs == null || arrs.Length <= 0) {
+				return;
+			}
+
+			MapTrigger tmpCell;
+			for (int i = 0; i < arrs.Length; i++) {
+				tmpCell = arrs [i];
+				if (tmpCell != null && !m_dicPlot.ContainsKey (tmpCell.GetInstanceID ())) {
+					PrefabType ptype = PrefabUtility.GetPrefabType (tmpCell.gameObject);
+					if (ptype == PrefabType.PrefabInstance) {
+						PrefabUtility.DisconnectPrefabInstance (tmpCell.gameObject);
+					}
+					m_dicPlot.Add (tmpCell.GetInstanceID (), tmpCell);
+					RefreshAllJsonData ();
+				}
+			}
+
+		} else {
+			RmPlotCell (instanceID);	
+			RefreshAllJsonData ();
+		}
+	}
+
+	void RefreshAllJsonData(){
+		m_jsonData.Clear ();
+		m_lPlot.Clear ();
+		m_lPlot.AddRange (m_dicPlot.Values);
+		int lens = m_lPlot.Count;
+		JsonData tmp = null;
+		for (int i = 0; i < lens; i++) {
+			tmp = ToJsonData(m_lPlot[i]);
+			if (tmp == null)
+				continue;
+			m_jsonData.Add (tmp);
+		}
+	}
+
+	#endif
+
 	#endregion
 
 }
