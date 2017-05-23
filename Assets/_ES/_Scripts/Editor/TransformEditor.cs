@@ -17,7 +17,7 @@ using System.Collections.Generic;
 public class TransformEditor :Editor
 {
 
-	static public System.Action<Transform> onChangeTransform;
+	static protected System.Action<Transform> onChangeTransform;
 
 	static bool m_isChanged = false;
 
@@ -27,6 +27,47 @@ public class TransformEditor :Editor
 		TransformEditor.onChangeTransform = delegate(Transform transform) {
 			// Debug.Log(string.Format("transform = {0}  positon = {1}",transform.name,transform.localPosition));
 		};
+	}
+
+	static bool IsHasEvent(System.Delegate entity,System.Action<Transform> evt)
+	{
+		System.Delegate[] list = entity.GetInvocationList ();
+		if (list == null) {
+			return false;
+		}
+
+		System.Delegate tmp = null;
+		for (int i = 0; i < list.Length; i++) {
+			tmp = list [i];
+			if (tmp == null) {
+				continue;
+			}
+
+			if (tmp == evt) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static public void AddEvent(System.Action<Transform> evt , bool isForceAppend = false){
+		bool isHas = IsHasEvent (onChangeTransform, evt);
+		if (!isForceAppend) {
+			if (isHas)
+				return;
+		}
+		onChangeTransform += evt;
+	}
+
+	static public void RemoveEvent(System.Action<Transform> evt){
+		bool isHas = IsHasEvent (onChangeTransform, evt);
+		if (!isHas)
+			return;
+		onChangeTransform -= evt;
+	}
+
+	static public void SetEvent(System.Action<Transform> evt){
+		onChangeTransform = evt;
 	}
 
 	static Hashtable mapIDS = new Hashtable ();

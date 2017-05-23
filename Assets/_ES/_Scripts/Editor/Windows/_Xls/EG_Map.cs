@@ -74,6 +74,8 @@ public partial class EG_Map {
 	{
 		m_isInView = true;
 
+		OnInitDelegate ();
+
 		m_isUseMapPath = EditorGUILayout.ToggleLeft ("是否使用MapList的Folder路径", m_isUseMapPath);
 
 		_DrawChooseGroupMonsters ();
@@ -303,6 +305,14 @@ public partial class EG_Map {
 		}
 	}
 
+	void OnInitDelegate(){
+		TransformEditor.AddEvent(OnChangeTransform);
+	}
+
+	void OnClearDelegate(){
+		TransformEditor.RemoveEvent(OnChangeTransform);
+	}
+
 	#region === 刷怪点 ===
 
 	List<EM_Base> m_lMapCells = new List<EM_Base> ();
@@ -481,19 +491,6 @@ public partial class EG_Map {
 		one.Reset (gobj);
 	}
 
-	void OnReInitDelegate(){
-		OnClearDelegate ();
-		OnInitDelegate ();
-	}
-
-	void OnInitDelegate(){
-		TransformEditor.onChangeTransform += OnChangeTransform;
-	}
-
-	void OnClearDelegate(){
-		TransformEditor.onChangeTransform -= OnChangeTransform;
-	}
-
 	void OnChangeGobj (int instanceID, int types)
 	{
 		if (!m_isInView)
@@ -536,8 +533,6 @@ public partial class EG_Map {
 	void _DrawBornMonster(){
 		if (m_psMonster == null) {
 			m_psMonster = new PSM_Monster ("刷怪点", _NewMonster, RmMapCell);
-
-			OnReInitDelegate ();
 		}
 
 		string strMon = ToJsonString<EM_Monster> (GetLMonsters());
@@ -567,8 +562,6 @@ public partial class EG_Map {
 	void _DrawBornNpc(){
 		if (m_psNpc == null) {
 			m_psNpc = new PSM_Npc ("刷NPC点", _NewNpc, RmMapCell);
-
-			OnReInitDelegate ();
 		}
 
 		ms_entity.strNpcs = ToJsonString<EM_NPC> (GetLNpcs());
@@ -597,8 +590,6 @@ public partial class EG_Map {
 	void _DrawMCenter(){
 		if (m_psMCenter == null) {
 			m_psMCenter = new PSM_MonsterCenter ("怪物聚集中心点", _NewMCenter, RmMapCell);
-
-			OnReInitDelegate ();
 		}
 
 		ms_entity.strMonsterCenters = ToJsonString<EM_MonsterCenter> (GetLMCenters());
@@ -627,8 +618,6 @@ public partial class EG_Map {
 	void _DrawAreaBornMonster(){
 		if (m_psAreaBM == null) {
 			m_psAreaBM = new PSM_AreaBornMonster ("触发刷怪区域点", _NewAreaBM, RmMapCell);
-
-			OnReInitDelegate ();
 		}
 
 		ms_entity.strAreasBornMoner = ToJsonString<EM_AreasBornMonster> (GetLAreaBM());
