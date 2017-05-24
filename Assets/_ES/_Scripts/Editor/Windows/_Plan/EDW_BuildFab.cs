@@ -20,7 +20,7 @@ public class EDW_BuildFab : EditorWindow {
 
 	// 窗体宽高
 	static public float width = 600;
-	static public float height = 295;
+	static public float height = 325;
 
 	[MenuItem("Tools/Windows/BuildAsset2Fab")]
 	static void AddWindow()
@@ -77,6 +77,9 @@ public class EDW_BuildFab : EditorWindow {
 	/// prefab的asset资源后缀名
 	/// </summary>
 	string abSuffix = "";
+
+	// 设置image的检测碰撞
+	bool m_isRaycastTarget = true;
 	#endregion
 
 	#region  == EditorWindow Func ===
@@ -129,6 +132,9 @@ public class EDW_BuildFab : EditorWindow {
 				m_fHight = EditorGUILayout.FloatField ("Height:", m_fHight);
 			}
 			EG_GUIHelper.FEG_EndToggleGroup ();
+			EG_GUIHelper.FG_Space(10);
+
+			m_isRaycastTarget = EditorGUILayout.ToggleLeft (" 是否添加碰撞检测 (勾选RaycatTarget)?", m_isRaycastTarget);
 			EG_GUIHelper.FG_Space(10);
 
 			abName = EditorGUILayout.TextField ("Fab的Asset资源名", abName);
@@ -248,7 +254,7 @@ public class EDW_BuildFab : EditorWindow {
 				imgUI = gobj.AddComponent<Image>();
 				spriteTemp = AssetDatabase.LoadAssetAtPath<Sprite>(tmpPath);
 				imgUI.sprite = spriteTemp;//Sprite.Create (t2dTemp);
-				imgUI.raycastTarget = false;
+				imgUI.raycastTarget = m_isRaycastTarget;
 				if (isSetSelfWH) {
 					rectTrsf = gobj.GetComponent<RectTransform> ();
 					rectTrsf.sizeDelta = new Vector2 (m_fWidth, m_fHight);
