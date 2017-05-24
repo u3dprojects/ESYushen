@@ -242,10 +242,14 @@ public partial class EG_MapPlot {
 				if(tmp.cameraObject != null && tmp.cameraGameObject == null){
 					GameObject gobj = GameObject.Instantiate(tmp.cameraObject) as GameObject;
 					gobj.name = "PlotModel";
-					gobj.transform.SetParent(tmp.transform,false);
+					
+					Transform trsf = gobj.transform;
+					trsf.SetParent(tmp.transform,false);
+					trsf.localPosition = Vector3.zero;
+					trsf.localEulerAngles = Vector3.zero;
 
 					tmp.cameraGameObject = gobj;
-					tmp.cameraTransform = gobj.transform;
+					tmp.cameraTransform = trsf;
 					tmp.cameraAnimator = gobj.GetComponent<Animator>();
 					gobj.SetActive(false);
 				}
