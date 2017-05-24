@@ -228,15 +228,28 @@ public partial class EG_MapPlot {
 
 		#if YuShenGameArtProject
 		m_jsonData.Clear ();
-		m_lPlot.Clear ();
-		m_lPlot.AddRange (m_dicPlot.Values);
-		int lens = m_lPlot.Count;
+		int lens = 0;
 		bool isValid = false;
 		MapTrigger tmp = null;
+
+		m_lPlot.Clear ();
+		m_lPlot.AddRange (m_dicPlot.Values);
+		lens = m_lPlot.Count;
 		for (int i = 0; i < lens; i++) {
 			tmp = m_lPlot [i];
 			isValid = IsValid (tmp);
-			if (!isValid) {
+			if (isValid) {
+				if(tmp.cameraObject != null && tmp.cameraGameObject == null){
+					GameObject gobj = GameObject.Instantiate(tmp.cameraObject) as GameObject;
+					gobj.name = "PlotModel";
+					gobj.transform.SetParent(tmp.transform,false);
+
+					tmp.cameraGameObject = gobj;
+					tmp.cameraTransform = gobj.transform;
+					tmp.cameraAnimator = gobj.GetComponent<Animator>();
+					gobj.SetActive(false);
+				}
+			}else{
 				RmPlotCell(tmp);
 				GameObject.DestroyImmediate (tmp.gameObject);
 			}
