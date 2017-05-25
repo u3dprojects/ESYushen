@@ -242,7 +242,7 @@ public partial class EG_MapPlot {
 				if(tmp.cameraObject != null && tmp.cameraGameObject == null){
 					GameObject gobj = GameObject.Instantiate(tmp.cameraObject) as GameObject;
 					gobj.name = "PlotModel";
-					
+
 					Transform trsf = gobj.transform;
 					trsf.SetParent(tmp.transform,false);
 					trsf.localPosition = Vector3.zero;
@@ -297,7 +297,7 @@ public partial class EG_MapPlot {
 		if (one.totalTime <= 0)
 			return false;
 
-		if (one.destPos == Vector3.zero) {
+		if (one.dest == null) {
 			return false;
 		}
 
@@ -328,9 +328,10 @@ public partial class EG_MapPlot {
 		data ["timeLength"] = EJ_Base.Round2D(one.totalTime,2);
 
 		JsonData tmp = new JsonData ();
-		tmp["x"] = EJ_Base.Round2D(one.destPos.x,2);
-		tmp["y"] = EJ_Base.Round2D(one.destPos.y,2);
-		tmp["z"] = EJ_Base.Round2D(one.destPos.z,2);
+		Vector3 v3Pos = one.dest.transform.position;
+		tmp["x"] = EJ_Base.Round2D(v3Pos.x,2);
+		tmp["y"] = EJ_Base.Round2D(v3Pos.y,2);
+		tmp["z"] = EJ_Base.Round2D(v3Pos.z,2);
 		data ["destPos"] = tmp;
 
 		int area_type = 1;
