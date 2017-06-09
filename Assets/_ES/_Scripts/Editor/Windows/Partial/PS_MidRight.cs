@@ -32,6 +32,7 @@ public partial class PS_MidRight{
 	EN_Time m_curTime;
 
     Vector2 scrollPos;
+	float topH = 115;
 	float topDescH = 20;
 	float botBtnH = 130;
 
@@ -109,8 +110,8 @@ public partial class PS_MidRight{
     {
         if (this.m_wSkill != null)
         {
-            // 100 - 是主界面顶部高度 20 - 是误差偏移
-			curScrollH = (m_wSkill.position.height - 100) - topDescH - botBtnH;
+			// topH - 是主界面顶部高度 20 - 是误差偏移
+			curScrollH = (m_wSkill.position.height - topH) - topDescH - botBtnH;
             curScrollH = Mathf.Max(curScrollH, minScrollH);
 
             curWidth = (m_wSkill.position.width - 10) / 2;

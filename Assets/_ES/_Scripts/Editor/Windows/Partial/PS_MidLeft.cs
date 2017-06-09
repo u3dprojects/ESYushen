@@ -41,6 +41,8 @@ public class PS_MidLeft{
     float minWidth = 440;
     float curWidth = 0;
 
+	float topH = 115;
+	float topDescH = 20;
 	float botBtnH = 45;
 
     // popup 列表选择值
@@ -123,8 +125,8 @@ public class PS_MidLeft{
     {
         if (this.m_wSkill != null)
         {
-            // 100 - 是主界面顶部高度 20 - 是误差偏移
-			curScrollH = (m_wSkill.position.height - 100) - botBtnH;
+			// topH - 是主界面顶部高度 20 - 是误差偏移
+			curScrollH = (m_wSkill.position.height - topH) - topDescH - botBtnH;
             curScrollH = Mathf.Max(curScrollH, minScrollH);
 
 			int numCell = m_wSkill.m_isShowRtPlan ? 2 : 1;
