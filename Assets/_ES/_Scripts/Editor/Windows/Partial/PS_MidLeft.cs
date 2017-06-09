@@ -127,7 +127,8 @@ public class PS_MidLeft{
 			curScrollH = (m_wSkill.position.height - 100) - botBtnH;
             curScrollH = Mathf.Max(curScrollH, minScrollH);
 
-            curWidth = (m_wSkill.position.width - 10) / 2;
+			int numCell = m_wSkill.m_isShowRtPlan ? 2 : 1;
+			curWidth = (m_wSkill.position.width - 10) / numCell;
             curWidth = Mathf.Max(curWidth, minWidth);
         }
     }

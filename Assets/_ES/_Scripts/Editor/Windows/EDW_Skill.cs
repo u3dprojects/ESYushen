@@ -87,6 +87,11 @@ public class EDW_Skill : EditorWindow
     PS_MidLeft m_midLeft;
     PS_MidRight m_midRight;
 
+	/// <summary>
+	/// 控制显示右边策划工具
+	/// </summary>
+	public bool m_isShowRtPlan = true;
+
     #endregion
 
     #region  == EditorWindow Func ===
@@ -143,7 +148,11 @@ public class EDW_Skill : EditorWindow
                     OnInitEntity();
                 }
             }
-            EG_GUIHelper.FG_Space(3);
+            EG_GUIHelper.FG_Space(10);
+
+			m_isShowRtPlan = EditorGUILayout.Toggle("是否绘制策划工具?", m_isShowRtPlan);
+
+			EG_GUIHelper.FG_Space(8);
         }
 
         {
@@ -152,7 +161,10 @@ public class EDW_Skill : EditorWindow
             {
                 // 左边
                 DrawLeft();
-                DrawRight();
+
+				if (m_isShowRtPlan) {
+					DrawRight ();
+				}
             }
             EG_GUIHelper.FEG_EndH();
         }
